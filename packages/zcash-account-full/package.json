@@ -1,5 +1,5 @@
 {
-  "name": "@asset-route-sdk/zcash-transparent-account-full",
+  "name": "@asset-route-sdk/zcash-account-full",
   "version": "0.1.0",
   "description": "Zcash transparent account management library",
   "author": "",
@@ -47,7 +47,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tkviet/asset-route-sdk.git",
-    "directory": "packages/zcash-transparent-account-full"
+    "directory": "packages/zcash-account-full"
   },
   "bugs": {
     "url": "https://github.com/tkviet/asset-route-sdk/issues"
