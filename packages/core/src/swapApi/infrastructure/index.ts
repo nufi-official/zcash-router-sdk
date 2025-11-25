@@ -1,1 +1,1 @@
-export * from './oneClickApi'
+export * from './oneClickApi';

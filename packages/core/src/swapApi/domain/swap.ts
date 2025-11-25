@@ -1,4 +1,4 @@
-import type {GetExecutionStatusResponse} from '@defuse-protocol/one-click-sdk-typescript'
+import type { GetExecutionStatusResponse } from '@defuse-protocol/one-click-sdk-typescript';
 
 import type {
   GetQuoteParams,
@@ -6,35 +6,35 @@ import type {
   SwapApi,
   CheckStatusResponse,
   SwapQuoteResponse,
-} from './swapApi.ts'
+} from './swapApi.ts';
 
 export type SwapStateChangeEvent =
   | {
-      status: 'DEPOSIT_SENT'
-      txHash: string
+      status: 'DEPOSIT_SENT';
+      txHash: string;
     }
   | {
-      status: CheckStatusResponse
-      statusResponse: GetExecutionStatusResponse
-    }
+      status: CheckStatusResponse;
+      statusResponse: GetExecutionStatusResponse;
+    };
 // TODO: timeout event
 
 export type SwapParams = {
-  swapApi: SwapApi
-  quote: GetQuoteParams
-  sendDeposit?: SendDepositFn
-  onStatusChange?: (event: SwapStateChangeEvent) => void
-}
+  swapApi: SwapApi;
+  quote: GetQuoteParams;
+  sendDeposit?: SendDepositFn;
+  onStatusChange?: (event: SwapStateChangeEvent) => void;
+};
 
 export const swap = async (params: SwapParams): Promise<SwapQuoteResponse> => {
-  const {swapApi, quote: quoteParams, sendDeposit, onStatusChange} = params
+  const { swapApi, quote: quoteParams, sendDeposit, onStatusChange } = params;
 
   // Step 1: Get quote and extract deposit address
-  const quoteResponse = await swapApi.getQuote(quoteParams)
+  const quoteResponse = await swapApi.getQuote(quoteParams);
 
-  const depositAddress = quoteResponse.quote?.depositAddress
+  const depositAddress = quoteResponse.quote?.depositAddress;
   if (!depositAddress) {
-    throw new Error('No deposit address found in quote response')
+    throw new Error('No deposit address found in quote response');
   }
 
   // Step 2: Send deposit if provided
@@ -43,27 +43,25 @@ export const swap = async (params: SwapParams): Promise<SwapQuoteResponse> => {
     const txHash = await sendDeposit({
       address: depositAddress,
       amount: quoteParams.amount,
-    })
+    });
 
-    onStatusChange?.({status: 'DEPOSIT_SENT', txHash})
+    onStatusChange?.({ status: 'DEPOSIT_SENT', txHash });
 
     // Step 3: Submit transaction hash to speed up processing (optional)
     await swapApi.submitTxHash({
       transactionHash: txHash,
       depositAddress,
-    })
+    });
   }
-
-  
 
   // Step 4: Poll for status
   await swapApi.pollStatus({
     depositAddress,
     maxAttempts: 100,
     pollingInterval: 10000,
-    initialDelay: 5000, 
+    initialDelay: 5000,
     onStatusChange,
-  })
+  });
 
-  return quoteResponse
-}
+  return quoteResponse;
+};
