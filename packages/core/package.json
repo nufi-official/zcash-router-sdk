@@ -52,5 +52,8 @@
   "bugs": {
     "url": "https://github.com/tkviet/asset-route-sdk/issues"
   },
-  "homepage": "https://github.com/tkviet/asset-route-sdk#readme"
+  "homepage": "https://github.com/tkviet/asset-route-sdk#readme",
+  "dependencies": {
+    "@defuse-protocol/one-click-sdk-typescript": "^0.1.14"
+  }
 }
