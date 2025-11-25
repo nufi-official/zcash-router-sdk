@@ -20,11 +20,6 @@ export type SwapQuoteResponse = {
   quote: {depositAddress?: string}
 }
 
-export type SwapResult = {
-  quote: SwapQuoteResponse
-  finalStatus: GetExecutionStatusResponse | null
-}
-
 export type SubmitTxHashParams = {
   transactionHash: string
   depositAddress: string
@@ -76,17 +71,13 @@ export type SendDepositFn = ({
   amount: string
 }) => Promise<string> // Returns transaction hash
 
-export type SwapApiAssetBlockchain = SwapApiAsset['blockchain']
-
 export type SwapApiAsset = {
   assetId: string
   priceUpdatedAt: string
   price: number
   decimals: number
   symbol: string
-} & (
-  | {
-      blockchain: 'solana'
-      tokenId: undefined // not supporting tokens
-    }
-)
+  blockchain: string
+  contractAddress?: string | undefined
+} 
+

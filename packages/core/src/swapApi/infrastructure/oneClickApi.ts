@@ -16,34 +16,12 @@ import type {
   SubmitTxHashParams,
   SwapApi,
   SwapApiAsset,
-  SwapApiAssetBlockchain,
+
 } from '../domain'
 
 export type OneClickApiConfig = {
   jwtToken: string
   apiBaseUrl: string
-}
-
-const tokenBlockchainSwapApiBlockchainMap: Record<
-  string,
-  SwapApiAssetBlockchain
-> = {
-  sol: 'solana',
-}
-
-const parseTokens = (tokens: TokenResponse[]): SwapApiAsset[] => {
-  return tokens
-    .map((token) => {
-      return {
-        assetId: token.assetId,
-        priceUpdatedAt: token.priceUpdatedAt,
-        tokenId: token.contractAddress,
-        blockchain: tokenBlockchainSwapApiBlockchainMap[token.blockchain],
-        price: token.price,
-        decimals: token.decimals,
-      }
-    })
-    .filter((token): token is SwapApiAsset => token.blockchain !== undefined)
 }
 
 export const OneClickApi = (config: OneClickApiConfig): SwapApi => {
@@ -52,9 +30,7 @@ export const OneClickApi = (config: OneClickApiConfig): SwapApi => {
 
   return {
     getTokens: async () => {
-      const tokens = await OneClickService.getTokens()
-
-      return parseTokens(tokens)
+      return await OneClickService.getTokens()
     },
 
     getQuote: async (params: GetQuoteParams) => {
