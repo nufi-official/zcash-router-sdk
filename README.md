@@ -5,7 +5,7 @@ A monorepo containing TypeScript SDKs for asset routing. Built with pnpm workspa
 ## 📦 Packages
 
 - [`@asset-route-sdk/core`](./packages/core) - Core asset routing and swap SDK
-- [`@asset-route-sdk/zcash-transparent-account-full`](./packages/zcash-transparent-account-full) - Zcash transparent account management
+- [`@asset-route-sdk/zcash-account-full`](./packages/zcash-account-full) - Zcash account management
 
 ## 🚀 Quick Start
 

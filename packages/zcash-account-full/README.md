@@ -1,4 +1,4 @@
-# @asset-route-sdk/zcash-transparent-account-full
+# @asset-route-sdk/zcash-account-full
 
 Zcash transparent account management library. Provides utilities for creating and managing Zcash transparent accounts.
 
@@ -13,21 +13,21 @@ Zcash transparent account management library. Provides utilities for creating an
 ## Installation
 
 ```bash
-npm install @asset-route-sdk/zcash-transparent-account-full
+npm install @asset-route-sdk/zcash-account-full
 ```
 
 ```bash
-yarn add @asset-route-sdk/zcash-transparent-account-full
+yarn add @asset-route-sdk/zcash-account-full
 ```
 
 ```bash
-pnpm add @asset-route-sdk/zcash-transparent-account-full
+pnpm add @asset-route-sdk/zcash-account-full
 ```
 
 ## Usage
 
 ```typescript
-import { } from '@asset-route-sdk/zcash-transparent-account-full';
+import { } from '@asset-route-sdk/zcash-account-full';
 
 // Usage examples will be added here
 ```
