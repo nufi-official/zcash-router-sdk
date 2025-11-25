@@ -1,1 +1,1 @@
-export * from './routeToZcash'
+export * from './routeToZcash';

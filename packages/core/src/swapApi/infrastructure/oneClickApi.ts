@@ -1,36 +1,31 @@
-import type {
-  GetExecutionStatusResponse,
-  TokenResponse,
-} from '@defuse-protocol/one-click-sdk-typescript'
+import type { GetExecutionStatusResponse } from '@defuse-protocol/one-click-sdk-typescript';
 import {
   OpenAPI,
   OneClickService,
   QuoteRequest,
-} from '@defuse-protocol/one-click-sdk-typescript'
+} from '@defuse-protocol/one-click-sdk-typescript';
 
-import {sleep} from '../../utils'
+import { sleep } from '../../utils';
 
 import type {
   CheckStatusParams,
   GetQuoteParams,
   SubmitTxHashParams,
   SwapApi,
-  SwapApiAsset,
-
-} from '../domain'
+} from '../domain';
 
 export type OneClickApiConfig = {
-  jwtToken: string
-  apiBaseUrl: string
-}
+  jwtToken: string;
+  apiBaseUrl: string;
+};
 
 export const OneClickApi = (config: OneClickApiConfig): SwapApi => {
-  OpenAPI.BASE = config.apiBaseUrl
-  OpenAPI.TOKEN = config.jwtToken
+  OpenAPI.BASE = config.apiBaseUrl;
+  OpenAPI.TOKEN = config.jwtToken;
 
   return {
     getTokens: async () => {
-      return await OneClickService.getTokens()
+      return await OneClickService.getTokens();
     },
 
     getQuote: async (params: GetQuoteParams) => {
@@ -51,29 +46,29 @@ export const OneClickApi = (config: OneClickApiConfig): SwapApi => {
         referral: params.referral, // TODO:
         quoteWaitingTimeMs: 3000,
         //  TODO: add appFees
-      }
+      };
 
-      return OneClickService.getQuote(quoteRequest)
+      return OneClickService.getQuote(quoteRequest);
     },
 
     submitTxHash: async (params: SubmitTxHashParams) => {
       await OneClickService.submitDepositTx({
         txHash: params.transactionHash,
         depositAddress: params.depositAddress,
-      })
+      });
     },
 
     pollStatus: async (
-      params: CheckStatusParams,
+      params: CheckStatusParams
     ): Promise<GetExecutionStatusResponse | null> => {
-      await sleep(params.initialDelay)
-      let attempts = 0
-      let statusResponse: GetExecutionStatusResponse | null = null
+      await sleep(params.initialDelay);
+      let attempts = 0;
+      let statusResponse: GetExecutionStatusResponse | null = null;
       while (attempts < params.maxAttempts) {
         try {
           const newStatusResponse = await OneClickService.getExecutionStatus(
-            params.depositAddress,
-          )
+            params.depositAddress
+          );
 
           if (
             params.onStatusChange &&
@@ -82,20 +77,21 @@ export const OneClickApi = (config: OneClickApiConfig): SwapApi => {
             params?.onStatusChange({
               status: newStatusResponse.status,
               statusResponse: newStatusResponse,
-            })
+            });
           }
 
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
           if (newStatusResponse.status === 'SUCCESS') {
-            return statusResponse
+            return statusResponse;
           }
 
-          statusResponse = newStatusResponse
+          statusResponse = newStatusResponse;
         } finally {
-          attempts++
-          await sleep(params.pollingInterval)
+          attempts++;
+          await sleep(params.pollingInterval);
         }
       }
-      return statusResponse
+      return statusResponse;
     },
-  }
-}
+  };
+};
