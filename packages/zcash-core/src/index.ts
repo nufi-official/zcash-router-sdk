@@ -51,3 +51,6 @@ export {
   webzJsWallet,
 } from './infrastructure/chainsafe-webzjs-wrapper';
 export type { WebZjsKeys, WebZjsWallet } from './infrastructure/chainsafe-webzjs-wrapper';
+
+// Utilities
+export { zecToZatoshis, zatoshisToZec } from './domain/parseUtils';
