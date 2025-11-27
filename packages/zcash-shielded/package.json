@@ -42,7 +42,7 @@
   "license": "MIT",
   "dependencies": {
     "@asset-route-sdk/core": "workspace:*",
-    "@asset-route-sdk/zcash-account-full": "workspace:*"
+    "@asset-route-sdk/zcash-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

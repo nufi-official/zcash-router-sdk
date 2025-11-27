@@ -54,7 +54,7 @@ importers:
         specifier: ^0.1.14
         version: 0.1.14
 
-  packages/zcash-account-full:
+  packages/zcash-core:
     dependencies:
       '@chainsafe/webzjs-keys':
         specifier: https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-keys-0.1.0.tgz
@@ -71,9 +71,9 @@ importers:
       '@asset-route-sdk/core':
         specifier: workspace:*
         version: link:../core
-      '@asset-route-sdk/zcash-account-full':
+      '@asset-route-sdk/zcash-core':
         specifier: workspace:*
-        version: link:../zcash-account-full
+        version: link:../zcash-core
     devDependencies:
       '@types/node':
         specifier: ^22.10.2
@@ -93,9 +93,9 @@ importers:
       '@asset-route-sdk/core':
         specifier: workspace:*
         version: link:../core
-      '@asset-route-sdk/zcash-account-full':
+      '@asset-route-sdk/zcash-core':
         specifier: workspace:*
-        version: link:../zcash-account-full
+        version: link:../zcash-core
     devDependencies:
       '@types/node':
         specifier: ^22.10.2

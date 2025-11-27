@@ -2,10 +2,10 @@ import type { AccountFull, RouteAsset } from '@asset-route-sdk/core';
 import type {
   ZcashAccountStoredData,
   ZcashWallet,
-} from '@asset-route-sdk/zcash-account-full';
-import type { WebWalletManager } from '@asset-route-sdk/zcash-account-full';
-import type { ZcashCryptoProvider } from '@asset-route-sdk/zcash-account-full';
-import { ZCashAccountManager } from '@asset-route-sdk/zcash-account-full';
+} from '@asset-route-sdk/zcash-core';
+import type { WebWalletManager } from '@asset-route-sdk/zcash-core';
+import type { ZcashCryptoProvider } from '@asset-route-sdk/zcash-core';
+import { ZCashAccountManager } from '@asset-route-sdk/zcash-core';
 
 const ZCASH_DECIMALS = 8;
 const ZATOSHIS_PER_ZEC = BigInt(10 ** ZCASH_DECIMALS);
