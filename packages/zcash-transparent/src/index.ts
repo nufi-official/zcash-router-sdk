@@ -5,10 +5,7 @@ import type {
 } from '@asset-route-sdk/zcash-core';
 import type { WebWalletManager } from '@asset-route-sdk/zcash-core';
 import type { ZcashCryptoProvider } from '@asset-route-sdk/zcash-core';
-import { ZCashAccountManager } from '@asset-route-sdk/zcash-core';
-
-const ZCASH_DECIMALS = 8;
-const ZATOSHIS_PER_ZEC = BigInt(10 ** ZCASH_DECIMALS);
+import { ZCashAccountManager, zecToZatoshis } from '@asset-route-sdk/zcash-core';
 
 export interface ZcashTransparentAccountParams {
   wallet: ZcashWallet;
@@ -76,10 +73,6 @@ export class ZcashTransparentAccount implements AccountFull {
   }
 
   assetToBaseUnits(amount: string): bigint {
-    // Convert ZEC amount string to zatoshis (1 ZEC = 100,000,000 zatoshis)
-    const [whole = '0', fraction = ''] = amount.split('.');
-    const paddedFraction = fraction.padEnd(ZCASH_DECIMALS, '0').slice(0, ZCASH_DECIMALS);
-    const zatoshis = BigInt(whole) * ZATOSHIS_PER_ZEC + BigInt(paddedFraction);
-    return zatoshis;
+    return zecToZatoshis(amount);
   }
 }
