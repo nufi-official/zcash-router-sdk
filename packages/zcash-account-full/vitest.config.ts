@@ -2,8 +2,11 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    // Test environment
-    environment: 'node',
+    // Use jsdom for better Node.js API compatibility
+    environment: 'jsdom',
+
+    // Setup files to run before tests
+    setupFiles: ['./vitest.setup.ts'],
 
     // Global test utilities
     globals: true,
@@ -22,10 +25,7 @@ export default defineConfig({
     },
 
     // Test file patterns
-    include: ['tests/**/*.{test,spec}.ts'],
-
-    // Watch mode options
-    watchExclude: ['**/node_modules/**', '**/dist/**'],
+    include: ['**/*.{test,spec}.ts'],
 
     // Timeout for tests (in ms)
     testTimeout: 10000,
