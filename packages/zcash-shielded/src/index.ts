@@ -1,11 +1,33 @@
 import type { AccountFull, RouteAsset } from '@asset-route-sdk/core';
 import type {
+  Zatoshis,
   ZcashAccountStoredData,
+  ZCashAddress,
   ZcashWallet,
+  ZcashNetwork,
 } from '@asset-route-sdk/zcash-core';
 import type { WebWalletManager } from '@asset-route-sdk/zcash-core';
 import type { ZcashCryptoProvider } from '@asset-route-sdk/zcash-core';
-import { ZCashAccountManager, zecToZatoshis } from '@asset-route-sdk/zcash-core';
+import {
+  ZCashAccountManager,
+  zecToZatoshis,
+  ZcashWallet as ZcashWalletClass,
+  MnemonicCryptoProvider,
+  WebWalletManagerImpl,
+} from '@asset-route-sdk/zcash-core';
+
+export interface CreateZcashShieldedAccountParams {
+  mnemonic: string;
+  accountIndex: number;
+  network: ZcashNetwork;
+  lightwalletdUrl: string;
+  minConfirmations: number;
+}
+
+const ZCASH_ASSET: RouteAsset = {
+  blockchain: 'zcash',
+  tokenId: undefined,
+};
 
 export interface ZcashShieldedAccountParams {
   wallet: ZcashWallet;
@@ -58,8 +80,8 @@ export class ZcashShieldedAccount implements AccountFull {
 
     // Create transaction plan
     const txPlan = {
-      toAddress: address as any, // Type cast to ZCashAddress
-      amount: amountZatoshis as any, // Type cast to Zatoshis
+      toAddress: address as ZCashAddress,
+      amount: amountZatoshis as Zatoshis,
     };
 
     // Sign and prove the transaction
@@ -75,4 +97,45 @@ export class ZcashShieldedAccount implements AccountFull {
   assetToBaseUnits(amount: string): bigint {
     return zecToZatoshis(amount);
   }
+}
+
+/**
+ * Factory function to create a Zcash shielded account with simplified parameters
+ */
+export async function createZcashShieldedAccount(
+  params: CreateZcashShieldedAccountParams
+): Promise<AccountFull> {
+  const { mnemonic, accountIndex, network, lightwalletdUrl, minConfirmations } =
+    params;
+
+  // Initialize crypto provider
+  const mnemonicProvider = new MnemonicCryptoProvider(mnemonic);
+
+  // Initialize web wallet manager
+  const webWalletManager = new WebWalletManagerImpl({
+    network,
+    lightwalletdUrl,
+    minConfirmations,
+  });
+
+  // Create wallet
+  const wallet = new ZcashWalletClass({
+    cryptoProviders: { mnemonic: mnemonicProvider },
+    webWalletManager,
+  });
+
+  // Create account
+  const account = await wallet.createAccount({
+    accountIndex,
+    cryptoProviderType: 'mnemonic',
+  });
+
+  // Return the shielded account
+  return new ZcashShieldedAccount({
+    wallet,
+    account,
+    cryptoProviders: { mnemonic: mnemonicProvider },
+    webWalletManager,
+    asset: ZCASH_ASSET,
+  });
 }
