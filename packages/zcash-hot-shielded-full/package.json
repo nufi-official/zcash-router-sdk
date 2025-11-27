@@ -1,7 +1,7 @@
 {
-  "name": "@asset-route-sdk/zcash-transparent",
+  "name": "@asset-route-sdk/zcash-hot-shielded-full",
   "version": "0.1.0",
-  "description": "Zcash transparent account implementation for asset routing",
+  "description": "Zcash hot shielded full account implementation for asset routing",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -34,7 +34,7 @@
   },
   "keywords": [
     "zcash",
-    "transparent",
+    "shielded",
     "account",
     "blockchain"
   ],
