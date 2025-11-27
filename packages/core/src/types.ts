@@ -1,9 +1,14 @@
 import { SendDepositFn } from './swapApi/domain';
 
-export type RouteAsset = {
-  blockchain: 'solana';
-  tokenId: string;
-};
+export type RouteAsset =
+  | {
+      blockchain: 'solana';
+      tokenId: string;
+    }
+  | {
+      blockchain: 'zcash';
+      tokenId: undefined;
+    };
 
 type AccountBase = {
   asset: RouteAsset;
