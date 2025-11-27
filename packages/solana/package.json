@@ -1,0 +1,63 @@
+{
+  "name": "@asset-route-sdk/solana",
+  "version": "0.1.0",
+  "description": "Solana address-only account management library",
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src tests --ext .ts",
+    "lint:fix": "eslint src tests --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm run typecheck && pnpm run test && pnpm run build"
+  },
+  "keywords": [
+    "solana",
+    "account",
+    "blockchain",
+    "typescript",
+    "address-only"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tkviet/asset-route-sdk.git",
+    "directory": "packages/solana"
+  },
+  "bugs": {
+    "url": "https://github.com/tkviet/asset-route-sdk/issues"
+  },
+  "homepage": "https://github.com/tkviet/asset-route-sdk#readme",
+  "dependencies": {
+    "@asset-route-sdk/core": "workspace:*",
+    "@solana/web3.js": "^1.95.8",
+    "bip32": "^4.0.0",
+    "bip39": "^3.1.0",
+    "tiny-secp256k1": "^2.2.3"
+  }
+}
