@@ -56,6 +56,9 @@ importers:
 
   packages/zcash-core:
     dependencies:
+      '@asset-route-sdk/core':
+        specifier: workspace:*
+        version: link:../core
       '@chainsafe/webzjs-keys':
         specifier: https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-keys-0.1.0.tgz
         version: https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-keys-0.1.0.tgz

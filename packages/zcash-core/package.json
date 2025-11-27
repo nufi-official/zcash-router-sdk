@@ -54,6 +54,7 @@
   },
   "homepage": "https://github.com/tkviet/asset-route-sdk#readme",
   "dependencies": {
+    "@asset-route-sdk/core": "workspace:*",
     "@chainsafe/webzjs-keys": "https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-keys-0.1.0.tgz",
     "@chainsafe/webzjs-wallet": "https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-wallet-0.1.0.tgz",
     "bip39": "^3.1.0"
