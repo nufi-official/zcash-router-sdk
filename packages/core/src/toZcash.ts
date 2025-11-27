@@ -8,7 +8,7 @@ export async function routeToZcash(params: {
     AccountFull & {
       asset: {
         blockchain: 'zcash';
-        contractAddress: undefined;
+        tokenId: undefined;
       };
     },
     AccountFull
