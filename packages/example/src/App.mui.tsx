@@ -53,7 +53,8 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+    fontFamily:
+      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
     h1: {
       fontWeight: 800,
       letterSpacing: '-0.025em',
@@ -209,10 +210,15 @@ function App() {
         }}
       >
         {/* Development Notice - Top Left */}
-        <Box sx={{ position: 'absolute', top: 20, left: 20, maxWidth: '500px' }}>
+        <Box
+          sx={{ position: 'absolute', top: 20, left: 20, maxWidth: '500px' }}
+        >
           <Alert severity="warning">
             <AlertTitle>Development Notice</AlertTitle>
-            <Box component="ul" sx={{ mt: 1, mb: 0, pl: 2, fontSize: '0.85rem' }}>
+            <Box
+              component="ul"
+              sx={{ mt: 1, mb: 0, pl: 2, fontSize: '0.85rem' }}
+            >
               <li>Wallet integration not implemented</li>
               <li>API configuration required via env vars</li>
               <li>Demo only - do not use with real funds</li>
@@ -222,7 +228,9 @@ function App() {
         </Box>
 
         {/* Mnemonic Input - Top Right */}
-        <Box sx={{ position: 'absolute', top: 20, right: 20, maxWidth: '500px' }}>
+        <Box
+          sx={{ position: 'absolute', top: 20, right: 20, maxWidth: '500px' }}
+        >
           <Box
             sx={{
               border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -299,16 +307,19 @@ function App() {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  background: 'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
+                  background:
+                    'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
                   borderRadius: 3,
                 }}
               >
                 <Box
                   sx={{
-                    background: 'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
+                    background:
+                      'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
                     color: 'white',
-                    p: 2,
+                    p: 3,
                     position: 'relative',
+                    borderRadius: '24px 24px 48px 48px',
                     '&::after': {
                       content: '""',
                       position: 'absolute',
@@ -316,14 +327,22 @@ function App() {
                       left: 0,
                       right: 0,
                       bottom: 0,
-                      background: 'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
+                      background:
+                        'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
+                      borderRadius: '24px 24px 48px 48px',
                     },
                   }}
                 >
-                  <Typography variant="h6" sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}
+                  >
                     Route to Zcash
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}
+                  >
                     Swap SOL → ZEC
                   </Typography>
                 </Box>
@@ -343,16 +362,19 @@ function App() {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  background: 'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
+                  background:
+                    'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
                   borderRadius: 3,
                 }}
               >
                 <Box
                   sx={{
-                    background: 'linear-gradient(135deg, #F3B724 0%, #9945FF 50%, #14F195 100%)',
+                    background:
+                      'linear-gradient(135deg, #F3B724 0%, #9945FF 50%, #14F195 100%)',
                     color: 'white',
-                    p: 2,
+                    p: 3,
                     position: 'relative',
+                    borderRadius: '24px 24px 48px 48px',
                     '&::after': {
                       content: '""',
                       position: 'absolute',
@@ -360,14 +382,22 @@ function App() {
                       left: 0,
                       right: 0,
                       bottom: 0,
-                      background: 'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
+                      background:
+                        'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
+                      borderRadius: '24px 24px 48px 48px',
                     },
                   }}
                 >
-                  <Typography variant="h6" sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}
+                  >
                     Route from Zcash
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}
+                  >
                     Swap ZEC → SOL
                   </Typography>
                 </Box>
@@ -385,7 +415,8 @@ function App() {
                     label="Coming Soon"
                     sx={{
                       mb: 2,
-                      background: 'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
+                      background:
+                        'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
                       fontWeight: 600,
                       color: 'white',
                     }}
@@ -406,7 +437,14 @@ function App() {
         </Box>
 
         {/* Footer - Bottom Center */}
-        <Box sx={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)' }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: 20,
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
+        >
           <Typography variant="body2" color="text.secondary">
             Built with React, Vite, TypeScript, and Material-UI
           </Typography>
