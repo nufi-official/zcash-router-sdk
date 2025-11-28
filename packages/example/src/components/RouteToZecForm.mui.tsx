@@ -224,53 +224,6 @@ export function RouteToZecForm() {
         )}
       </Box>
 
-      {/* Solana Mnemonic */}
-      <TextField
-        fullWidth
-        label="Solana Mnemonic"
-        value={solanaMnemonic}
-        onChange={(e) => setSolanaMnemonic(e.target.value)}
-        placeholder="your twelve or twenty-four word mnemonic..."
-        multiline
-        rows={3}
-        margin="normal"
-        variant="outlined"
-        required
-        error={!!errors['solanaMnemonic']}
-        helperText={
-          errors['solanaMnemonic'] ||
-          '⚠️ Never share your mnemonic. This is for demo purposes only.'
-        }
-        sx={{
-          '& .MuiInputBase-input': {
-            fontFamily: 'monospace',
-            fontSize: '0.875rem',
-          },
-        }}
-      />
-
-      {/* Zcash Mnemonic */}
-      <TextField
-        fullWidth
-        label="Zcash Mnemonic (Destination)"
-        value={zcashMnemonic}
-        onChange={(e) => setZcashMnemonic(e.target.value)}
-        placeholder="your twelve or twenty-four word mnemonic..."
-        multiline
-        rows={3}
-        margin="normal"
-        variant="outlined"
-        required
-        error={!!errors['zcashMnemonic']}
-        helperText={errors['zcashMnemonic']}
-        sx={{
-          '& .MuiInputBase-input': {
-            fontFamily: 'monospace',
-            fontSize: '0.875rem',
-          },
-        }}
-      />
-
       {/* Submit Button */}
       <Button
         type="submit"
