@@ -142,18 +142,87 @@ export function RouteToZecForm() {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
-      {/* Asset Selector */}
-      <TextField
-        select
-        fullWidth
-        label="Source Asset"
-        value={asset}
-        onChange={(e) => setAsset(e.target.value)}
-        margin="normal"
-        variant="outlined"
+      {/* Amount and Asset Selector Combined */}
+      <Box
+        sx={{
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: 3,
+          p: 3,
+          mb: 3,
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        }}
       >
-        <MenuItem value="SOL">SOL (Solana)</MenuItem>
-      </TextField>
+        <Typography
+          variant="caption"
+          sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+        >
+          Sell
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <TextField
+            fullWidth
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            type="number"
+            placeholder="0"
+            variant="standard"
+            error={!!errors['amount']}
+            InputProps={{
+              disableUnderline: true,
+              sx: {
+                fontSize: '2.5rem',
+                fontWeight: 500,
+                color: 'white',
+                '& input': {
+                  padding: 0,
+                },
+                '& input::placeholder': {
+                  color: 'rgba(255, 255, 255, 0.3)',
+                  opacity: 1,
+                },
+              },
+            }}
+            inputProps={{
+              step: '0.000000001',
+              min: '0',
+            }}
+          />
+          <TextField
+            select
+            value={asset}
+            onChange={(e) => setAsset(e.target.value)}
+            variant="standard"
+            InputProps={{
+              disableUnderline: true,
+              sx: {
+                fontSize: '1rem',
+                fontWeight: 600,
+                color: 'white',
+                minWidth: 100,
+              },
+            }}
+            SelectProps={{
+              sx: {
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                borderRadius: 2,
+                px: 2,
+                py: 1,
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              },
+            }}
+          >
+            <MenuItem value="SOL">SOL</MenuItem>
+          </TextField>
+        </Box>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+          $0
+        </Typography>
+        {errors['amount'] && (
+          <Typography variant="caption" sx={{ color: 'error.main', mt: 1, display: 'block' }}>
+            {errors['amount']}
+          </Typography>
+        )}
+      </Box>
 
       {/* Solana Mnemonic */}
       <TextField
@@ -199,31 +268,6 @@ export function RouteToZecForm() {
             fontFamily: 'monospace',
             fontSize: '0.875rem',
           },
-        }}
-      />
-
-      {/* Amount */}
-      <TextField
-        fullWidth
-        label="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        type="number"
-        margin="normal"
-        variant="outlined"
-        required
-        error={!!errors['amount']}
-        helperText={errors['amount']}
-        InputProps={{
-          endAdornment: (
-            <Typography variant="body2" color="text.secondary">
-              {asset}
-            </Typography>
-          ),
-        }}
-        inputProps={{
-          step: '0.000000001',
-          min: '0',
         }}
       />
 
