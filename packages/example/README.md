@@ -106,9 +106,14 @@ The form will display real-time progress through these stages:
 - **@asset-route-sdk/solana-hot-address-only**: Solana account management
 - **@asset-route-sdk/zcash-hot-shielded-full**: Zcash account management
 - **React 18**: UI framework
-- **Vite**: Build tool and dev server
+- **Vite**: Build tool and dev server with WASM support plugins
 - **Tailwind CSS**: Styling
 - **TypeScript**: Type safety
+
+### Technical Notes
+
+- WASM support is enabled via `vite-plugin-wasm` and `vite-plugin-top-level-await` to support the Zcash cryptographic libraries
+- The Zcash packages use `@chainsafe/webzjs-wallet` which requires WASM
 
 ## Building for Production
 
