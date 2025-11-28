@@ -2,13 +2,13 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   CssBaseline,
   Typography,
-  Container,
   Box,
   Paper,
   Alert,
   AlertTitle,
   Chip,
   Stack,
+  TextField,
 } from '@mui/material';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
 
@@ -118,7 +118,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
+          borderRadius: 24,
           padding: '10px 24px',
           fontSize: '0.95rem',
           boxShadow: 'none',
@@ -202,43 +202,93 @@ function App() {
       <CssBaseline />
       <Box
         sx={{
-          flexGrow: 1,
           minHeight: '100vh',
           bgcolor: 'background.default',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          p: 3,
+          position: 'relative',
         }}
       >
-        {/* Main Content */}
-        <Container maxWidth="lg" sx={{ py: 6 }}>
-          {/* Development Notice */}
-          <Alert severity="warning" sx={{ mb: 4 }}>
+        {/* Development Notice - Top Left */}
+        <Box sx={{ position: 'absolute', top: 20, left: 20, maxWidth: '500px' }}>
+          <Alert severity="warning">
             <AlertTitle>Development Notice</AlertTitle>
-            <Box component="ul" sx={{ mt: 1, mb: 0, pl: 2 }}>
-              <li>
-                Wallet integration (sendDeposit) is not implemented - requires
-                real wallet SDK
-              </li>
-              <li>
-                API configuration (JWT token, base URL) needs to be set via
-                environment variables
-              </li>
-              <li>
-                This is a demo app for testing the SDK - do not use with real
-                funds on mainnet
-              </li>
-              <li>
-                Use test mnemonics only - never enter your real wallet mnemonic
-              </li>
+            <Box component="ul" sx={{ mt: 1, mb: 0, pl: 2, fontSize: '0.85rem' }}>
+              <li>Wallet integration not implemented</li>
+              <li>API configuration required via env vars</li>
+              <li>Demo only - do not use with real funds</li>
+              <li>Test mnemonics only</li>
             </Box>
           </Alert>
+        </Box>
 
-          {/* Swap Forms Grid */}
+        {/* Mnemonic Input - Top Right */}
+        <Box sx={{ position: 'absolute', top: 20, right: 20, maxWidth: '500px' }}>
+          <Box
+            sx={{
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: 3,
+              p: 3,
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+            >
+              Mnemonic Phrase
+            </Typography>
+            <TextField
+              fullWidth
+              placeholder="your twelve or twenty-four word mnemonic..."
+              multiline
+              rows={3}
+              variant="standard"
+              slotProps={{
+                input: {
+                  disableUnderline: true,
+                  sx: {
+                    fontFamily: 'monospace',
+                    fontSize: '0.875rem',
+                    color: 'white',
+                    '& textarea': {
+                      padding: 0,
+                    },
+                    '& textarea::placeholder': {
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      opacity: 1,
+                    },
+                  },
+                },
+              }}
+            />
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'text.secondary',
+                mt: 1,
+                display: 'block',
+              }}
+            >
+              ⚠️ Never share your mnemonic
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Centered Forms Container */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '100vh',
+          }}
+        >
+          {/* Swap Forms Grid - Centered */}
           <Stack
             direction={{ xs: 'column', md: 'row' }}
             spacing={4}
             alignItems="stretch"
+            sx={{ maxWidth: '1200px', width: '100%' }}
           >
             {/* Route to Zcash */}
             <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -250,6 +300,7 @@ function App() {
                   display: 'flex',
                   flexDirection: 'column',
                   background: 'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
+                  borderRadius: 3,
                 }}
               >
                 <Box
@@ -293,6 +344,7 @@ function App() {
                   display: 'flex',
                   flexDirection: 'column',
                   background: 'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
+                  borderRadius: 3,
                 }}
               >
                 <Box
@@ -350,14 +402,14 @@ function App() {
               </Paper>
             </Box>
           </Stack>
+        </Box>
 
-          {/* Footer */}
-          <Box sx={{ mt: 6, textAlign: 'center' }}>
-            <Typography variant="body2" color="text.secondary">
-              Built with React, Vite, TypeScript, and Material-UI
-            </Typography>
-          </Box>
-        </Container>
+        {/* Footer - Bottom Center */}
+        <Box sx={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)' }}>
+          <Typography variant="body2" color="text.secondary">
+            Built with React, Vite, TypeScript, and Material-UI
+          </Typography>
+        </Box>
       </Box>
     </ThemeProvider>
   );
