@@ -12,31 +12,31 @@ import {
 } from '@mui/material';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
 
-// Hot vibrant theme with energetic colors
+// Theme with official Solana and Zcash brand colors
 const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#ff6b35', // Hot Orange
-      light: '#ff8c5a',
-      dark: '#e85a2a',
+      main: '#9945FF', // Solana Purple
+      light: '#b36dff',
+      dark: '#7a2ecc',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#ff006e', // Hot Pink/Magenta
-      light: '#ff3d8f',
-      dark: '#d9005c',
-      contrastText: '#ffffff',
+      main: '#F3B724', // Zcash Gold
+      light: '#f5c550',
+      dark: '#c9981d',
+      contrastText: '#000000',
     },
     success: {
-      main: '#06ffa5', // Neon Green
-      light: '#3cffb8',
-      dark: '#05d98a',
+      main: '#14F195', // Solana Green
+      light: '#43f4aa',
+      dark: '#10c177',
     },
     warning: {
-      main: '#ffbe0b', // Electric Yellow
-      light: '#ffcb3c',
-      dark: '#e6ab00',
+      main: '#F3B724', // Zcash Gold
+      light: '#f5c550',
+      dark: '#c9981d',
     },
     error: {
       main: '#ff1744', // Hot Red
@@ -89,30 +89,30 @@ const theme = createTheme({
   },
   shadows: [
     'none',
-    '0px 2px 8px rgba(255, 107, 53, 0.15)',
-    '0px 4px 12px rgba(255, 107, 53, 0.2)',
-    '0px 8px 16px rgba(255, 107, 53, 0.25)',
-    '0px 12px 24px rgba(255, 0, 110, 0.3)',
-    '0px 16px 32px rgba(255, 0, 110, 0.35)',
-    '0px 20px 40px rgba(255, 0, 110, 0.4)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
-    '0px 24px 48px rgba(255, 0, 110, 0.45)',
+    '0px 2px 8px rgba(153, 69, 255, 0.15)',
+    '0px 4px 12px rgba(153, 69, 255, 0.2)',
+    '0px 8px 16px rgba(153, 69, 255, 0.25)',
+    '0px 12px 24px rgba(20, 241, 149, 0.3)',
+    '0px 16px 32px rgba(20, 241, 149, 0.35)',
+    '0px 20px 40px rgba(20, 241, 149, 0.4)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
+    '0px 24px 48px rgba(243, 183, 36, 0.45)',
   ] as const,
   components: {
     MuiButton: {
@@ -123,7 +123,7 @@ const theme = createTheme({
           fontSize: '0.95rem',
           boxShadow: 'none',
           '&:hover': {
-            boxShadow: '0px 8px 24px rgba(255, 107, 53, 0.4)',
+            boxShadow: '0px 8px 24px rgba(153, 69, 255, 0.4)',
             transform: 'translateY(-2px)',
           },
           transition: 'all 0.3s ease-in-out',
@@ -133,15 +133,15 @@ const theme = createTheme({
           fontSize: '1rem',
         },
         containedPrimary: {
-          background: 'linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%)',
+          background: 'linear-gradient(135deg, #14F195 0%, #9945FF 100%)',
           '&:hover': {
-            background: 'linear-gradient(135deg, #ff8c5a 0%, #ff6b35 100%)',
+            background: 'linear-gradient(135deg, #9945FF 0%, #14F195 100%)',
           },
         },
         containedSecondary: {
-          background: 'linear-gradient(135deg, #ff006e 0%, #ff3d8f 100%)',
+          background: 'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
           '&:hover': {
-            background: 'linear-gradient(135deg, #ff3d8f 0%, #ff006e 100%)',
+            background: 'linear-gradient(135deg, #9945FF 0%, #F3B724 100%)',
           },
         },
       },
@@ -305,7 +305,7 @@ function App() {
               >
                 <Box
                   sx={{
-                    background: 'linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%)',
+                    background: 'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
                     color: 'white',
                     p: 2,
                     position: 'relative',
@@ -349,7 +349,7 @@ function App() {
               >
                 <Box
                   sx={{
-                    background: 'linear-gradient(135deg, #ff006e 0%, #ff3d8f 100%)',
+                    background: 'linear-gradient(135deg, #F3B724 0%, #9945FF 50%, #14F195 100%)',
                     color: 'white',
                     p: 2,
                     position: 'relative',
@@ -385,8 +385,9 @@ function App() {
                     label="Coming Soon"
                     sx={{
                       mb: 2,
-                      background: 'linear-gradient(135deg, #ff006e 0%, #8338ec 100%)',
+                      background: 'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
                       fontWeight: 600,
+                      color: 'white',
                     }}
                   />
                   <Typography
