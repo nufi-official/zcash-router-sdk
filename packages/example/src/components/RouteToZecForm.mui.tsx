@@ -1,5 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
-import { validateMnemonic } from 'bip39';
+import { useState, useCallback } from 'react';
 import {
   Box,
   TextField,
@@ -9,45 +8,11 @@ import {
   Typography,
 } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
-import {
-  routeToZcash,
-  type SwapStateChangeEvent,
-  type AccountFull,
-} from '@asset-route-sdk/core';
-import { createSolanaAccount } from '@asset-route-sdk/solana-hot-address-only';
-import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-hot-shielded-full';
+import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 import { SwapStatus } from './SwapStatus.mui';
-
-// Solana Icon Component
-const SolanaIcon = ({ size = 20 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 397.7 311.7" fill="currentColor">
-    <defs>
-      <linearGradient
-        id="solanaGradient"
-        x1="360.8791"
-        y1="351.4553"
-        x2="141.213"
-        y2="-69.2936"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop offset="0" style={{ stopColor: '#00FFA3' }} />
-        <stop offset="1" style={{ stopColor: '#DC1FFF' }} />
-      </linearGradient>
-    </defs>
-    <path
-      d="M64.6,237.9c2.4-2.4,5.7-3.8,9.2-3.8h317.4c5.8,0,8.7,7,4.6,11.1l-62.7,62.7c-2.4,2.4-5.7,3.8-9.2,3.8H6.5c-5.8,0-8.7-7-4.6-11.1L64.6,237.9z"
-      fill="url(#solanaGradient)"
-    />
-    <path
-      d="M64.6,3.8C67.1,1.4,70.4,0,73.8,0h317.4c5.8,0,8.7,7,4.6,11.1l-62.7,62.7c-2.4,2.4-5.7,3.8-9.2,3.8H6.5c-5.8,0-8.7-7-4.6-11.1L64.6,3.8z"
-      fill="url(#solanaGradient)"
-    />
-    <path
-      d="M333.1,120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8,0-8.7,7-4.6,11.1l62.7,62.7c2.4,2.4,5.7,3.8,9.2,3.8h317.4c5.8,0,8.7-7,4.6-11.1L333.1,120.1z"
-      fill="url(#solanaGradient)"
-    />
-  </svg>
-);
+import { SolanaIcon } from './RouteToZecForm/SolanaIcon';
+import { CARVED_BOX_STYLES, SLIDE_DOWN_ANIMATION, AMOUNT_INPUT_STYLES } from './RouteToZecForm/constants';
+import { createMockSwapStates } from './RouteToZecForm/mockSwapStates';
 
 export function RouteToZecForm() {
   // Form state
@@ -68,26 +33,7 @@ export function RouteToZecForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const startMockProgress = useCallback(() => {
-    const mockStates: SwapStateChangeEvent[] = [
-      { status: 'DEPOSIT_SENT', txHash: '0x123...abc' },
-      {
-        status: 'KNOWN_DEPOSIT_TX',
-        statusResponse: { depositTxHash: '0x123...abc' } as any
-      },
-      {
-        status: 'PENDING_DEPOSIT',
-        statusResponse: { depositTxHash: '0x123...abc' } as any
-      },
-      {
-        status: 'PROCESSING',
-        statusResponse: {} as any
-      },
-      {
-        status: 'SUCCESS',
-        statusResponse: { zcashTxHash: '0xabc...123' } as any
-      },
-    ];
-
+    const mockStates = createMockSwapStates();
     let currentIndex = 0;
     setSwapStatus('processing');
     setCurrentState(mockStates[0]);
@@ -220,16 +166,7 @@ export function RouteToZecForm() {
       sx={{ width: '100%' }}
     >
       {/* Amount and Asset Selector Combined */}
-      <Box
-        sx={{
-          border: '1px solid rgba(0, 0, 0, 0.5)',
-          borderRadius: 3,
-          p: 3,
-          mb: 3,
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.8), inset 0 1px 2px rgba(0, 0, 0, 0.9)',
-        }}
-      >
+      <Box sx={{ ...CARVED_BOX_STYLES, p: 3, mb: 3 }}>
         <Typography
           variant="caption"
           sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
@@ -248,29 +185,7 @@ export function RouteToZecForm() {
             slotProps={{
               input: {
                 disableUnderline: true,
-                sx: {
-                  fontSize: '2.5rem',
-                  fontWeight: 500,
-                  color: 'white',
-                  '& input': {
-                    padding: 0,
-                  },
-                  '& input::placeholder': {
-                    color: 'rgba(255, 255, 255, 0.3)',
-                    opacity: 1,
-                  },
-                  '& input[type=number]': {
-                    MozAppearance: 'textfield',
-                  },
-                  '& input[type=number]::-webkit-outer-spin-button': {
-                    WebkitAppearance: 'none',
-                    margin: 0,
-                  },
-                  '& input[type=number]::-webkit-inner-spin-button': {
-                    WebkitAppearance: 'none',
-                    margin: 0,
-                  },
-                },
+                sx: AMOUNT_INPUT_STYLES,
               },
               htmlInput: {
                 step: '0.000000001',
@@ -436,24 +351,7 @@ export function RouteToZecForm() {
 
       {/* Status Display */}
       {swapStatus !== 'idle' && (
-        <Box
-          sx={{
-            mt: 3,
-            animation: 'slideDown 0.8s ease-out',
-            '@keyframes slideDown': {
-              '0%': {
-                opacity: 0,
-                transform: 'translateY(-20px)',
-                maxHeight: 0,
-              },
-              '100%': {
-                opacity: 1,
-                transform: 'translateY(0)',
-                maxHeight: '500px',
-              },
-            },
-          }}
-        >
+        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <SwapStatus
             status={swapStatus}
             currentState={currentState}
