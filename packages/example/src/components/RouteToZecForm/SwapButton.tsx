@@ -3,9 +3,10 @@ import { Send as SendIcon } from '@mui/icons-material';
 
 interface SwapButtonProps {
   isProcessing: boolean;
+  text?: string;
 }
 
-export function SwapButton({ isProcessing }: SwapButtonProps) {
+export function SwapButton({ isProcessing, text = 'Swap to Zcash' }: SwapButtonProps) {
   return (
     <Button
       type="submit"
@@ -16,7 +17,7 @@ export function SwapButton({ isProcessing }: SwapButtonProps) {
       startIcon={isProcessing ? <CircularProgress size={20} /> : <SendIcon />}
       sx={{ mt: 3, py: 1.5 }}
     >
-      {isProcessing ? 'Processing...' : 'Swap to Zcash'}
+      {isProcessing ? 'Processing...' : text}
     </Button>
   );
 }
