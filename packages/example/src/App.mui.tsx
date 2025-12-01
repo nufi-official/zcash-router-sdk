@@ -320,6 +320,8 @@ function App() {
                     p: 3,
                     position: 'relative',
                     borderRadius: '24px 24px 48px 48px',
+                    boxShadow: '0 0 32px rgba(20, 241, 149, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
+                    zIndex: 1,
                     '&::after': {
                       content: '""',
                       position: 'absolute',
@@ -375,6 +377,8 @@ function App() {
                     p: 3,
                     position: 'relative',
                     borderRadius: '24px 24px 48px 48px',
+                    boxShadow: '0 0 32px rgba(243, 183, 36, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
+                    zIndex: 1,
                     '&::after': {
                       content: '""',
                       position: 'absolute',
