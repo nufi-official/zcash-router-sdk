@@ -11,84 +11,42 @@ interface SwapTimelineProps {
 }
 
 export function SwapTimeline({ currentState, isFetchingQuote, hasQuote }: SwapTimelineProps) {
-  // If fetching quote (and don't have it yet), show "Getting Quote" as active
-  if (isFetchingQuote) {
-    return (
-      <Box sx={{ ...CARVED_BOX_STYLES, p: 3, mb: 3 }}>
-        <Stepper activeStep={0} alternativeLabel>
-          <Step>
-            <StepLabel
-              StepIconComponent={() => (
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <PendingIcon color="primary" sx={{ fontSize: 32 }} />
-                </Box>
-              )}
-            >
-              GETTING QUOTE
-            </StepLabel>
-          </Step>
-          {['PENDING DEPOSIT', 'KNOWN DEPOSIT TX', 'PROCESSING', 'SUCCESS'].map((label) => (
-            <Step key={label}>
-              <StepLabel
-                StepIconComponent={() => (
-                  <Box
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      borderRadius: '50%',
-                      border: '2px solid',
-                      borderColor: 'grey.400',
-                    }}
-                  />
-                )}
-              >
-                {label}
-              </StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+  // Build timeline steps
+  const buildTimeline = () => {
+    if (!currentState || isFetchingQuote) {
+      // Show all steps in pending state when fetching quote
+      return ['GETTING QUOTE', 'PENDING DEPOSIT', 'KNOWN DEPOSIT TX', 'PROCESSING', 'SUCCESS'];
+    }
 
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-          <Chip label="GETTING QUOTE" color="primary" size="small" />
-        </Box>
-      </Box>
-    );
-  }
-
-  // After we have quote and monitoring starts
-  if (!currentState) return null;
-
-  // Determine which timeline to show based on current state
-  const getTimeline = () => {
     // If we hit an end state, show only that end state
     if (SWAP_END_STATES.has(currentState.status)) {
-      return [currentState.status];
+      return ['GETTING QUOTE', currentState.status.replace(/_/g, ' ')];
     }
 
     // Otherwise show happy path with "Getting Quote" completed
-    return SWAP_HAPPY_PATH_TIMELINE;
+    const timeline = SWAP_HAPPY_PATH_TIMELINE;
+    return ['GETTING QUOTE', ...timeline.map((status) => status.replace(/_/g, ' '))];
   };
 
-  const timeline = getTimeline();
-  // Add "Getting Quote" as first completed step
-  const allSteps = ['GETTING QUOTE', ...timeline.map((status) => status.replace(/_/g, ' '))];
+  const allSteps = buildTimeline();
 
   const getActiveStep = () => {
+    // If fetching quote, "Getting Quote" is active (step 0)
+    if (isFetchingQuote) {
+      return 0;
+    }
+
+    if (!currentState) {
+      return 1; // Quote received, move to step 1 (Pending Deposit)
+    }
+
     // If it's an end state, show it as completed
     if (SWAP_END_STATES.has(currentState.status)) {
       return 2; // Getting Quote + end state, both completed
     }
 
     // Find the index of current status in happy path
-    const currentIndex = timeline.findIndex(
+    const currentIndex = SWAP_HAPPY_PATH_TIMELINE.findIndex(
       (step) => step === currentState.status
     );
 
@@ -99,6 +57,16 @@ export function SwapTimeline({ currentState, isFetchingQuote, hasQuote }: SwapTi
 
     // Add 1 to account for "Getting Quote" step being first and completed
     return currentIndex >= 0 ? currentIndex + 1 : 1;
+  };
+
+  const getCurrentStatusLabel = () => {
+    if (isFetchingQuote) {
+      return 'GETTING QUOTE';
+    }
+    if (currentState) {
+      return currentState.status.replace(/_/g, ' ');
+    }
+    return 'PENDING DEPOSIT';
   };
 
   return (
@@ -152,10 +120,10 @@ export function SwapTimeline({ currentState, isFetchingQuote, hasQuote }: SwapTi
       {/* Current Status Chip */}
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
         <Chip
-          label={currentState.status.replace(/_/g, ' ')}
+          label={getCurrentStatusLabel()}
           color={
-            currentState.status === 'SUCCESS' ? 'success' :
-            currentState.status === 'FAILED' || currentState.status === 'REFUNDED' ? 'error' :
+            currentState?.status === 'SUCCESS' ? 'success' :
+            currentState?.status === 'FAILED' || currentState?.status === 'REFUNDED' ? 'error' :
             'primary'
           }
           size="small"
