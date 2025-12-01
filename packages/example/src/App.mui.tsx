@@ -555,19 +555,6 @@ function App() {
           </Box>
         </Box>
 
-        {/* Footer - Bottom Center */}
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 20,
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}
-        >
-          <Typography variant="body2" color="text.secondary">
-            Built with React, Vite, TypeScript, and Material-UI
-          </Typography>
-        </Box>
       </Box>
     </ThemeProvider>
   );
