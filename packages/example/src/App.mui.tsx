@@ -206,10 +206,11 @@ function App() {
       <CssBaseline />
       <Box
         sx={{
-          minHeight: '100vh',
+          height: '100vh',
           bgcolor: 'background.default',
           p: 3,
           position: 'relative',
+          overflow: 'hidden',
         }}
       >
         {/* Development Notice - Top Left */}
@@ -291,7 +292,7 @@ function App() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            minHeight: '100vh',
+            height: '100%',
           }}
         >
           <Box sx={{ maxWidth: '1200px', width: '100%' }}>
@@ -318,9 +319,10 @@ function App() {
                 <Box
                   sx={{
                     position: 'absolute',
-                    top: 4,
-                    left: addressType === 'transparent' ? 4 : 'calc(50% + 2px)',
-                    width: 'calc(50% - 6px)',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    left: addressType === 'transparent' ? 4 : 'calc(50%)',
+                    width: 'calc(50% - 4px)',
                     height: 'calc(100% - 8px)',
                     background: 'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
                     boxShadow: '0 4px 16px rgba(243, 183, 36, 0.4)',
