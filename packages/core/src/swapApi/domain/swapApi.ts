@@ -57,10 +57,9 @@ export const checkStatusResponse = [
 export type CheckStatusResponse = (typeof checkStatusResponse)[number];
 
 // Happy path timeline - normal successful swap flow
-// KNOWN_DEPOSIT_TX is excluded because it's an optional intermediate state
-// that may or may not occur depending on chain detection
 export const SWAP_HAPPY_PATH_TIMELINE: readonly CheckStatusResponse[] = [
   'PENDING_DEPOSIT',
+  'KNOWN_DEPOSIT_TX', // Deposit detected on-chain
   'PROCESSING',
   'SUCCESS',
 ] as const;
