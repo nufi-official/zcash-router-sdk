@@ -1,4 +1,5 @@
 import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
+import { SWAP_HAPPY_PATH_TIMELINE, SWAP_END_STATES } from '@asset-route-sdk/core';
 import {
   Box,
   Typography,
@@ -31,25 +32,43 @@ export function SwapStatus({
     return null;
   }
 
-  const getActiveStep = () => {
-    if (!currentState) return 0;
+  // Determine which timeline to show based on current state
+  const getTimeline = () => {
+    if (!currentState) return SWAP_HAPPY_PATH_TIMELINE;
 
-    if (currentState.status === 'DEPOSIT_SENT') return 0;
-    if (currentState.status === 'KNOWN_DEPOSIT_TX' ||
-        currentState.status === 'PENDING_DEPOSIT' ||
-        currentState.status === 'INCOMPLETE_DEPOSIT') return 1;
-    if (currentState.status === 'PROCESSING') return 2;
-    if (currentState.status === 'SUCCESS') return 4; // Return 4 so all steps show as completed
+    // If we hit an end state, show only that end state
+    if (SWAP_END_STATES.has(currentState.status)) {
+      // For end states, show just the final status
+      return [currentState.status];
+    }
 
-    return 0;
+    // Otherwise show happy path
+    return SWAP_HAPPY_PATH_TIMELINE;
   };
 
-  const steps = [
-    'Deposit Sent',
-    'Deposit Confirmed',
-    'Processing Swap',
-    'Swap Complete',
-  ];
+  const timeline = getTimeline();
+  const steps = timeline.map((status) => status.replace(/_/g, ' '));
+
+  const getActiveStep = () => {
+    if (!currentState) return -1;
+
+    // If it's an end state, show it as completed
+    if (SWAP_END_STATES.has(currentState.status)) {
+      return 1; // Single step, completed
+    }
+
+    // Find the index of current status in happy path
+    const currentIndex = timeline.findIndex(
+      (step) => step === currentState.status
+    );
+
+    // If SUCCESS, return length to show all completed
+    if (currentState.status === 'SUCCESS') {
+      return timeline.length;
+    }
+
+    return currentIndex >= 0 ? currentIndex + 1 : 0;
+  };
 
   return (
     <Box
@@ -109,7 +128,7 @@ export function SwapStatus({
             })}
           </Stepper>
 
-          {getActiveStep() < 3 && (
+          {getActiveStep() < timeline.length && (
             <Box sx={{ mt: 3 }}>
               <LinearProgress />
             </Box>
