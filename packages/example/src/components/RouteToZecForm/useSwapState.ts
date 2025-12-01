@@ -1,0 +1,35 @@
+import { useState, useCallback } from 'react';
+import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
+import { createMockSwapStates } from './mockSwapStates';
+
+export function useSwapState() {
+  const [swapStatus, setSwapStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
+  const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
+  const [txHash, setTxHash] = useState<string>();
+  const [error, setError] = useState<string>();
+
+  const startMockProgress = useCallback(() => {
+    const mockStates = createMockSwapStates();
+    let currentIndex = 0;
+    setSwapStatus('processing');
+    setCurrentState(mockStates[0]);
+
+    setInterval(() => {
+      currentIndex++;
+      if (currentIndex < mockStates.length) {
+        setCurrentState(mockStates[currentIndex]);
+        if (mockStates[currentIndex].status === 'SUCCESS') {
+          setSwapStatus('success');
+        }
+      }
+    }, 3000);
+  }, []);
+
+  return {
+    swapStatus,
+    currentState,
+    txHash,
+    error,
+    startMockProgress,
+  };
+}
