@@ -7,7 +7,7 @@ export const CARVED_BOX_STYLES = {
 } as const;
 
 export const SLIDE_DOWN_ANIMATION = {
-  animation: 'slideDown 0.8s ease-out',
+  animation: 'slideDown 2s ease-out',
   '@keyframes slideDown': {
     '0%': {
       opacity: 0,
