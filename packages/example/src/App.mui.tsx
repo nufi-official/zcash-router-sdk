@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   CssBaseline,
@@ -198,6 +199,8 @@ const theme = createTheme({
 });
 
 function App() {
+  const [addressType, setAddressType] = useState<'transparent' | 'shielded'>('transparent');
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -291,13 +294,97 @@ function App() {
             minHeight: '100vh',
           }}
         >
-          {/* Swap Forms Grid - Centered */}
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            spacing={4}
-            alignItems="stretch"
-            sx={{ maxWidth: '1200px', width: '100%' }}
-          >
+          <Box sx={{ maxWidth: '1200px', width: '100%' }}>
+            {/* Zcash Address Type Selector */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                mb: 4,
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'inline-flex',
+                  border: '2px solid rgba(243, 183, 36, 0.3)',
+                  borderRadius: '32px',
+                  p: 0.5,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  backdropFilter: 'blur(10px)',
+                  position: 'relative',
+                }}
+              >
+                {/* Sliding background */}
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 4,
+                    left: addressType === 'transparent' ? 4 : 'calc(50% + 2px)',
+                    width: 'calc(50% - 6px)',
+                    height: 'calc(100% - 8px)',
+                    background: 'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
+                    boxShadow: '0 4px 16px rgba(243, 183, 36, 0.4)',
+                    borderRadius: '28px',
+                    transition: 'left 0.3s ease',
+                    pointerEvents: 'none',
+                  }}
+                />
+
+                {/* Transparent option */}
+                <Box
+                  onClick={() => setAddressType('transparent')}
+                  sx={{
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: '28px',
+                    cursor: 'pointer',
+                    transition: 'color 0.3s ease',
+                    color: addressType === 'transparent' ? 'white' : 'rgba(243, 183, 36, 0.8)',
+                    fontWeight: 600,
+                    minWidth: '140px',
+                    textAlign: 'center',
+                    position: 'relative',
+                    zIndex: 1,
+                    '&:hover': {
+                      color: addressType === 'transparent' ? 'white' : '#F3B724',
+                    },
+                  }}
+                >
+                  Transparent
+                </Box>
+
+                {/* Shielded option */}
+                <Box
+                  onClick={() => setAddressType('shielded')}
+                  sx={{
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: '28px',
+                    cursor: 'pointer',
+                    transition: 'color 0.3s ease',
+                    color: addressType === 'shielded' ? 'white' : 'rgba(243, 183, 36, 0.8)',
+                    fontWeight: 600,
+                    minWidth: '140px',
+                    textAlign: 'center',
+                    position: 'relative',
+                    zIndex: 1,
+                    '&:hover': {
+                      color: addressType === 'shielded' ? 'white' : '#F3B724',
+                    },
+                  }}
+                >
+                  Shielded
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Swap Forms Grid - Centered */}
+            <Stack
+              direction={{ xs: 'column', md: 'row' }}
+              spacing={4}
+              alignItems="stretch"
+              sx={{ width: '100%' }}
+            >
             {/* Route to Zcash */}
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Paper
@@ -438,6 +525,7 @@ function App() {
               </Paper>
             </Box>
           </Stack>
+          </Box>
         </Box>
 
         {/* Footer - Bottom Center */}
