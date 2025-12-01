@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { SwapStatus } from './SwapStatus.mui';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
@@ -19,7 +19,7 @@ const PLACEHOLDER_ZEC_ADDRESS = 't1gQn3cVQDM5Cnez96dAAZfKZydJDKq73cX';
 export function RouteToZecForm() {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
-  const [swapStatus, setSwapStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
+  const [swapStatus, setSwapStatus] = useState<'idle' | 'fetching-quote' | 'monitoring' | 'success' | 'error'>('idle');
   const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
   const [swapError, setSwapError] = useState<string>();
   const shouldAutoStartRef = useRef(false);
@@ -39,16 +39,12 @@ export function RouteToZecForm() {
 
   // Auto-start monitoring when quote is received
   useEffect(() => {
-    if (quote && shouldAutoStartRef.current && swapStatus === 'idle') {
-      console.log('[RouteToZecForm] Auto-starting monitoring...');
+    if (quote && shouldAutoStartRef.current && swapStatus === 'fetching-quote') {
+      console.log('[RouteToZecForm] Quote received, auto-starting monitoring...');
       shouldAutoStartRef.current = false; // Reset flag
 
-      // Give user 2 seconds to see the deposit address
-      const timer = setTimeout(() => {
-        handleStartMonitoring();
-      }, 2000);
-
-      return () => clearTimeout(timer);
+      // Start monitoring immediately after quote
+      handleStartMonitoring();
     }
   }, [quote, swapStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -60,7 +56,7 @@ export function RouteToZecForm() {
 
     try {
       console.log('[RouteToZecForm] Starting swap monitoring...');
-      setSwapStatus('processing');
+      setSwapStatus('monitoring');
       setSwapError(undefined);
 
       await startSwapExecution({
@@ -101,6 +97,10 @@ export function RouteToZecForm() {
     }
 
     try {
+      // Set status to fetching-quote to show processing UI
+      setSwapStatus('fetching-quote');
+      setSwapError(undefined);
+
       // For now, we need to get the assets to get their assetIds
       // In a real app, you'd cache this or get it from the token price hook
       const { getSwapApiAssets } = await import('@asset-route-sdk/core');
@@ -111,6 +111,7 @@ export function RouteToZecForm() {
 
       if (!sourceAsset || !destinationAsset) {
         alert('Asset not found');
+        setSwapStatus('idle');
         return;
       }
 
@@ -136,6 +137,7 @@ export function RouteToZecForm() {
       shouldAutoStartRef.current = true;
     } catch (err) {
       console.error('[RouteToZecForm] Failed to get quote:', err);
+      setSwapStatus('idle');
       alert(`Failed to get quote: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
@@ -161,28 +163,31 @@ export function RouteToZecForm() {
 
       {/* Submit Button */}
       <SwapButton
-        isProcessing={quoteLoading || swapStatus === 'processing'}
-        text={quote ? 'Get New Quote' : 'Get Quote'}
+        isProcessing={quoteLoading || swapStatus === 'fetching-quote'}
+        text={quote && swapStatus === 'idle' ? 'Get New Quote' : 'Get Quote'}
       />
 
-      {/* Quote Display - Hide once monitoring starts */}
-      {quote && !quoteError && swapStatus === 'idle' && (
+      {/* Show processing state while fetching quote */}
+      {swapStatus === 'fetching-quote' && !quote && (
+        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
+          <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
+            Fetching quote...
+          </Typography>
+        </Box>
+      )}
+
+      {/* Quote Display - Show during PENDING_DEPOSIT or PROCESSING */}
+      {quote && !quoteError && (
+        currentState?.status === 'PENDING_DEPOSIT' ||
+        currentState?.status === 'PROCESSING' ||
+        currentState?.status === 'KNOWN_DEPOSIT_TX'
+      ) && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <QuoteDisplay
             quote={quote}
             sourceSymbol={asset}
             destinationSymbol="ZEC"
           />
-          <Button
-            variant="contained"
-            color="success"
-            fullWidth
-            size="large"
-            onClick={handleStartMonitoring}
-            sx={{ mt: 2 }}
-          >
-            Start Monitoring Swap
-          </Button>
         </Box>
       )}
 
@@ -196,16 +201,17 @@ export function RouteToZecForm() {
       )}
 
       {/* Status Display - Show when monitoring is active */}
-      {swapStatus !== 'idle' && (
+      {swapStatus === 'monitoring' || swapStatus === 'success' || swapStatus === 'error' ? (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <SwapStatus
             status={swapStatus}
             currentState={currentState}
             txHash={currentState && 'txHash' in currentState ? currentState.txHash : undefined}
             error={swapError}
+            swapExplorerUrl={quote?.quote.depositAddress ? `https://swap-explorer.example.com/${quote.quote.depositAddress}` : undefined}
           />
         </Box>
-      )}
+      ) : null}
     </Box>
   );
 }
