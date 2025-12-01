@@ -1,8 +1,34 @@
-import { Box, Stepper, Step, StepLabel, Chip } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { Box, Stepper, Step, StepLabel, Chip, keyframes } from '@mui/material';
 import { CheckCircle as CheckIcon, Pending as PendingIcon } from '@mui/icons-material';
 import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 import { SWAP_HAPPY_PATH_TIMELINE, SWAP_END_STATES } from '@asset-route-sdk/core';
 import { CARVED_BOX_STYLES } from './constants';
+
+// Glow animations
+const greenGlow = keyframes`
+  0% {
+    filter: drop-shadow(0 0 0px rgba(76, 175, 80, 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(76, 175, 80, 0.9));
+  }
+  100% {
+    filter: drop-shadow(0 0 0px rgba(76, 175, 80, 0));
+  }
+`;
+
+const purpleGlow = keyframes`
+  0% {
+    filter: drop-shadow(0 0 0px rgba(156, 39, 176, 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(156, 39, 176, 0.9));
+  }
+  100% {
+    filter: drop-shadow(0 0 0px rgba(156, 39, 176, 0));
+  }
+`;
 
 interface SwapTimelineProps {
   currentState?: SwapStateChangeEvent;
@@ -10,7 +36,10 @@ interface SwapTimelineProps {
   hasQuote?: boolean;
 }
 
-export function SwapTimeline({ currentState, isFetchingQuote, hasQuote }: SwapTimelineProps) {
+export function SwapTimeline({ currentState, isFetchingQuote }: SwapTimelineProps) {
+  const previousActiveStepRef = useRef<number>(-1);
+  const [animatingSteps, setAnimatingSteps] = useState<Map<number, 'active' | 'completed'>>(new Map());
+
   // Build timeline steps
   const buildTimeline = () => {
     if (!currentState || isFetchingQuote) {
@@ -69,13 +98,49 @@ export function SwapTimeline({ currentState, isFetchingQuote, hasQuote }: SwapTi
     return 'PENDING DEPOSIT';
   };
 
+  const activeStepIndex = getActiveStep();
+
+  // Track when active step changes to trigger animations
+  useEffect(() => {
+    const previous = previousActiveStepRef.current;
+
+    if (previous !== activeStepIndex && activeStepIndex >= 0) {
+      const newAnimatingSteps = new Map<number, 'active' | 'completed'>();
+
+      // Animate previous step as completed (green glow)
+      if (previous >= 0 && previous < activeStepIndex) {
+        newAnimatingSteps.set(previous, 'completed');
+      }
+
+      // Animate new active step (purple glow)
+      newAnimatingSteps.set(activeStepIndex, 'active');
+
+      setAnimatingSteps(newAnimatingSteps);
+
+      // Clear animations after 500ms (animation duration)
+      const timer = setTimeout(() => {
+        setAnimatingSteps(new Map());
+      }, 500);
+
+      previousActiveStepRef.current = activeStepIndex;
+
+      return () => clearTimeout(timer);
+    }
+  }, [activeStepIndex]);
+
+  const shouldAnimateStep = (index: number) => {
+    return animatingSteps.get(index) || null;
+  };
+
   return (
     <Box sx={{ ...CARVED_BOX_STYLES, p: 3, mb: 3 }}>
-      <Stepper activeStep={getActiveStep()} alternativeLabel>
+      <Stepper activeStep={activeStepIndex} alternativeLabel>
         {allSteps.map((label, index) => {
           const stepStatus =
-            index < getActiveStep() ? 'completed' :
-            index === getActiveStep() ? 'active' : 'pending';
+            index < activeStepIndex ? 'completed' :
+            index === activeStepIndex ? 'active' : 'pending';
+
+          const animationType = shouldAnimateStep(index);
 
           return (
             <Step key={label}>
@@ -88,6 +153,11 @@ export function SwapTimeline({ currentState, isFetchingQuote, hasQuote }: SwapTi
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      animation: animationType === 'completed'
+                        ? `${greenGlow} 0.5s ease-in-out`
+                        : animationType === 'active'
+                        ? `${purpleGlow} 0.5s ease-in-out`
+                        : 'none',
                     }}
                   >
                     {stepStatus === 'completed' && (
