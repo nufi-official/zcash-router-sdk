@@ -202,24 +202,26 @@ export function RouteToZecForm() {
             placeholder="0"
             variant="standard"
             error={!!errors['amount']}
-            InputProps={{
-              disableUnderline: true,
-              sx: {
-                fontSize: '2.5rem',
-                fontWeight: 500,
-                color: 'white',
-                '& input': {
-                  padding: 0,
-                },
-                '& input::placeholder': {
-                  color: 'rgba(255, 255, 255, 0.3)',
-                  opacity: 1,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+                sx: {
+                  fontSize: '2.5rem',
+                  fontWeight: 500,
+                  color: 'white',
+                  '& input': {
+                    padding: 0,
+                  },
+                  '& input::placeholder': {
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    opacity: 1,
+                  },
                 },
               },
-            }}
-            inputProps={{
-              step: '0.000000001',
-              min: '0',
+              htmlInput: {
+                step: '0.000000001',
+                min: '0',
+              },
             }}
           />
           <TextField
@@ -285,15 +287,15 @@ export function RouteToZecForm() {
                   </Box>
                 ),
                 sx: {
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  backgroundColor: 'transparent',
                   borderRadius: 3,
                   px: 3,
                   py: 1.5,
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   '&:focus': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   },
                   '& .MuiSelect-select': {
                     display: 'flex',
