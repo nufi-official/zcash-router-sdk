@@ -42,8 +42,8 @@ const IconComponent = (props: any) => (
       right: -12,
       top: '50%',
       pointerEvents: 'none',
-      'margin-right': '14px',
-      'margin-top': '-5px',
+      marginRight: '14px',
+      marginTop: '-5px',
     }}
   >
     ▼

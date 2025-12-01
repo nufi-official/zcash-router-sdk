@@ -5,8 +5,8 @@ import { createMockSwapStates } from './mockSwapStates';
 export function useSwapState() {
   const [swapStatus, setSwapStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
   const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
-  const [txHash, setTxHash] = useState<string>();
-  const [error, setError] = useState<string>();
+  const [txHash] = useState<string>();
+  const [error] = useState<string>();
 
   const startMockProgress = useCallback(() => {
     const mockStates = createMockSwapStates();
@@ -18,7 +18,7 @@ export function useSwapState() {
       currentIndex++;
       if (currentIndex < mockStates.length) {
         setCurrentState(mockStates[currentIndex]);
-        if (mockStates[currentIndex].status === 'SUCCESS') {
+        if (mockStates[currentIndex]?.status === 'SUCCESS') {
           setSwapStatus('success');
         }
       }
