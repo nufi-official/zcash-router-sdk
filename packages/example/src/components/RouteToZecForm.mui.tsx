@@ -179,11 +179,12 @@ export function RouteToZecForm() {
       {/* Amount and Asset Selector Combined */}
       <Box
         sx={{
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(0, 0, 0, 0.5)',
           borderRadius: 3,
           p: 3,
           mb: 3,
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.8), inset 0 1px 2px rgba(0, 0, 0, 0.9)',
         }}
       >
         <Typography
