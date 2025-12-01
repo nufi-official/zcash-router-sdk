@@ -9,6 +9,7 @@ import {
   Alert,
   Chip,
   LinearProgress,
+  Link,
 } from '@mui/material';
 import {
   CheckCircle as CheckIcon,
@@ -16,10 +17,11 @@ import {
 } from '@mui/icons-material';
 
 interface SwapStatusProps {
-  status: 'idle' | 'processing' | 'success' | 'error';
+  status: 'idle' | 'fetching-quote' | 'monitoring' | 'success' | 'error';
   currentState?: SwapStateChangeEvent;
   txHash?: string;
   error?: string;
+  swapExplorerUrl?: string;
 }
 
 export function SwapStatus({
@@ -27,8 +29,9 @@ export function SwapStatus({
   currentState,
   txHash,
   error,
+  swapExplorerUrl,
 }: SwapStatusProps) {
-  if (status === 'idle') {
+  if (status === 'idle' || status === 'fetching-quote') {
     return null;
   }
 
@@ -67,7 +70,8 @@ export function SwapStatus({
       return timeline.length;
     }
 
-    return currentIndex >= 0 ? currentIndex + 1 : 0;
+    // Return the current index (not +1) so the current step is active (purple)
+    return currentIndex >= 0 ? currentIndex : 0;
   };
 
   return (
@@ -80,7 +84,7 @@ export function SwapStatus({
         boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.8), inset 0 1px 2px rgba(0, 0, 0, 0.9)',
       }}
     >
-      {(status === 'processing' || status === 'success') && currentState && (
+      {(status === 'monitoring' || status === 'success') && currentState && (
         <Box>
           <Stepper activeStep={getActiveStep()} alternativeLabel>
             {steps.map((label, index) => {
@@ -147,12 +151,45 @@ export function SwapStatus({
             />
           </Box>
 
+          {/* Swap Explorer Link - Show during PROCESSING */}
+          {currentState.status === 'PROCESSING' && (
+            <Box sx={{ mt: 2 }}>
+              <Link
+                href={swapExplorerUrl || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+              >
+                <Typography variant="body2">
+                  View swap details →
+                </Typography>
+              </Link>
+            </Box>
+          )}
+
           {status === 'success' && (
-            <Alert severity="success" sx={{ mt: 2 }}>
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                Swap completed successfully!
-              </Typography>
-            </Alert>
+            <Box>
+              <Alert severity="success" sx={{ mt: 2 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  Swap completed successfully!
+                </Typography>
+              </Alert>
+              {/* Transaction Explorer Link - Show on SUCCESS */}
+              {txHash && (
+                <Box sx={{ mt: 2 }}>
+                  <Link
+                    href={txHash || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                  >
+                    <Typography variant="body2">
+                      View transaction →
+                    </Typography>
+                  </Link>
+                </Box>
+              )}
+            </Box>
           )}
         </Box>
       )}
@@ -163,26 +200,6 @@ export function SwapStatus({
             Error: {error}
           </Typography>
         </Alert>
-      )}
-
-      {txHash && (
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Transaction Hash:
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              fontFamily: 'monospace',
-              wordBreak: 'break-all',
-              bgcolor: 'grey.100',
-              p: 1,
-              borderRadius: 1,
-            }}
-          >
-            {txHash}
-          </Typography>
-        </Box>
       )}
     </Box>
   );
