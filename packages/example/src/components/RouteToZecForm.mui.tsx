@@ -179,8 +179,7 @@ export function RouteToZecForm() {
       {/* Timeline - Show as separate bubble above deposit address */}
       {currentState && (
         currentState.status === 'PENDING_DEPOSIT' ||
-        currentState.status === 'PROCESSING' ||
-        currentState.status === 'KNOWN_DEPOSIT_TX'
+        currentState.status === 'PROCESSING'
       ) && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <SwapTimeline currentState={currentState} />
@@ -190,8 +189,7 @@ export function RouteToZecForm() {
       {/* Quote Display - Show during PENDING_DEPOSIT or PROCESSING */}
       {quote && !quoteError && (
         currentState?.status === 'PENDING_DEPOSIT' ||
-        currentState?.status === 'PROCESSING' ||
-        currentState?.status === 'KNOWN_DEPOSIT_TX'
+        currentState?.status === 'PROCESSING'
       ) && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <QuoteDisplay
