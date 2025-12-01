@@ -8,7 +8,7 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
-import { Send as SendIcon } from '@mui/icons-material';
+import { Send as SendIcon, Brightness1 } from '@mui/icons-material';
 import {
   routeToZcash,
   type SwapStateChangeEvent,
@@ -17,6 +17,37 @@ import {
 import { createSolanaAccount } from '@asset-route-sdk/solana-hot-address-only';
 import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-hot-shielded-full';
 import { SwapStatus } from './SwapStatus.mui';
+
+// Solana Icon Component
+const SolanaIcon = ({ size = 20 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 397.7 311.7" fill="currentColor">
+    <defs>
+      <linearGradient
+        id="solanaGradient"
+        x1="360.8791"
+        y1="351.4553"
+        x2="141.213"
+        y2="-69.2936"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop offset="0" style={{ stopColor: '#00FFA3' }} />
+        <stop offset="1" style={{ stopColor: '#DC1FFF' }} />
+      </linearGradient>
+    </defs>
+    <path
+      d="M64.6,237.9c2.4-2.4,5.7-3.8,9.2-3.8h317.4c5.8,0,8.7,7,4.6,11.1l-62.7,62.7c-2.4,2.4-5.7,3.8-9.2,3.8H6.5c-5.8,0-8.7-7-4.6-11.1L64.6,237.9z"
+      fill="url(#solanaGradient)"
+    />
+    <path
+      d="M64.6,3.8C67.1,1.4,70.4,0,73.8,0h317.4c5.8,0,8.7,7,4.6,11.1l-62.7,62.7c-2.4,2.4-5.7,3.8-9.2,3.8H6.5c-5.8,0-8.7-7-4.6-11.1L64.6,3.8z"
+      fill="url(#solanaGradient)"
+    />
+    <path
+      d="M333.1,120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8,0-8.7,7-4.6,11.1l62.7,62.7c2.4,2.4,5.7,3.8,9.2,3.8h317.4c5.8,0,8.7-7,4.6-11.1L333.1,120.1z"
+      fill="url(#solanaGradient)"
+    />
+  </svg>
+);
 
 export function RouteToZecForm() {
   // Form state
@@ -191,30 +222,127 @@ export function RouteToZecForm() {
             }}
           />
           <TextField
+            sx={{
+              minWidth: 140,
+            }}
             select
             value={asset}
             onChange={(e) => setAsset(e.target.value)}
             variant="standard"
-            InputProps={{
-              disableUnderline: true,
-              sx: {
-                fontSize: '1rem',
-                fontWeight: 600,
-                color: 'white',
-                minWidth: 100,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+                sx: {
+                  fontSize: '1.25rem',
+                  fontWeight: 600,
+                  color: 'white',
+                  minWidth: 160,
+                },
+              },
+              select: {
+                renderValue: (value: unknown) => {
+                  const val = value as string;
+                  return (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1.5,
+                        fontSize: '1.25rem',
+                        fontWeight: 600,
+                        fontFamily:
+                          '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                      }}
+                    >
+                      {val === 'SOL' && <SolanaIcon size={28} />}
+                      {val}
+                    </Box>
+                  );
+                },
+                IconComponent: (props) => (
+                  <Box
+                    {...props}
+                    sx={{
+                      color: '#F3B724',
+                      transition: 'transform 0.2s ease',
+                      transform: props.className?.includes('MuiSelect-iconOpen')
+                        ? 'rotate(180deg)'
+                        : 'rotate(0)',
+                      fontSize: '0.875rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      position: 'absolute',
+                      right: -12,
+                      top: '50%',
+                      pointerEvents: 'none',
+                      'margin-right': '14px',
+                      'margin-top': '-5px',
+                    }}
+                  >
+                    ▼
+                  </Box>
+                ),
+                sx: {
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  borderRadius: 3,
+                  px: 3,
+                  py: 1.5,
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  '&:focus': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  },
+                  '& .MuiSelect-select': {
+                    display: 'flex',
+                    alignItems: 'center',
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                  },
+                },
               },
             }}
             SelectProps={{
-              sx: {
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                borderRadius: 2,
-                px: 2,
-                py: 1,
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+              MenuProps: {
+                PaperProps: {
+                  sx: {
+                    backgroundColor: 'rgba(10, 10, 10, 0.98)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderTop: 'none',
+                    borderRadius: '0 0 24px 24px',
+                    marginTop: '-8px',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+                    '& .MuiList-root': {
+                      paddingTop: 0,
+                    },
+                  },
+                },
               },
             }}
           >
-            <MenuItem value="SOL">SOL</MenuItem>
+            <MenuItem
+              value="SOL"
+              sx={{
+                fontSize: '1.25rem',
+                py: 1.5,
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                },
+                '&.Mui-selected': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                  },
+                },
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <SolanaIcon size={28} />
+                SOL
+              </Box>
+            </MenuItem>
           </TextField>
         </Box>
         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
