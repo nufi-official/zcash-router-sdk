@@ -1,14 +1,15 @@
-import { useState, useMemo } from 'react';
-import { Box, Typography } from '@mui/material';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { Box, Typography, Button } from '@mui/material';
 import { SwapStatus } from './SwapStatus.mui';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
 import { QuoteDisplay } from './RouteToZecForm/QuoteDisplay';
-import { useSwapState } from './RouteToZecForm/useSwapState';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
 import { useSwapQuote } from './RouteToZecForm/useSwapQuote';
+import { useSwapExecution } from './RouteToZecForm/useSwapExecution';
 import { CARVED_BOX_STYLES, SLIDE_DOWN_ANIMATION } from './RouteToZecForm/constants';
+import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 
 // Temporary placeholder addresses - replace with real wallet integration
 const PLACEHOLDER_SOL_ADDRESS = 'So11111111111111111111111111111111111111112';
@@ -18,10 +19,14 @@ const PLACEHOLDER_ZEC_ADDRESS = 't1gQn3cVQDM5Cnez96dAAZfKZydJDKq73cX';
 export function RouteToZecForm() {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
+  const [swapStatus, setSwapStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
+  const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
+  const [swapError, setSwapError] = useState<string>();
+  const shouldAutoStartRef = useRef(false);
 
-  const { swapStatus, currentState, txHash, error } = useSwapState();
   const { price, loading: priceLoading } = useTokenPrice(asset);
   const { quote, loading: quoteLoading, error: quoteError, fetchQuote } = useSwapQuote();
+  const { startSwapExecution } = useSwapExecution();
 
   const usdValue = useMemo(() => {
     const numAmount = parseFloat(amount);
@@ -31,6 +36,54 @@ export function RouteToZecForm() {
     const value = numAmount * price;
     return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }, [amount, price]);
+
+  // Auto-start monitoring when quote is received
+  useEffect(() => {
+    if (quote && shouldAutoStartRef.current && swapStatus === 'idle') {
+      console.log('[RouteToZecForm] Auto-starting monitoring...');
+      shouldAutoStartRef.current = false; // Reset flag
+
+      // Give user 2 seconds to see the deposit address
+      const timer = setTimeout(() => {
+        handleStartMonitoring();
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [quote, swapStatus]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleStartMonitoring = useCallback(async () => {
+    if (!quote?.quote.depositAddress) {
+      alert('No deposit address available');
+      return;
+    }
+
+    try {
+      console.log('[RouteToZecForm] Starting swap monitoring...');
+      setSwapStatus('processing');
+      setSwapError(undefined);
+
+      await startSwapExecution({
+        depositAddress: quote.quote.depositAddress,
+        onStatusChange: (event) => {
+          console.log('[RouteToZecForm] Status update:', event);
+          setCurrentState(event);
+
+          // Update swap status based on event
+          if (event.status === 'SUCCESS') {
+            setSwapStatus('success');
+          } else if (event.status === 'FAILED' || event.status === 'REFUNDED') {
+            setSwapStatus('error');
+            setSwapError(`Swap ${event.status.toLowerCase()}`);
+          }
+        },
+      });
+    } catch (err) {
+      console.error('[RouteToZecForm] Swap monitoring failed:', err);
+      setSwapStatus('error');
+      setSwapError(err instanceof Error ? err.message : 'Swap monitoring failed');
+    }
+  }, [quote, startSwapExecution]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,8 +132,8 @@ export function RouteToZecForm() {
         recipientAddress: PLACEHOLDER_ZEC_ADDRESS,
       });
 
-      // Uncomment to test mock progress
-      // startMockProgress();
+      // Set flag to auto-start monitoring when quote is received
+      shouldAutoStartRef.current = true;
     } catch (err) {
       console.error('[RouteToZecForm] Failed to get quote:', err);
       alert(`Failed to get quote: ${err instanceof Error ? err.message : 'Unknown error'}`);
@@ -112,14 +165,24 @@ export function RouteToZecForm() {
         text={quote ? 'Get New Quote' : 'Get Quote'}
       />
 
-      {/* Quote Display */}
-      {quote && !quoteError && (
+      {/* Quote Display - Hide once monitoring starts */}
+      {quote && !quoteError && swapStatus === 'idle' && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <QuoteDisplay
             quote={quote}
             sourceSymbol={asset}
             destinationSymbol="ZEC"
           />
+          <Button
+            variant="contained"
+            color="success"
+            fullWidth
+            size="large"
+            onClick={handleStartMonitoring}
+            sx={{ mt: 2 }}
+          >
+            Start Monitoring Swap
+          </Button>
         </Box>
       )}
 
@@ -132,14 +195,14 @@ export function RouteToZecForm() {
         </Box>
       )}
 
-      {/* Status Display */}
+      {/* Status Display - Show when monitoring is active */}
       {swapStatus !== 'idle' && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <SwapStatus
             status={swapStatus}
             currentState={currentState}
-            txHash={txHash}
-            error={error}
+            txHash={currentState && 'txHash' in currentState ? currentState.txHash : undefined}
+            error={swapError}
           />
         </Box>
       )}
