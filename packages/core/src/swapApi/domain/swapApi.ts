@@ -44,15 +44,32 @@ export type CheckStatusParams = {
   initialDelay: number;
   onStatusChange?: (event: SwapStateChangeEvent) => void;
 };
+export const checkStatusResponse = [
+  'KNOWN_DEPOSIT_TX',
+  'PENDING_DEPOSIT',
+  'INCOMPLETE_DEPOSIT',
+  'PROCESSING',
+  'SUCCESS',
+  'REFUNDED',
+  'FAILED',
+] as const;
 
-export type CheckStatusResponse =
-  | 'KNOWN_DEPOSIT_TX'
-  | 'PENDING_DEPOSIT'
-  | 'INCOMPLETE_DEPOSIT'
-  | 'PROCESSING'
-  | 'SUCCESS'
-  | 'REFUNDED'
-  | 'FAILED';
+export type CheckStatusResponse = (typeof checkStatusResponse)[number];
+
+// Happy path timeline - normal successful swap flow
+export const SWAP_HAPPY_PATH_TIMELINE: readonly CheckStatusResponse[] = [
+  'KNOWN_DEPOSIT_TX',
+  'PENDING_DEPOSIT',
+  'PROCESSING',
+  'SUCCESS',
+] as const;
+
+// End states that terminate the swap (no more progression)
+export const SWAP_END_STATES = new Set<CheckStatusResponse>([
+  'SUCCESS',
+  'FAILED',
+  'REFUNDED',
+]);
 
 export type SwapApi = {
   getTokens: () => Promise<SwapApiAsset[]>;
