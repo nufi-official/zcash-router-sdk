@@ -1,5 +1,6 @@
-import { Box, Typography, Divider, Alert } from '@mui/material';
-import { Info as InfoIcon } from '@mui/icons-material';
+import { useState } from 'react';
+import { Box, Typography, Divider, Alert, IconButton, Tooltip } from '@mui/material';
+import { Info as InfoIcon, ContentCopy as CopyIcon, Check as CheckIcon } from '@mui/icons-material';
 import type { SwapQuoteResponse } from '@asset-route-sdk/core';
 import { CARVED_BOX_STYLES } from './constants';
 
@@ -10,9 +11,23 @@ interface QuoteDisplayProps {
 }
 
 export function QuoteDisplay({ quote, sourceSymbol, destinationSymbol }: QuoteDisplayProps) {
+  const [copied, setCopied] = useState(false);
+
   if (!quote) return null;
 
   const depositAddress = quote.quote.depositAddress;
+
+  const handleCopy = async () => {
+    if (!depositAddress) return;
+
+    try {
+      await navigator.clipboard.writeText(depositAddress);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
 
   return (
     <Box sx={{ ...CARVED_BOX_STYLES, p: 3, mb: 3 }}>
@@ -27,16 +42,33 @@ export function QuoteDisplay({ quote, sourceSymbol, destinationSymbol }: QuoteDi
 
       {/* Deposit Address */}
       <Box sx={{ mb: 2 }}>
-        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
-          Deposit Address ({sourceSymbol})
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            Deposit Address ({sourceSymbol})
+          </Typography>
+          <Tooltip title={copied ? 'Copied!' : 'Copy address'}>
+            <IconButton
+              size="small"
+              onClick={handleCopy}
+              sx={{ color: copied ? 'success.main' : 'text.secondary' }}
+            >
+              {copied ? <CheckIcon fontSize="small" /> : <CopyIcon fontSize="small" />}
+            </IconButton>
+          </Tooltip>
+        </Box>
         <Box
           sx={{
             backgroundColor: 'rgba(0, 0, 0, 0.4)',
             p: 1.5,
             borderRadius: 2,
             border: '1px solid rgba(255, 255, 255, 0.1)',
+            cursor: 'pointer',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+            },
           }}
+          onClick={handleCopy}
         >
           <Typography
             variant="body2"
