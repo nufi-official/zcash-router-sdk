@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import {
   CheckCircle as CheckIcon,
-  Error as ErrorIcon,
   Pending as PendingIcon,
 } from '@mui/icons-material';
 
