@@ -439,7 +439,7 @@ export function RouteToZecForm() {
         <Box
           sx={{
             mt: 3,
-            animation: 'slideDown 0.5s ease-out',
+            animation: 'slideDown 0.8s ease-out',
             '@keyframes slideDown': {
               '0%': {
                 opacity: 0,
