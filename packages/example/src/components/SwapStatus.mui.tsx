@@ -1,7 +1,6 @@
 import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 import {
   Box,
-  Paper,
   Typography,
   Stepper,
   Step,
