@@ -167,32 +167,19 @@ export function RouteToZecForm() {
         text={quote && swapStatus === 'idle' ? 'Get New Quote' : 'Get Quote'}
       />
 
-      {/* Show processing state while fetching quote */}
-      {swapStatus === 'fetching-quote' && !quote && (
+      {/* Timeline - Show immediately after submit */}
+      {(swapStatus === 'fetching-quote' || swapStatus === 'monitoring' || swapStatus === 'success') && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
-          <Typography variant="body2" sx={{ textAlign: 'center', color: 'text.secondary' }}>
-            Fetching quote...
-          </Typography>
+          <SwapTimeline
+            currentState={currentState}
+            isFetchingQuote={swapStatus === 'fetching-quote' && !quote}
+            hasQuote={!!quote}
+          />
         </Box>
       )}
 
-      {/* Timeline - Show as separate bubble above deposit address */}
-      {currentState && (
-        currentState.status === 'PENDING_DEPOSIT' ||
-        currentState.status === 'KNOWN_DEPOSIT_TX' ||
-        currentState.status === 'PROCESSING'
-      ) && (
-        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
-          <SwapTimeline currentState={currentState} />
-        </Box>
-      )}
-
-      {/* Quote Display - Show during PENDING_DEPOSIT, KNOWN_DEPOSIT_TX, or PROCESSING */}
-      {quote && !quoteError && (
-        currentState?.status === 'PENDING_DEPOSIT' ||
-        currentState?.status === 'KNOWN_DEPOSIT_TX' ||
-        currentState?.status === 'PROCESSING'
-      ) && (
+      {/* Quote Display - Show once we have the quote (after Getting Quote step is complete) */}
+      {quote && !quoteError && swapStatus !== 'idle' && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <QuoteDisplay
             quote={quote}

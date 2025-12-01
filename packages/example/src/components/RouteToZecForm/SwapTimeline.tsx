@@ -5,32 +5,86 @@ import { SWAP_HAPPY_PATH_TIMELINE, SWAP_END_STATES } from '@asset-route-sdk/core
 import { CARVED_BOX_STYLES } from './constants';
 
 interface SwapTimelineProps {
-  currentState: SwapStateChangeEvent;
+  currentState?: SwapStateChangeEvent;
+  isFetchingQuote?: boolean;
+  hasQuote?: boolean;
 }
 
-export function SwapTimeline({ currentState }: SwapTimelineProps) {
+export function SwapTimeline({ currentState, isFetchingQuote, hasQuote }: SwapTimelineProps) {
+  // If fetching quote (and don't have it yet), show "Getting Quote" as active
+  if (isFetchingQuote) {
+    return (
+      <Box sx={{ ...CARVED_BOX_STYLES, p: 3, mb: 3 }}>
+        <Stepper activeStep={0} alternativeLabel>
+          <Step>
+            <StepLabel
+              StepIconComponent={() => (
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <PendingIcon color="primary" sx={{ fontSize: 32 }} />
+                </Box>
+              )}
+            >
+              GETTING QUOTE
+            </StepLabel>
+          </Step>
+          {['PENDING DEPOSIT', 'KNOWN DEPOSIT TX', 'PROCESSING', 'SUCCESS'].map((label) => (
+            <Step key={label}>
+              <StepLabel
+                StepIconComponent={() => (
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: '50%',
+                      border: '2px solid',
+                      borderColor: 'grey.400',
+                    }}
+                  />
+                )}
+              >
+                {label}
+              </StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+          <Chip label="GETTING QUOTE" color="primary" size="small" />
+        </Box>
+      </Box>
+    );
+  }
+
+  // After we have quote and monitoring starts
+  if (!currentState) return null;
+
   // Determine which timeline to show based on current state
   const getTimeline = () => {
-    if (!currentState) return SWAP_HAPPY_PATH_TIMELINE;
-
     // If we hit an end state, show only that end state
     if (SWAP_END_STATES.has(currentState.status)) {
       return [currentState.status];
     }
 
-    // Otherwise show happy path
+    // Otherwise show happy path with "Getting Quote" completed
     return SWAP_HAPPY_PATH_TIMELINE;
   };
 
   const timeline = getTimeline();
-  const steps = timeline.map((status) => status.replace(/_/g, ' '));
+  // Add "Getting Quote" as first completed step
+  const allSteps = ['GETTING QUOTE', ...timeline.map((status) => status.replace(/_/g, ' '))];
 
   const getActiveStep = () => {
-    if (!currentState) return -1;
-
     // If it's an end state, show it as completed
     if (SWAP_END_STATES.has(currentState.status)) {
-      return 1; // Single step, completed
+      return 2; // Getting Quote + end state, both completed
     }
 
     // Find the index of current status in happy path
@@ -40,17 +94,17 @@ export function SwapTimeline({ currentState }: SwapTimelineProps) {
 
     // If SUCCESS, return length to show all completed
     if (currentState.status === 'SUCCESS') {
-      return timeline.length;
+      return allSteps.length;
     }
 
-    // Return the current index (not +1) so the current step is active (purple)
-    return currentIndex >= 0 ? currentIndex : 0;
+    // Add 1 to account for "Getting Quote" step being first and completed
+    return currentIndex >= 0 ? currentIndex + 1 : 1;
   };
 
   return (
     <Box sx={{ ...CARVED_BOX_STYLES, p: 3, mb: 3 }}>
       <Stepper activeStep={getActiveStep()} alternativeLabel>
-        {steps.map((label, index) => {
+        {allSteps.map((label, index) => {
           const stepStatus =
             index < getActiveStep() ? 'completed' :
             index === getActiveStep() ? 'active' : 'pending';
