@@ -55,34 +55,57 @@ const theme = createTheme({
   },
   typography: {
     fontFamily:
-      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     h1: {
       fontWeight: 800,
-      letterSpacing: '-0.025em',
+      letterSpacing: '-0.04em',
+      fontSize: '3.5rem',
     },
     h2: {
       fontWeight: 700,
-      letterSpacing: '-0.025em',
+      letterSpacing: '-0.03em',
+      fontSize: '2.75rem',
     },
     h3: {
       fontWeight: 700,
-      letterSpacing: '-0.02em',
+      letterSpacing: '-0.025em',
+      fontSize: '2.25rem',
     },
     h4: {
       fontWeight: 700,
-      letterSpacing: '-0.015em',
+      letterSpacing: '-0.02em',
+      fontSize: '1.75rem',
     },
     h5: {
       fontWeight: 600,
-      letterSpacing: '-0.01em',
+      letterSpacing: '-0.015em',
+      fontSize: '1.5rem',
     },
     h6: {
-      fontWeight: 600,
+      fontWeight: 700,
       letterSpacing: '-0.01em',
+      fontSize: '1.25rem',
+    },
+    body1: {
+      fontSize: '1rem',
+      lineHeight: 1.6,
+      fontWeight: 400,
+    },
+    body2: {
+      fontSize: '0.875rem',
+      lineHeight: 1.5,
+      fontWeight: 400,
     },
     button: {
       fontWeight: 600,
       textTransform: 'none',
+      letterSpacing: '0.01em',
+      fontSize: '1rem',
+    },
+    caption: {
+      fontSize: '0.75rem',
+      lineHeight: 1.4,
+      fontWeight: 500,
       letterSpacing: '0.02em',
     },
   },
@@ -259,9 +282,11 @@ function App() {
                 input: {
                   disableUnderline: true,
                   sx: {
-                    fontFamily: 'monospace',
+                    fontFamily: '"JetBrains Mono", "Consolas", "Monaco", monospace',
                     fontSize: '0.875rem',
                     color: 'white',
+                    fontWeight: 400,
+                    lineHeight: 1.8,
                     '& textarea': {
                       padding: 0,
                     },

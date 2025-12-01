@@ -5,7 +5,6 @@ import {
   TextField,
   Button,
   MenuItem,
-  Alert,
   CircularProgress,
   Typography,
 } from '@mui/material';
@@ -21,8 +20,8 @@ import { SwapStatus } from './SwapStatus.mui';
 
 export function RouteToZecForm() {
   // Form state
-  const [solanaMnemonic, setSolanaMnemonic] = useState('');
-  const [zcashMnemonic, setZcashMnemonic] = useState('');
+  const [solanaMnemonic] = useState('');
+  const [zcashMnemonic] = useState('');
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
 
@@ -141,7 +140,11 @@ export function RouteToZecForm() {
   );
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+    <Box
+      component="form"
+      onSubmit={(e) => handleSubmit(e)}
+      sx={{ width: '100%' }}
+    >
       {/* Amount and Asset Selector Combined */}
       <Box
         sx={{
@@ -218,7 +221,10 @@ export function RouteToZecForm() {
           $0
         </Typography>
         {errors['amount'] && (
-          <Typography variant="caption" sx={{ color: 'error.main', mt: 1, display: 'block' }}>
+          <Typography
+            variant="caption"
+            sx={{ color: 'error.main', mt: 1, display: 'block' }}
+          >
             {errors['amount']}
           </Typography>
         )}
@@ -232,7 +238,11 @@ export function RouteToZecForm() {
         fullWidth
         disabled={swapStatus === 'processing'}
         startIcon={
-          swapStatus === 'processing' ? <CircularProgress size={20} /> : <SendIcon />
+          swapStatus === 'processing' ? (
+            <CircularProgress size={20} />
+          ) : (
+            <SendIcon />
+          )
         }
         sx={{ mt: 3, py: 1.5 }}
       >
