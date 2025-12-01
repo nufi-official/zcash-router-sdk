@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { validateMnemonic } from 'bip39';
 import {
   Box,
@@ -8,7 +8,7 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
-import { Send as SendIcon, Brightness1 } from '@mui/icons-material';
+import { Send as SendIcon } from '@mui/icons-material';
 import {
   routeToZcash,
   type SwapStateChangeEvent,
@@ -67,6 +67,42 @@ export function RouteToZecForm() {
   // Validation
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const startMockProgress = useCallback(() => {
+    const mockStates: SwapStateChangeEvent[] = [
+      { status: 'DEPOSIT_SENT', txHash: '0x123...abc' },
+      {
+        status: 'KNOWN_DEPOSIT_TX',
+        statusResponse: { depositTxHash: '0x123...abc' } as any
+      },
+      {
+        status: 'PENDING_DEPOSIT',
+        statusResponse: { depositTxHash: '0x123...abc' } as any
+      },
+      {
+        status: 'PROCESSING',
+        statusResponse: {} as any
+      },
+      {
+        status: 'SUCCESS',
+        statusResponse: { zcashTxHash: '0xabc...123' } as any
+      },
+    ];
+
+    let currentIndex = 0;
+    setSwapStatus('processing');
+    setCurrentState(mockStates[0]);
+
+    setInterval(() => {
+      currentIndex++;
+      if (currentIndex < mockStates.length) {
+        setCurrentState(mockStates[currentIndex]);
+        if (mockStates[currentIndex].status === 'SUCCESS') {
+          setSwapStatus('success');
+        }
+      }
+    }, 3000);
+  }, []);
+
   const validateForm = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -95,10 +131,16 @@ export function RouteToZecForm() {
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      if (!validateForm()) {
-        return;
-      }
+      // Skip validation for mock
+      // if (!validateForm()) {
+      //   return;
+      // }
 
+      // Start mock progress
+      startMockProgress();
+
+      // TODO: Uncomment below for real implementation
+      /*
       try {
         setSwapStatus('processing');
         setError(undefined);
@@ -166,8 +208,9 @@ export function RouteToZecForm() {
         setSwapStatus('error');
         setError(err instanceof Error ? err.message : 'Unknown error occurred');
       }
+      */
     },
-    [solanaMnemonic, zcashMnemonic, amount, validateForm]
+    [validateForm, startMockProgress]
   );
 
   return (
@@ -215,6 +258,17 @@ export function RouteToZecForm() {
                   '& input::placeholder': {
                     color: 'rgba(255, 255, 255, 0.3)',
                     opacity: 1,
+                  },
+                  '& input[type=number]': {
+                    MozAppearance: 'textfield',
+                  },
+                  '& input[type=number]::-webkit-outer-spin-button': {
+                    WebkitAppearance: 'none',
+                    margin: 0,
+                  },
+                  '& input[type=number]::-webkit-inner-spin-button': {
+                    WebkitAppearance: 'none',
+                    margin: 0,
                   },
                 },
               },
@@ -382,7 +436,24 @@ export function RouteToZecForm() {
 
       {/* Status Display */}
       {swapStatus !== 'idle' && (
-        <Box sx={{ mt: 3 }}>
+        <Box
+          sx={{
+            mt: 3,
+            animation: 'slideDown 0.5s ease-out',
+            '@keyframes slideDown': {
+              '0%': {
+                opacity: 0,
+                transform: 'translateY(-20px)',
+                maxHeight: 0,
+              },
+              '100%': {
+                opacity: 1,
+                transform: 'translateY(0)',
+                maxHeight: '500px',
+              },
+            },
+          }}
+        >
           <SwapStatus
             status={swapStatus}
             currentState={currentState}

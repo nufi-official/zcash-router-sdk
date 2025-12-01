@@ -40,7 +40,7 @@ export function SwapStatus({
         currentState.status === 'PENDING_DEPOSIT' ||
         currentState.status === 'INCOMPLETE_DEPOSIT') return 1;
     if (currentState.status === 'PROCESSING') return 2;
-    if (currentState.status === 'SUCCESS') return 3;
+    if (currentState.status === 'SUCCESS') return 4; // Return 4 so all steps show as completed
 
     return 0;
   };
@@ -53,13 +53,17 @@ export function SwapStatus({
   ];
 
   return (
-    <Paper elevation={2} sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-        Swap Progress
-      </Typography>
-
-      {status === 'processing' && currentState && (
-        <Box sx={{ mt: 2 }}>
+    <Box
+      sx={{
+        border: '1px solid rgba(0, 0, 0, 0.5)',
+        borderRadius: 3,
+        p: 3,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.8), inset 0 1px 2px rgba(0, 0, 0, 0.9)',
+      }}
+    >
+      {(status === 'processing' || status === 'success') && currentState && (
+        <Box>
           <Stepper activeStep={getActiveStep()} alternativeLabel>
             {steps.map((label, index) => {
               const stepStatus =
@@ -124,15 +128,15 @@ export function SwapStatus({
               size="small"
             />
           </Box>
-        </Box>
-      )}
 
-      {status === 'success' && (
-        <Alert severity="success" sx={{ mt: 2 }}>
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-            Swap completed successfully!
-          </Typography>
-        </Alert>
+          {status === 'success' && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                Swap completed successfully!
+              </Typography>
+            </Alert>
+          )}
+        </Box>
       )}
 
       {status === 'error' && error && (
@@ -162,6 +166,6 @@ export function SwapStatus({
           </Typography>
         </Box>
       )}
-    </Paper>
+    </Box>
   );
 }
