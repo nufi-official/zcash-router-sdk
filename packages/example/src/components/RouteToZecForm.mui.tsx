@@ -5,6 +5,7 @@ import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
 import { QuoteDisplay } from './RouteToZecForm/QuoteDisplay';
+import { SwapTimeline } from './RouteToZecForm/SwapTimeline';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
 import { useSwapQuote } from './RouteToZecForm/useSwapQuote';
 import { useSwapExecution } from './RouteToZecForm/useSwapExecution';
@@ -176,6 +177,17 @@ export function RouteToZecForm() {
         </Box>
       )}
 
+      {/* Timeline - Show as separate bubble above deposit address */}
+      {currentState && (
+        currentState.status === 'PENDING_DEPOSIT' ||
+        currentState.status === 'PROCESSING' ||
+        currentState.status === 'KNOWN_DEPOSIT_TX'
+      ) && (
+        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
+          <SwapTimeline currentState={currentState} />
+        </Box>
+      )}
+
       {/* Quote Display - Show during PENDING_DEPOSIT or PROCESSING */}
       {quote && !quoteError && (
         currentState?.status === 'PENDING_DEPOSIT' ||
@@ -200,18 +212,16 @@ export function RouteToZecForm() {
         </Box>
       )}
 
-      {/* Status Display - Show when monitoring is active */}
-      {swapStatus === 'monitoring' || swapStatus === 'success' || swapStatus === 'error' ? (
+      {/* Error Display - Show only on error */}
+      {swapStatus === 'error' && swapError && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
-          <SwapStatus
-            status={swapStatus}
-            currentState={currentState}
-            txHash={currentState && 'txHash' in currentState ? currentState.txHash : undefined}
-            error={swapError}
-            swapExplorerUrl={quote?.quote.depositAddress ? `https://swap-explorer.example.com/${quote.quote.depositAddress}` : undefined}
-          />
+          <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
+            <Typography color="error" variant="body2">
+              Error: {swapError}
+            </Typography>
+          </Box>
         </Box>
-      ) : null}
+      )}
     </Box>
   );
 }
