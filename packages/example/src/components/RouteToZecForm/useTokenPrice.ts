@@ -9,10 +9,14 @@ export function useTokenPrice(assetSymbol: string) {
 
   useEffect(() => {
     let mounted = true;
+    let isInitialFetch = true;
 
     const fetchPrice = async () => {
       try {
-        setLoading(true);
+        // Only show loading on initial fetch, not on periodic refetches
+        if (isInitialFetch) {
+          setLoading(true);
+        }
         setError(null);
         console.log('[useTokenPrice] Fetching assets...');
         const assets = await getSwapApiAssets();
@@ -36,9 +40,10 @@ export function useTokenPrice(assetSymbol: string) {
         setError(err instanceof Error ? err.message : 'Failed to fetch price');
         console.error('[useTokenPrice] Failed to fetch token price:', err);
       } finally {
-        if (mounted) {
+        if (mounted && isInitialFetch) {
           setLoading(false);
         }
+        isInitialFetch = false;
       }
     };
 
