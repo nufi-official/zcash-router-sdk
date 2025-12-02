@@ -65,12 +65,6 @@ importers:
       '@asset-route-sdk/zcash-core':
         specifier: workspace:*
         version: link:../zcash-core
-      '@asset-route-sdk/zcash-hot-shielded-full':
-        specifier: workspace:*
-        version: link:../zcash-hot-shielded-full
-      '@asset-route-sdk/zcash-hot-transparent-full':
-        specifier: workspace:*
-        version: link:../zcash-hot-transparent-full
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.27)(react@18.3.1)
