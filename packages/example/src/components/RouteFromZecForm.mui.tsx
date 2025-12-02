@@ -100,17 +100,33 @@ export function RouteFromZecForm({
       );
 
       // Get Zcash account (source)
+      console.log('[RouteFromZecForm] Creating Zcash account...');
       const zcashAccount = await getZcashAccount({
         addressType,
         mnemonic,
         lightwalletdUrl,
       });
 
+      if (!zcashAccount) {
+        throw new Error('Failed to create Zcash account - account is undefined');
+      }
+
+      console.log('[RouteFromZecForm] Zcash account created:', {
+        hasAccount: !!zcashAccount,
+        type: zcashAccount.type,
+        hasAssetToBaseUnits: typeof zcashAccount.assetToBaseUnits === 'function',
+        hasGetAddress: typeof zcashAccount.getAddress === 'function',
+        hasSendDeposit: typeof zcashAccount.sendDeposit === 'function',
+      });
+
+      const address = await zcashAccount.getAddress();
+      console.log('[RouteFromZecForm] Zcash address:', address);
+
       // Create destination AddressOnlyAccount for Solana
       const destinationAccount = {
         type: 'addressOnly' as const,
         asset: {
-          blockchain: 'solana' as const,
+          blockchain: 'sol' as const,
           tokenId: undefined,
         },
         getAddress: async () => destinationAddress.trim(),
@@ -119,6 +135,14 @@ export function RouteFromZecForm({
           return BigInt(Math.floor(parseFloat(amount) * 1_000_000_000));
         },
       };
+
+      console.log('[RouteFromZecForm] Starting swap:', {
+        amount: numAmount,
+        from: 'ZEC',
+        to: asset,
+        sourceAddress: await zcashAccount.getAddress(),
+        destinationAddress,
+      });
 
       // Execute the swap
       await routeFromZcash({

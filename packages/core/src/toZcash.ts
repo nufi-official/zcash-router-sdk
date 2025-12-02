@@ -30,8 +30,7 @@ export async function routeToZcash(params: {
 
   // destination asset is ZECo
   const zecSwapApiAsset = swapApiAssets.find(
-    (asset) =>
-      asset.blockchain === 'zcash' && asset.contractAddress === undefined
+    (asset) => asset.blockchain === 'zec' && asset.contractAddress === undefined
   );
 
   if (!zecSwapApiAsset) {

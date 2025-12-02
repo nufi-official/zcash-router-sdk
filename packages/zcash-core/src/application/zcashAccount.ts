@@ -4,7 +4,6 @@ import type { ZcashAccountStoredData } from '../domain/accountManager';
 import { ZCashAccountManager } from '../domain/accountManager';
 import type { ZCashAddress } from '../domain/address';
 import type { ZcashCryptoProvider } from '../domain/cryptoProvider';
-import type { Zatoshis } from '../domain/transaction';
 import type { WebWalletManager } from '../domain/webWalletManager';
 import type { ZcashWallet } from '../domain/zcashWallet';
 import { zecToZatoshis } from '../domain/parseUtils';
@@ -64,6 +63,10 @@ export class ZcashAccount implements AccountFull {
       : networkInfo.shieldedBalance;
   }
 
+  assetToBaseUnits(amount: string): bigint {
+    return zecToZatoshis(amount);
+  }
+
   async sendDeposit({
     address,
     amount,
@@ -71,12 +74,12 @@ export class ZcashAccount implements AccountFull {
     address: string;
     amount: string;
   }): Promise<string> {
-    const amountZatoshis = this.assetToBaseUnits(amount);
+    const amountZatoshis = zecToZatoshis(amount);
 
     // Create transaction plan
     const txPlan = {
       toAddress: address as ZCashAddress,
-      amount: amountZatoshis as Zatoshis,
+      amount: amountZatoshis,
     };
 
     // Sign and prove the transaction
@@ -87,9 +90,5 @@ export class ZcashAccount implements AccountFull {
 
     // Submit the transaction and return the transaction hash
     return await this.wallet.submitTransaction(provedPcztHex);
-  }
-
-  assetToBaseUnits(amount: string): bigint {
-    return zecToZatoshis(amount);
   }
 }
