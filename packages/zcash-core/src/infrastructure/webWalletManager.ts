@@ -50,6 +50,22 @@ export class WebWalletManagerImpl implements WebWalletManager {
   }
 
   /**
+   * Get the current block height from the lightwalletd server
+   */
+  private async getCurrentBlockHeight(): Promise<bigint> {
+    const wallet = await this.getOrCreateWallet();
+    try {
+      // Get wallet summary which includes the latest scanned height
+      return await wallet.get_latest_block();
+    } catch (error) {
+      // If we can't get the summary, fall back to a reasonable default
+      console.warn('Could not get current block height, using default:', error);
+    }
+    // Fallback to a recent block height if we can't fetch it
+    return BigInt(1);
+  }
+
+  /**
    * Import an account using a UFVK with spending capability
    *
    * @param account
@@ -64,7 +80,6 @@ export class WebWalletManagerImpl implements WebWalletManager {
       Buffer.from(account.seedFingerprintHex, 'hex')
     );
     const accountIndex = account.accountIndex;
-    const birthdayHeight = 3134462; // TODO: get this dynamically
 
     const cacheKey = `${Buffer.from(seedFingerprint).toString('hex')}-${accountIndex}`;
     const cachedAccountId = this.accountIdCache.get(cacheKey);
@@ -72,6 +87,10 @@ export class WebWalletManagerImpl implements WebWalletManager {
     if (cachedAccountId) {
       return cachedAccountId;
     }
+
+    const birthdayHeight = await this.getCurrentBlockHeight();
+
+    console.log('birthdayHeight', birthdayHeight);
 
     const wallet = await this.getOrCreateWallet();
     const sfp = webzJsWallet.SeedFingerprint.from_bytes(seedFingerprint);
@@ -81,7 +100,7 @@ export class WebWalletManagerImpl implements WebWalletManager {
       ufvk,
       sfp,
       accountIndex,
-      birthdayHeight
+      Number(birthdayHeight.toString())
     );
     this.accountIdCache.set(cacheKey, accountId);
     return accountId;
