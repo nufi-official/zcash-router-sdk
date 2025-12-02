@@ -80,9 +80,14 @@ export const OneClickApi = (config: OneClickApiConfig): SwapApi => {
             });
           }
 
+          // Stop polling on terminal states
           // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-          if (newStatusResponse.status === 'SUCCESS') {
-            return statusResponse;
+          if (
+            newStatusResponse.status === 'SUCCESS' ||
+            newStatusResponse.status === 'FAILED' ||
+            newStatusResponse.status === 'REFUNDED'
+          ) {
+            return newStatusResponse;
           }
 
           statusResponse = newStatusResponse;
