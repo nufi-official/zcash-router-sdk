@@ -306,7 +306,7 @@ function App() {
             <TextField
               fullWidth
               value={mnemonic}
-              onChange={(e) => setMnemonic(e.target.value)}
+              onChange={(e) => setMnemonic(e.target.value.trim())}
               placeholder="your twelve or twenty-four word mnemonic..."
               multiline
               rows={3}
