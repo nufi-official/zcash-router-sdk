@@ -12,15 +12,12 @@ import { getZcashAccount } from './RouteToZecForm/zcashAccountManager';
 import { CARVED_BOX_STYLES, SLIDE_DOWN_ANIMATION } from './RouteToZecForm/constants';
 import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 
-// Temporary placeholder address - replace with real wallet integration
-const PLACEHOLDER_SOL_ADDRESS = 'So11111111111111111111111111111111111111112';
-
 interface RouteToZecFormProps {
   addressType: 'transparent' | 'shielded';
-  zcashMnemonic: string;
+  mnemonic: string;
 }
 
-export function RouteToZecForm({ addressType, zcashMnemonic }: RouteToZecFormProps) {
+export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
   const [swapStatus, setSwapStatus] = useState<'idle' | 'fetching-quote' | 'monitoring' | 'success' | 'error'>('idle');
@@ -106,8 +103,8 @@ export function RouteToZecForm({ addressType, zcashMnemonic }: RouteToZecFormPro
       setSwapError(undefined);
 
       // Validate mnemonic
-      if (!zcashMnemonic || !zcashMnemonic.trim()) {
-        alert('Please enter a Zcash mnemonic');
+      if (!mnemonic || !mnemonic.trim()) {
+        alert('Please enter a mnemonic');
         setSwapStatus('idle');
         return;
       }
@@ -120,14 +117,26 @@ export function RouteToZecForm({ addressType, zcashMnemonic }: RouteToZecFormPro
       // Get Zcash account and address
       const zcashAccount = await getZcashAccount({
         addressType,
-        mnemonic: zcashMnemonic,
+        mnemonic,
         lightwalletdUrl,
       });
 
       const recipientAddress = await zcashAccount.getAddress();
 
-      console.log('[RouteToZecForm] Using Zcash address:', {
+      // Get Solana account and address
+      const { createSolanaAccount } = await import('@asset-route-sdk/solana-hot-address-only');
+      const solanaAccount = await createSolanaAccount({
+        mnemonic: mnemonic.trim(),
+        accountIndex: 0,
+        network: 'mainnet',
+        tokenId: 'native',
+      });
+
+      const senderAddress = await solanaAccount.getAddress();
+
+      console.log('[RouteToZecForm] Using addresses:', {
         addressType,
+        senderAddress,
         recipientAddress,
       });
 
@@ -159,7 +168,7 @@ export function RouteToZecForm({ addressType, zcashMnemonic }: RouteToZecFormPro
         amount: amountInBaseUnits,
         sourceAsset,
         destinationAsset,
-        senderAddress: PLACEHOLDER_SOL_ADDRESS,
+        senderAddress,
         recipientAddress,
       });
 
