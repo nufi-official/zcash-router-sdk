@@ -17,6 +17,7 @@ import { ensure } from '../utils';
 
 import { webzJsWallet } from './chainsafe-webzjs-wrapper';
 import type { WebZjsWallet } from './chainsafe-webzjs-wrapper';
+import { getBirthdayBlock, setBirthdayBlock } from './birthdayBlockStorage';
 
 /**
  * Manager for WebWallet instances
@@ -70,6 +71,9 @@ export class WebWalletManagerImpl implements WebWalletManager {
   /**
    * Import an account using a UFVK with spending capability
    *
+   * Uses stored birthday block if available, otherwise fetches current block height
+   * and stores it for future use
+   *
    * @param account
    * @returns Account ID
    */
@@ -90,9 +94,36 @@ export class WebWalletManagerImpl implements WebWalletManager {
       return cachedAccountId;
     }
 
-    const birthdayHeight = await this.getCurrentBlockHeight();
+    // Try to get stored birthday block first
+    let birthdayHeight = getBirthdayBlock(
+      account.seedFingerprintHex,
+      accountIndex
+    );
 
-    console.log('birthdayHeight', birthdayHeight);
+    // If no stored birthday block, fetch current and store it
+    if (birthdayHeight === null) {
+      const currentHeight = await this.getCurrentBlockHeight();
+      birthdayHeight = Number(currentHeight.toString()) - 20;
+
+      // Store for future use
+      setBirthdayBlock(
+        account.seedFingerprintHex,
+        accountIndex,
+        birthdayHeight
+      );
+
+      console.log('[WebWalletManager] New account - storing birthday block:', {
+        fingerprintHex: account.seedFingerprintHex,
+        accountIndex,
+        birthdayHeight,
+      });
+    } else {
+      console.log('[WebWalletManager] Using stored birthday block:', {
+        fingerprintHex: account.seedFingerprintHex,
+        accountIndex,
+        birthdayHeight,
+      });
+    }
 
     const wallet = await this.getOrCreateWallet();
     const sfp = webzJsWallet.SeedFingerprint.from_bytes(seedFingerprint);
@@ -102,7 +133,7 @@ export class WebWalletManagerImpl implements WebWalletManager {
       ufvk,
       sfp,
       accountIndex,
-      Number(birthdayHeight.toString())
+      birthdayHeight
     );
     this.accountIdCache.set(cacheKey, accountId);
     return accountId;
