@@ -12,6 +12,9 @@ export function RouteFromZecForm() {
 
   const { price, loading: priceLoading } = useTokenPrice(asset);
 
+  // Mock max balance - will be replaced with real wallet integration
+  const maxBalance = '1';
+
   const usdValue = useMemo(() => {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0 || price <= 0) {
@@ -46,8 +49,30 @@ export function RouteFromZecForm() {
           Buy
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <AmountInput value={amount} onChange={setAmount} />
-          <AssetSelect value={asset} onChange={setAsset} />
+          <Box sx={{ flex: 1 }}>
+            <AmountInput value={amount} onChange={setAmount} />
+          </Box>
+          <Box sx={{ position: 'relative' }}>
+            <AssetSelect value={asset} onChange={setAsset} />
+            <Typography
+              onClick={() => setAmount(maxBalance)}
+              sx={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                mt: 0.5,
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                color: '#F3B724',
+                cursor: 'pointer',
+                '&:hover': {
+                  textDecoration: 'underline',
+                },
+              }}
+            >
+              MAX: {maxBalance} {asset}
+            </Typography>
+          </Box>
         </Box>
         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
           {priceLoading ? 'Loading price...' : usdValue}
