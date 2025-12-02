@@ -4,25 +4,49 @@ import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
+import { useZecBalance } from './RouteToZecForm/useZecBalance';
 import { CARVED_BOX_STYLES } from './RouteToZecForm/constants';
 
-export function RouteFromZecForm() {
+interface RouteFromZecFormProps {
+  addressType: 'transparent' | 'shielded';
+  zcashMnemonic: string;
+}
+
+export function RouteFromZecForm({ addressType, zcashMnemonic }: RouteFromZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
 
-  const { price, loading: priceLoading } = useTokenPrice(asset);
+  const { price: assetPrice, loading: priceLoading } = useTokenPrice(asset);
+  const { price: zecPrice, loading: zecPriceLoading } = useTokenPrice('ZEC');
+  const { balance: zecBalance, loading: balanceLoading } = useZecBalance(addressType, zcashMnemonic);
 
-  // Mock max balance - will be replaced with real wallet integration
-  const maxBalance = '1';
+  // Calculate max SOL amount based on ZEC balance
+  const maxBalance = useMemo(() => {
+    if (balanceLoading || zecPriceLoading || priceLoading) return '0';
+
+    const zecBalanceNum = parseFloat(zecBalance);
+    const zecPriceNum = zecPrice;
+    const assetPriceNum = assetPrice;
+
+    if (isNaN(zecBalanceNum) || zecBalanceNum <= 0 || zecPriceNum <= 0 || assetPriceNum <= 0) {
+      return '0';
+    }
+
+    // Convert ZEC balance to USD, then to SOL
+    const zecValueInUsd = zecBalanceNum * zecPriceNum;
+    const maxAssetAmount = zecValueInUsd / assetPriceNum;
+
+    return maxAssetAmount.toFixed(6);
+  }, [zecBalance, zecPrice, assetPrice, balanceLoading, zecPriceLoading, priceLoading]);
 
   const usdValue = useMemo(() => {
     const numAmount = parseFloat(amount);
-    if (isNaN(numAmount) || numAmount <= 0 || price <= 0) {
+    if (isNaN(numAmount) || numAmount <= 0 || assetPrice <= 0) {
       return '$0';
     }
-    const value = numAmount * price;
+    const value = numAmount * assetPrice;
     return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  }, [amount, price]);
+  }, [amount, assetPrice]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

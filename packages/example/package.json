@@ -16,6 +16,7 @@
     "@asset-route-sdk/core": "workspace:*",
     "@asset-route-sdk/solana-hot-address-only": "workspace:*",
     "@asset-route-sdk/zcash-hot-shielded-full": "workspace:*",
+    "@asset-route-sdk/zcash-hot-transparent-full": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.5",
