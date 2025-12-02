@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   CssBaseline,
@@ -14,6 +14,7 @@ import {
 import { generateMnemonic } from 'bip39';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
 import { RouteFromZecForm } from './components/RouteFromZecForm.mui';
+import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-core';
 
 // Theme with official Solana and Zcash brand colors
 const theme = createTheme({
@@ -226,11 +227,80 @@ const theme = createTheme({
 function App() {
   const [addressType, setAddressType] = useState<'transparent' | 'shielded'>('transparent');
   const [mnemonic, setMnemonic] = useState('');
+  const [wasmInitializing, setWasmInitializing] = useState(true);
+  const [wasmError, setWasmError] = useState<string>();
+
+  // Initialize WASM on mount
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await loadAndInitWebZjs();
+        setWasmInitializing(false);
+      } catch (err) {
+        console.error('Failed to initialize WASM:', err);
+        setWasmError(err instanceof Error ? err.message : 'Failed to initialize WASM');
+        setWasmInitializing(false);
+      }
+    };
+
+    void init();
+  }, []);
 
   const handleGenerateMnemonic = () => {
     const newMnemonic = generateMnemonic();
     setMnemonic(newMnemonic);
   };
+
+  // Show loading state while WASM initializes
+  if (wasmInitializing) {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box
+          sx={{
+            height: '100vh',
+            bgcolor: 'background.default',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography variant="h5" sx={{ color: 'white', mb: 2 }}>
+              Initializing WASM...
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              This may take a few seconds
+            </Typography>
+          </Box>
+        </Box>
+      </ThemeProvider>
+    );
+  }
+
+  // Show error if WASM failed to initialize
+  if (wasmError) {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box
+          sx={{
+            height: '100vh',
+            bgcolor: 'background.default',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            p: 3,
+          }}
+        >
+          <Alert severity="error" sx={{ maxWidth: 600 }}>
+            <AlertTitle>Failed to Initialize</AlertTitle>
+            {wasmError}
+          </Alert>
+        </Box>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>

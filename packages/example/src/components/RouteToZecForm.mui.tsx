@@ -115,13 +115,28 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
         'https://zcash-mainnet.chainsafe.dev';
 
       // Get Zcash account and address
-      const zcashAccount = await getZcashAccount({
-        addressType,
-        mnemonic,
-        lightwalletdUrl,
-      });
+      let zcashAccount;
+      let recipientAddress;
 
-      const recipientAddress = await zcashAccount.getAddress();
+      try {
+        zcashAccount = await getZcashAccount({
+          addressType,
+          mnemonic,
+          lightwalletdUrl,
+        });
+
+        recipientAddress = await zcashAccount.getAddress();
+      } catch (zcashErr) {
+        console.error('[RouteToZecForm] Failed to create Zcash account:', zcashErr);
+        setSwapStatus('idle');
+        const errorMsg = zcashErr instanceof Error ? zcashErr.message : 'Unknown error';
+        if (addressType === 'shielded' && errorMsg.includes('UnifiedSpendingKey')) {
+          alert(`Failed to create Zcash shielded account. This may require additional WASM initialization. Try using "Transparent" address type instead.`);
+        } else {
+          alert(`Failed to create Zcash ${addressType} account: ${errorMsg}`);
+        }
+        return;
+      }
 
       // Get Solana account and address
       const { createSolanaAccount } = await import('@asset-route-sdk/solana-hot-address-only');

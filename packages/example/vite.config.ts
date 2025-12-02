@@ -8,8 +8,13 @@ export default defineConfig({
   plugins: [react(), wasm(), topLevelAwait()],
   server: {
     port: 3000,
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+    },
   },
   optimizeDeps: {
+    exclude: ['@chainsafe/webzjs-wallet', '@chainsafe/webzjs-keys'],
     esbuildOptions: {
       define: {
         global: 'globalThis',
@@ -32,5 +37,8 @@ export default defineConfig({
       stream: 'stream-browserify',
       util: 'util',
     },
+  },
+  worker: {
+    format: 'es',
   },
 });

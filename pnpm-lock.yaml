@@ -62,6 +62,9 @@ importers:
       '@asset-route-sdk/solana-hot-address-only':
         specifier: workspace:*
         version: link:../solana-hot-address-only
+      '@asset-route-sdk/zcash-core':
+        specifier: workspace:*
+        version: link:../zcash-core
       '@asset-route-sdk/zcash-hot-shielded-full':
         specifier: workspace:*
         version: link:../zcash-hot-shielded-full
