@@ -14,7 +14,7 @@ import {
 import { generateMnemonic } from 'bip39';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
 import { RouteFromZecForm } from './components/RouteFromZecForm.mui';
-import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-core';
+import { loadAndInitWebZjs, resetZcashWallet } from '@asset-route-sdk/zcash-core';
 
 // Theme with official Solana and Zcash brand colors
 const theme = createTheme({
@@ -238,6 +238,13 @@ function App() {
     setMnemonic(newMnemonic);
   };
 
+  const handleResetWallet = () => {
+    if (confirm('This will clear all Zcash wallet data and birthday blocks from localStorage. Continue?')) {
+      resetZcashWallet();
+      alert('Zcash wallet reset complete. Please refresh the page.');
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -331,16 +338,33 @@ function App() {
                 },
               }}
             />
-            <Typography
-              variant="caption"
-              sx={{
-                color: 'text.secondary',
-                mt: 1,
-                display: 'block',
-              }}
-            >
-              ⚠️ Never share your mnemonic
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+              <Typography
+                variant="caption"
+                sx={{
+                  color: 'text.secondary',
+                }}
+              >
+                ⚠️ Never share your mnemonic
+              </Typography>
+              <Button
+                onClick={handleResetWallet}
+                size="small"
+                sx={{
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
+                  color: 'error.main',
+                  textTransform: 'none',
+                  padding: '4px 8px',
+                  minWidth: 'auto',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 23, 68, 0.1)',
+                  },
+                }}
+              >
+                Reset Wallet
+              </Button>
+            </Box>
           </Box>
         </Box>
 

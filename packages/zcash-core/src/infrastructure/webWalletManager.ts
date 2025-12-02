@@ -103,7 +103,7 @@ export class WebWalletManagerImpl implements WebWalletManager {
     // If no stored birthday block, fetch current and store it
     if (birthdayHeight === null) {
       const currentHeight = await this.getCurrentBlockHeight();
-      birthdayHeight = Number(currentHeight.toString()) - 20;
+      birthdayHeight = Number(currentHeight.toString()) - 1000;
 
       // Store for future use
       setBirthdayBlock(

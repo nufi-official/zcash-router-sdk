@@ -24,7 +24,7 @@ export class SolanaAccountAddressOnly implements AccountAddressOnly {
     this.accountIndex = params.accountIndex;
 
     this.asset = {
-      blockchain: 'solana',
+      blockchain: 'sol',
       tokenId: params.tokenId,
     };
   }

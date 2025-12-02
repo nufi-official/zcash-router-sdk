@@ -6,7 +6,10 @@ import { SwapButton } from './RouteToZecForm/SwapButton';
 import { SwapTimeline } from './RouteToZecForm/SwapTimeline';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
 import { useZecBalance } from './RouteToZecForm/useZecBalance';
-import { CARVED_BOX_STYLES, SLIDE_DOWN_ANIMATION } from './RouteToZecForm/constants';
+import {
+  CARVED_BOX_STYLES,
+  SLIDE_DOWN_ANIMATION,
+} from './RouteToZecForm/constants';
 import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 
 interface RouteFromZecFormProps {
@@ -21,7 +24,9 @@ export function RouteFromZecForm({
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
   const [destinationAddress, setDestinationAddress] = useState('');
-  const [swapStatus, setSwapStatus] = useState<'idle' | 'initiating' | 'monitoring' | 'success' | 'error'>('idle');
+  const [swapStatus, setSwapStatus] = useState<
+    'idle' | 'initiating' | 'monitoring' | 'success' | 'error'
+  >('idle');
   const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
   const [swapError, setSwapError] = useState<string>();
 
@@ -116,13 +121,16 @@ export function RouteFromZecForm({
       });
 
       if (!zcashAccount) {
-        throw new Error('Failed to create Zcash account - account is undefined');
+        throw new Error(
+          'Failed to create Zcash account - account is undefined'
+        );
       }
 
       console.log('[RouteFromZecForm] Zcash account created:', {
         hasAccount: !!zcashAccount,
         type: zcashAccount.type,
-        hasAssetToBaseUnits: typeof zcashAccount.assetToBaseUnits === 'function',
+        hasAssetToBaseUnits:
+          typeof zcashAccount.assetToBaseUnits === 'function',
         hasGetAddress: typeof zcashAccount.getAddress === 'function',
         hasSendDeposit: typeof zcashAccount.sendDeposit === 'function',
       });
@@ -260,12 +268,16 @@ export function RouteFromZecForm({
 
       {/* Submit Button */}
       <SwapButton
-        isProcessing={swapStatus === 'initiating' || swapStatus === 'monitoring'}
+        isProcessing={
+          swapStatus === 'initiating' || swapStatus === 'monitoring'
+        }
         text="Swap"
       />
 
       {/* Timeline - Show when swap is in progress */}
-      {(swapStatus === 'initiating' || swapStatus === 'monitoring' || swapStatus === 'success') && (
+      {(swapStatus === 'initiating' ||
+        swapStatus === 'monitoring' ||
+        swapStatus === 'success') && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <SwapTimeline
             currentState={currentState}
