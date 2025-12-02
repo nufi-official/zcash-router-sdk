@@ -36,6 +36,8 @@ export default defineConfig({
       process: 'process/browser',
       stream: 'stream-browserify',
       util: 'util',
+      crypto: 'crypto-browserify',
+      events: 'events',
     },
   },
   worker: {
