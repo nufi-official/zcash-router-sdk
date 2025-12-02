@@ -3,9 +3,11 @@ import { Box, Typography, TextField } from '@mui/material';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
+import { SwapTimeline } from './RouteToZecForm/SwapTimeline';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
 import { useZecBalance } from './RouteToZecForm/useZecBalance';
-import { CARVED_BOX_STYLES } from './RouteToZecForm/constants';
+import { CARVED_BOX_STYLES, SLIDE_DOWN_ANIMATION } from './RouteToZecForm/constants';
+import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 
 interface RouteFromZecFormProps {
   addressType: 'transparent' | 'shielded';
@@ -19,6 +21,9 @@ export function RouteFromZecForm({
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
   const [destinationAddress, setDestinationAddress] = useState('');
+  const [swapStatus, setSwapStatus] = useState<'idle' | 'initiating' | 'monitoring' | 'success' | 'error'>('idle');
+  const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
+  const [swapError, setSwapError] = useState<string>();
 
   const { price: assetPrice, loading: priceLoading } = useTokenPrice(asset);
   const { price: zecPrice, loading: zecPriceLoading } = useTokenPrice('ZEC');
@@ -88,6 +93,9 @@ export function RouteFromZecForm({
     }
 
     try {
+      setSwapStatus('initiating');
+      setSwapError(undefined);
+
       // Get lightwalletd URL from environment variable
       const lightwalletdUrl =
         import.meta.env.VITE_LIGHTWALLETD_URL ||
@@ -144,6 +152,9 @@ export function RouteFromZecForm({
         destinationAddress,
       });
 
+      // Start monitoring
+      setSwapStatus('monitoring');
+
       // Execute the swap
       await routeFromZcash({
         zcashAccount,
@@ -151,16 +162,21 @@ export function RouteFromZecForm({
         amount: numAmount.toString(),
         onSwapStatusChange: (event) => {
           console.log('[RouteFromZecForm] Swap status:', event);
-          // TODO: Add UI for swap status tracking
+          setCurrentState(event);
+
+          // Update swap status based on event
+          if (event.status === 'SUCCESS') {
+            setSwapStatus('success');
+          } else if (event.status === 'FAILED' || event.status === 'REFUNDED') {
+            setSwapStatus('error');
+            setSwapError(`Swap ${event.status.toLowerCase()}`);
+          }
         },
       });
-
-      alert('Swap initiated successfully!');
     } catch (err) {
       console.error('[RouteFromZecForm] Swap failed:', err);
-      alert(
-        `Swap failed: ${err instanceof Error ? err.message : 'Unknown error'}`
-      );
+      setSwapStatus('error');
+      setSwapError(err instanceof Error ? err.message : 'Unknown error');
     }
   };
 
@@ -243,7 +259,32 @@ export function RouteFromZecForm({
       </Box>
 
       {/* Submit Button */}
-      <SwapButton isProcessing={false} text="Get Quote" />
+      <SwapButton
+        isProcessing={swapStatus === 'initiating' || swapStatus === 'monitoring'}
+        text="Swap"
+      />
+
+      {/* Timeline - Show when swap is in progress */}
+      {(swapStatus === 'initiating' || swapStatus === 'monitoring' || swapStatus === 'success') && (
+        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
+          <SwapTimeline
+            currentState={currentState}
+            isFetchingQuote={swapStatus === 'initiating'}
+            hasQuote={swapStatus !== 'initiating'}
+          />
+        </Box>
+      )}
+
+      {/* Error Display */}
+      {swapStatus === 'error' && swapError && (
+        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
+          <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
+            <Typography color="error" variant="body2">
+              Error: {swapError}
+            </Typography>
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 }
