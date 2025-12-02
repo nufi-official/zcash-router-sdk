@@ -7,11 +7,11 @@ import {
   Paper,
   Alert,
   AlertTitle,
-  Chip,
   Stack,
   TextField,
 } from '@mui/material';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
+import { RouteFromZecForm } from './components/RouteFromZecForm.mui';
 
 // Theme with official Solana and Zcash brand colors
 const theme = createTheme({
@@ -468,13 +468,12 @@ function App() {
               </Paper>
             </Box>
 
-            {/* Route from Zcash - Coming Soon */}
+            {/* Route from Zcash */}
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Paper
                 elevation={3}
                 sx={{
                   overflow: 'hidden',
-                  opacity: 0.7,
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -519,35 +518,8 @@ function App() {
                     Swap ZEC → SOL
                   </Typography>
                 </Box>
-                <Box
-                  sx={{
-                    p: 3,
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Chip
-                    label="Coming Soon"
-                    sx={{
-                      mb: 2,
-                      background:
-                        'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
-                      fontWeight: 600,
-                      color: 'white',
-                    }}
-                  />
-                  <Typography
-                    variant="body1"
-                    color="text.secondary"
-                    align="center"
-                  >
-                    This form will allow you to route assets
-                    <br />
-                    from Zcash to other blockchains
-                  </Typography>
+                <Box sx={{ p: 3, flex: 1 }}>
+                  <RouteFromZecForm />
                 </Box>
               </Paper>
             </Box>
