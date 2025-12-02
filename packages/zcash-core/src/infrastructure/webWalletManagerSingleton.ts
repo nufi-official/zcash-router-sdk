@@ -43,9 +43,21 @@ export function getWebWalletManager(
  * Useful for testing or when switching wallets
  */
 export function clearWebWalletManager(): void {
-  if (webWalletManagerInstance && typeof (webWalletManagerInstance as any).destroy === 'function') {
-    (webWalletManagerInstance as any).destroy();
+  if (webWalletManagerInstance) {
+    const manager = webWalletManagerInstance as any;
+    if (typeof manager.destroy === 'function') {
+      manager.destroy();
+    }
   }
   webWalletManagerInstance = null;
+  currentConfig = null;
+}
+
+/**
+ * Force reset the singleton instance even if config hasn't changed
+ * Use this when you need to clear all cached accounts and start fresh
+ */
+export function resetWebWalletManager(): void {
+  clearWebWalletManager();
   currentConfig = null;
 }

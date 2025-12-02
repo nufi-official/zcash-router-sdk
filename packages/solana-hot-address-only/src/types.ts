@@ -29,8 +29,8 @@ export interface CreateSolanaAccountParams {
  * Solana asset definition
  */
 export const SOLANA_ASSET: RouteAsset = {
-  blockchain: 'solana',
-  tokenId: 'native', // Native SOL
+  blockchain: 'sol',
+  tokenId: undefined, // Native SOL
 };
 
 /**

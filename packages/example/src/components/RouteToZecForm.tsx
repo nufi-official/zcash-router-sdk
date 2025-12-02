@@ -6,7 +6,7 @@ import {
   type AccountFull,
 } from '@asset-route-sdk/core';
 import { createSolanaAccount } from '@asset-route-sdk/solana-hot-address-only';
-import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-hot-shielded-full';
+import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-core';
 import { SwapStatus } from './SwapStatus';
 
 export function RouteToZecForm() {

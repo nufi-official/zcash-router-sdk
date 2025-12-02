@@ -163,7 +163,7 @@ import {
 
 console.log(SOLANA_DECIMALS); // 9
 console.log(LAMPORTS_PER_SOL); // 1000000000n
-console.log(SOLANA_ASSET); // { blockchain: 'solana', tokenId: 'native' }
+console.log(SOLANA_ASSET); // { blockchain: 'sol', tokenId: 'native' }
 ```
 
 ## Utilities
