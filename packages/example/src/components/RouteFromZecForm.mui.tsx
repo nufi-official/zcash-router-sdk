@@ -111,7 +111,7 @@ export function RouteFromZecForm({
         type: 'addressOnly' as const,
         asset: {
           blockchain: 'solana' as const,
-          tokenId: 'native', // SOL is native token
+          tokenId: undefined,
         },
         getAddress: async () => destinationAddress.trim(),
         assetToBaseUnits: (amount: string) => {
@@ -119,14 +119,6 @@ export function RouteFromZecForm({
           return BigInt(Math.floor(parseFloat(amount) * 1_000_000_000));
         },
       };
-
-      console.log('[RouteFromZecForm] Starting swap:', {
-        amount: numAmount,
-        from: 'ZEC',
-        to: asset,
-        sourceAddress: await zcashAccount.getAddress(),
-        destinationAddress,
-      });
 
       // Execute the swap
       await routeFromZcash({
