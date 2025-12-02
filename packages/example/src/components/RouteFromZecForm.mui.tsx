@@ -9,16 +9,16 @@ import { CARVED_BOX_STYLES } from './RouteToZecForm/constants';
 
 interface RouteFromZecFormProps {
   addressType: 'transparent' | 'shielded';
-  zcashMnemonic: string;
+  mnemonic: string;
 }
 
-export function RouteFromZecForm({ addressType, zcashMnemonic }: RouteFromZecFormProps) {
+export function RouteFromZecForm({ addressType, mnemonic }: RouteFromZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
 
   const { price: assetPrice, loading: priceLoading } = useTokenPrice(asset);
   const { price: zecPrice, loading: zecPriceLoading } = useTokenPrice('ZEC');
-  const { balance: zecBalance, loading: balanceLoading } = useZecBalance(addressType, zcashMnemonic);
+  const { balance: zecBalance, loading: balanceLoading } = useZecBalance(addressType, mnemonic);
 
   // Calculate max SOL amount based on ZEC balance
   const maxBalance = useMemo(() => {
