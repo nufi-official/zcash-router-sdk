@@ -51,12 +51,14 @@ export class WebWalletManagerImpl implements WebWalletManager {
 
   /**
    * Get the current block height from the lightwalletd server
+   * Returns current height minus 5 blocks for safety margin
    */
   private async getCurrentBlockHeight(): Promise<bigint> {
     const wallet = await this.getOrCreateWallet();
     try {
-      // Get wallet summary which includes the latest scanned height
-      return await wallet.get_latest_block();
+      // Get latest block height and subtract 5 blocks for safety
+      const latestBlock = await wallet.get_latest_block();
+      return latestBlock - BigInt(20);
     } catch (error) {
       // If we can't get the summary, fall back to a reasonable default
       console.warn('Could not get current block height, using default:', error);
@@ -257,8 +259,15 @@ export class WebWalletManagerImpl implements WebWalletManager {
     const wallet = await this.getOrCreateWallet();
     const accountId = await this.importOrGetAccount(account);
 
+    console.log('[WebWalletManager] Syncing wallet for account:', accountId);
     await this.sync();
     const summary = ensure(await wallet.get_wallet_summary());
+
+    console.log('[WebWalletManager] Wallet summary:', {
+      chain_tip_height: summary.chain_tip_height,
+      fully_scanned_height: summary.fully_scanned_height,
+      account_balances: summary.account_balances,
+    });
 
     const accountBalances = summary.account_balances as [
       number,
@@ -282,9 +291,17 @@ export class WebWalletManagerImpl implements WebWalletManager {
     const samplingBalance = accountBalance.sapling_balance;
     const orchardBalance = accountBalance.orchard_balance;
 
+    console.log('[WebWalletManager] Account balances:', {
+      accountId,
+      sapling_balance: samplingBalance,
+      orchard_balance: orchardBalance,
+      unshielded_balance: accountBalance.unshielded_balance,
+      total_shielded: samplingBalance + orchardBalance,
+    });
+
     return {
       shieldedBalance: BigInt(samplingBalance + orchardBalance) as Zatoshis,
-      unshieldedBalance: BigInt(accountBalance.sapling_balance) as Zatoshis,
+      unshieldedBalance: BigInt(accountBalance.unshielded_balance) as Zatoshis,
     };
   }
 

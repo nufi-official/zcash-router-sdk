@@ -43,6 +43,14 @@ export function useZecBalance(
 
         // Convert from zatoshis to ZEC (1 ZEC = 100,000,000 zatoshis)
         const balanceInZec = Number(balanceInZatoshis) / 100_000_000;
+
+        console.log('[useZecBalance] Zcash Balance:', {
+          addressType,
+          balanceInZatoshis: balanceInZatoshis.toString(),
+          balanceInZec,
+          address: await account.getAddress(),
+        });
+
         setBalance(balanceInZec.toString());
       } catch (err) {
         if (!mounted) return;
