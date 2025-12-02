@@ -251,48 +251,6 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
-      {/* Addresses Display */}
-      {(solanaAddress || zcashAddress) && (
-        <Box sx={{ ...CARVED_BOX_STYLES, p: 2, mb: 3 }}>
-          {solanaAddress && (
-            <Box sx={{ mb: zcashAddress ? 1.5 : 0 }}>
-              <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
-                Solana Address (Sender)
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontFamily: 'monospace',
-                  fontSize: '0.75rem',
-                  color: 'primary.main',
-                  wordBreak: 'break-all',
-                }}
-              >
-                {solanaAddress}
-              </Typography>
-            </Box>
-          )}
-          {zcashAddress && (
-            <Box>
-              <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
-                Zcash Address (Recipient - {addressType})
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontFamily: 'monospace',
-                  fontSize: '0.75rem',
-                  color: 'secondary.main',
-                  wordBreak: 'break-all',
-                }}
-              >
-                {zcashAddress}
-              </Typography>
-            </Box>
-          )}
-        </Box>
-      )}
-
       {/* Amount and Asset Selector */}
       <Box sx={{ ...CARVED_BOX_STYLES, p: 3, mb: 3 }}>
         <Typography
