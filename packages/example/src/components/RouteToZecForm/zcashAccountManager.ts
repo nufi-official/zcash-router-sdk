@@ -1,7 +1,9 @@
 import type { AccountFull } from '@asset-route-sdk/core';
-import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-hot-shielded-full';
-import { createZcashTransparentAccount } from '@asset-route-sdk/zcash-hot-transparent-full';
-import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-core';
+import {
+  createZcashShieldedAccount,
+  createZcashTransparentAccount,
+  loadAndInitWebZjs,
+} from '@asset-route-sdk/zcash-core';
 
 // Singleton instances stored at module level
 let shieldedAccountInstance: AccountFull | null = null;

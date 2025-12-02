@@ -2,7 +2,7 @@ import type { AccountFull } from '@asset-route-sdk/core';
 
 import type { ZcashNetwork } from '../domain/network';
 import { MnemonicCryptoProvider } from '../infrastructure/mnemonicCryptoProvider';
-import { WebWalletManagerImpl } from '../infrastructure/webWalletManager';
+import { getWebWalletManager } from '../infrastructure/webWalletManagerSingleton';
 import { ZcashWallet } from '../domain/zcashWallet';
 
 import { ZcashAccount, type ZcashAddressType } from './zcashAccount';
@@ -14,6 +14,22 @@ export interface CreateZcashAccountParams {
   lightwalletdUrl: string;
   minConfirmations: number;
   addressType: ZcashAddressType;
+}
+
+export interface CreateZcashShieldedAccountParams {
+  mnemonic: string;
+  accountIndex: number;
+  network: ZcashNetwork;
+  lightwalletdUrl: string;
+  minConfirmations: number;
+}
+
+export interface CreateZcashTransparentAccountParams {
+  mnemonic: string;
+  accountIndex: number;
+  network: ZcashNetwork;
+  lightwalletdUrl: string;
+  minConfirmations: number;
 }
 
 /**
@@ -35,12 +51,13 @@ export async function createZcashAccount(
   // Initialize crypto provider
   const mnemonicProvider = new MnemonicCryptoProvider(mnemonic);
 
-  // Initialize web wallet manager
-  const webWalletManager = new WebWalletManagerImpl({
+  // Get singleton web wallet manager instance
+  // This ensures all accounts share the same wallet
+  const webWalletManager = getWebWalletManager(
     network,
     lightwalletdUrl,
-    minConfirmations,
-  });
+    minConfirmations
+  );
 
   // Create wallet
   const wallet = new ZcashWallet({
@@ -61,5 +78,29 @@ export async function createZcashAccount(
     cryptoProviders: { mnemonic: mnemonicProvider },
     webWalletManager,
     addressType,
+  });
+}
+
+/**
+ * Factory function to create a Zcash shielded account
+ */
+export async function createZcashShieldedAccount(
+  params: CreateZcashShieldedAccountParams
+): Promise<AccountFull> {
+  return createZcashAccount({
+    ...params,
+    addressType: 'shielded',
+  });
+}
+
+/**
+ * Factory function to create a Zcash transparent account
+ */
+export async function createZcashTransparentAccount(
+  params: CreateZcashTransparentAccountParams
+): Promise<AccountFull> {
+  return createZcashAccount({
+    ...params,
+    addressType: 'transparent',
   });
 }
