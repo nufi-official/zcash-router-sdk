@@ -1,4 +1,4 @@
-// IMPORTANT: Polyfills must be imported FIRST
+// Import polyfills first to make Buffer and process available globally
 import './polyfills';
 
 import React from 'react';

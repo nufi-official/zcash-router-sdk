@@ -23,6 +23,8 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
   const [swapStatus, setSwapStatus] = useState<'idle' | 'fetching-quote' | 'monitoring' | 'success' | 'error'>('idle');
   const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
   const [swapError, setSwapError] = useState<string>();
+  const [solanaAddress, setSolanaAddress] = useState<string>('');
+  const [zcashAddress, setZcashAddress] = useState<string>('');
   const shouldAutoStartRef = useRef(false);
 
   const { price, loading: priceLoading } = useTokenPrice(asset);
@@ -37,6 +39,57 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
     const value = numAmount * price;
     return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }, [amount, price]);
+
+  // Derive addresses when mnemonic or address type changes
+  useEffect(() => {
+    const deriveAddresses = async () => {
+      if (!mnemonic || !mnemonic.trim()) {
+        setSolanaAddress('');
+        setZcashAddress('');
+        return;
+      }
+
+      try {
+        // Clean up mnemonic: trim and normalize whitespace
+        const cleanedMnemonic = mnemonic.trim().replace(/\s+/g, ' ');
+        console.log('[RouteToZecForm] Original mnemonic length:', mnemonic.length);
+        console.log('[RouteToZecForm] Cleaned mnemonic:', cleanedMnemonic);
+        console.log('[RouteToZecForm] Word count:', cleanedMnemonic.split(' ').length);
+
+        // Derive Solana address
+        const { createSolanaAccount } = await import('@asset-route-sdk/solana-hot-address-only');
+        const solanaAccount = await createSolanaAccount({
+          mnemonic: cleanedMnemonic,
+          accountIndex: 0,
+          network: 'mainnet',
+          tokenId: 'native',
+        });
+        const solAddr = await solanaAccount.getAddress();
+        console.log('[RouteToZecForm] Derived Solana address:', solAddr);
+        setSolanaAddress(solAddr);
+
+        // Derive Zcash address
+        const lightwalletdUrl =
+          import.meta.env.VITE_LIGHTWALLETD_URL ||
+          'https://zcash-mainnet.chainsafe.dev';
+        const zcashAccount = await getZcashAccount({
+          addressType,
+          mnemonic: cleanedMnemonic,
+          lightwalletdUrl,
+        });
+        const zecAddr = await zcashAccount.getAddress();
+        console.log('[RouteToZecForm] Derived Zcash address:', zecAddr, 'Type:', addressType);
+        setZcashAddress(zecAddr);
+      } catch (err) {
+        console.error('[RouteToZecForm] Failed to derive addresses:', err);
+        // Clear addresses on error
+        setSolanaAddress('');
+        setZcashAddress('');
+      }
+    };
+
+    void deriveAddresses();
+  }, [mnemonic, addressType]);
 
   // Auto-start monitoring when quote is received
   useEffect(() => {
@@ -198,6 +251,48 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+      {/* Addresses Display */}
+      {(solanaAddress || zcashAddress) && (
+        <Box sx={{ ...CARVED_BOX_STYLES, p: 2, mb: 3 }}>
+          {solanaAddress && (
+            <Box sx={{ mb: zcashAddress ? 1.5 : 0 }}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                Solana Address (Sender)
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontFamily: 'monospace',
+                  fontSize: '0.75rem',
+                  color: 'primary.main',
+                  wordBreak: 'break-all',
+                }}
+              >
+                {solanaAddress}
+              </Typography>
+            </Box>
+          )}
+          {zcashAddress && (
+            <Box>
+              <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.5 }}>
+                Zcash Address (Recipient - {addressType})
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontFamily: 'monospace',
+                  fontSize: '0.75rem',
+                  color: 'secondary.main',
+                  wordBreak: 'break-all',
+                }}
+              >
+                {zcashAddress}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      )}
+
       {/* Amount and Asset Selector */}
       <Box sx={{ ...CARVED_BOX_STYLES, p: 3, mb: 3 }}>
         <Typography

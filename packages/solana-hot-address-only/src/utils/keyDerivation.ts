@@ -1,18 +1,19 @@
 import * as bip39 from 'bip39';
-import { BIP32Factory } from 'bip32';
-import * as ecc from 'tiny-secp256k1';
+import { derivePath } from 'ed25519-hd-key';
+import nacl from 'tweetnacl';
 import { Keypair } from '@solana/web3.js';
 
-const bip32 = BIP32Factory(ecc);
-
 /**
- * Solana uses BIP44 with coin type 501
- * Derivation path: m/44'/501'/account'/change'
+ * Solana uses BIP44 with coin type 501 and Ed25519 key derivation
+ * Standard derivation path: m/44'/501'/account'/change'
  */
 const SOLANA_COIN_TYPE = 501;
 
 /**
- * Derive a Solana keypair from a mnemonic phrase
+ * Derive a Solana keypair from a mnemonic phrase using Ed25519 derivation
+ * Uses BIP44 path: m/44'/501'/account'/change' (default change=0)
+ * This is compatible with most Solana wallets when change=0
+ *
  * @param mnemonic - BIP39 mnemonic phrase
  * @param accountIndex - Account index (default: 0)
  * @param change - Change index (default: 0)
@@ -24,25 +25,25 @@ export function deriveKeypairFromMnemonic(
   change: number = 0
 ): Keypair {
   // Validate mnemonic
+
   if (!bip39.validateMnemonic(mnemonic)) {
     throw new Error('Invalid mnemonic phrase');
   }
 
-  // Convert mnemonic to seed
+  // Convert mnemonic to seed (64 bytes)
   const seed = bip39.mnemonicToSeedSync(mnemonic);
 
   // Derive the path: m/44'/501'/account'/change'
   const path = `m/44'/${SOLANA_COIN_TYPE}'/${accountIndex}'/${change}'`;
 
-  // Derive the key
-  const derivedKey = bip32.fromSeed(seed).derivePath(path);
+  // Derive the Ed25519 key using ed25519-hd-key
+  const derivedSeed = derivePath(path, seed.toString('hex')).key;
 
-  if (!derivedKey.privateKey) {
-    throw new Error('Failed to derive private key');
-  }
+  // Create Solana keypair from the derived seed using tweetnacl
+  const keyPair = nacl.sign.keyPair.fromSeed(derivedSeed);
 
-  // Create Solana keypair from the derived private key
-  return Keypair.fromSeed(derivedKey.privateKey.slice(0, 32));
+  // Create Solana Keypair from the nacl keypair
+  return new Keypair(keyPair);
 }
 
 /**

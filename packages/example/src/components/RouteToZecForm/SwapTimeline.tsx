@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Box, Stepper, Step, StepLabel, Chip, keyframes } from '@mui/material';
-import { CheckCircle as CheckIcon, Pending as PendingIcon } from '@mui/icons-material';
+import {
+  CheckCircle as CheckIcon,
+  Pending as PendingIcon,
+} from '@mui/icons-material';
 import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
-import { SWAP_HAPPY_PATH_TIMELINE, SWAP_END_STATES } from '@asset-route-sdk/core';
+import {
+  SWAP_HAPPY_PATH_TIMELINE,
+  SWAP_END_STATES,
+} from '@asset-route-sdk/core';
 import { CARVED_BOX_STYLES } from './constants';
 
 // Glow animations
@@ -36,25 +42,42 @@ interface SwapTimelineProps {
   hasQuote?: boolean;
 }
 
-export function SwapTimeline({ currentState, isFetchingQuote }: SwapTimelineProps) {
+export function SwapTimeline({
+  currentState,
+  isFetchingQuote,
+}: SwapTimelineProps) {
   const previousActiveStepRef = useRef<number>(-1);
-  const [animatingSteps, setAnimatingSteps] = useState<Map<number, 'active' | 'completed'>>(new Map());
+  const [animatingSteps, setAnimatingSteps] = useState<
+    Map<number, 'active' | 'completed'>
+  >(new Map());
 
   // Build timeline steps
   const buildTimeline = () => {
     if (!currentState || isFetchingQuote) {
       // Show all steps in pending state when fetching quote
-      return ['GETTING QUOTE', 'PENDING DEPOSIT', 'KNOWN DEPOSIT TX', 'PROCESSING', 'SUCCESS'];
+      return [
+        'GETTING QUOTE',
+        'PENDING DEPOSIT',
+        'KNOWN DEPOSIT TX',
+        'PROCESSING',
+        'SUCCESS',
+      ];
     }
 
     // If we hit an end state, show only that end state
-    if (SWAP_END_STATES.has(currentState.status)) {
+    if (
+      currentState.status === 'DEPOSIT_SENT' ||
+      SWAP_END_STATES.has(currentState.status)
+    ) {
       return ['GETTING QUOTE', currentState.status.replace(/_/g, ' ')];
     }
 
     // Otherwise show happy path with "Getting Quote" completed
     const timeline = SWAP_HAPPY_PATH_TIMELINE;
-    return ['GETTING QUOTE', ...timeline.map((status) => status.replace(/_/g, ' '))];
+    return [
+      'GETTING QUOTE',
+      ...timeline.map((status) => status.replace(/_/g, ' ')),
+    ];
   };
 
   const allSteps = buildTimeline();
@@ -67,6 +90,10 @@ export function SwapTimeline({ currentState, isFetchingQuote }: SwapTimelineProp
 
     if (!currentState) {
       return 1; // Quote received, move to step 1 (Pending Deposit)
+    }
+
+    if (currentState.status === 'DEPOSIT_SENT') {
+      return 1;
     }
 
     // If it's an end state, show it as completed
@@ -137,8 +164,11 @@ export function SwapTimeline({ currentState, isFetchingQuote }: SwapTimelineProp
       <Stepper activeStep={activeStepIndex} alternativeLabel>
         {allSteps.map((label, index) => {
           const stepStatus =
-            index < activeStepIndex ? 'completed' :
-            index === activeStepIndex ? 'active' : 'pending';
+            index < activeStepIndex
+              ? 'completed'
+              : index === activeStepIndex
+                ? 'active'
+                : 'pending';
 
           const animationType = shouldAnimateStep(index);
 
@@ -153,11 +183,12 @@ export function SwapTimeline({ currentState, isFetchingQuote }: SwapTimelineProp
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      animation: animationType === 'completed'
-                        ? `${greenGlow} 0.5s ease-in-out`
-                        : animationType === 'active'
-                        ? `${purpleGlow} 0.5s ease-in-out`
-                        : 'none',
+                      animation:
+                        animationType === 'completed'
+                          ? `${greenGlow} 0.5s ease-in-out`
+                          : animationType === 'active'
+                            ? `${purpleGlow} 0.5s ease-in-out`
+                            : 'none',
                     }}
                   >
                     {stepStatus === 'completed' && (
@@ -192,9 +223,12 @@ export function SwapTimeline({ currentState, isFetchingQuote }: SwapTimelineProp
         <Chip
           label={getCurrentStatusLabel()}
           color={
-            currentState?.status === 'SUCCESS' ? 'success' :
-            currentState?.status === 'FAILED' || currentState?.status === 'REFUNDED' ? 'error' :
-            'primary'
+            currentState?.status === 'SUCCESS'
+              ? 'success'
+              : currentState?.status === 'FAILED' ||
+                  currentState?.status === 'REFUNDED'
+                ? 'error'
+                : 'primary'
           }
           size="small"
         />

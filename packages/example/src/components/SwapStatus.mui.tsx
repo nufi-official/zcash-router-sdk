@@ -39,10 +39,15 @@ export function SwapStatus({
   const getTimeline = () => {
     if (!currentState) return SWAP_HAPPY_PATH_TIMELINE;
 
+    // DEPOSIT_SENT is a local status, not from the API, so handle it separately
+    if (currentState.status === 'DEPOSIT_SENT') {
+      return SWAP_HAPPY_PATH_TIMELINE;
+    }
+
     // If we hit an end state, show only that end state
-    if (SWAP_END_STATES.has(currentState.status)) {
+    if (SWAP_END_STATES.has(currentState.status as any)) {
       // For end states, show just the final status
-      return [currentState.status];
+      return [currentState.status as any];
     }
 
     // Otherwise show happy path
@@ -55,8 +60,13 @@ export function SwapStatus({
   const getActiveStep = () => {
     if (!currentState) return -1;
 
+    // DEPOSIT_SENT is not in the timeline, treat it as -1 (not started yet)
+    if (currentState.status === 'DEPOSIT_SENT') {
+      return -1;
+    }
+
     // If it's an end state, show it as completed
-    if (SWAP_END_STATES.has(currentState.status)) {
+    if (SWAP_END_STATES.has(currentState.status as any)) {
       return 1; // Single step, completed
     }
 
