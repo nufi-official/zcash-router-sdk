@@ -9,7 +9,9 @@ import {
   AlertTitle,
   Stack,
   TextField,
+  Button,
 } from '@mui/material';
+import { generateMnemonic } from 'bip39';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
 import { RouteFromZecForm } from './components/RouteFromZecForm.mui';
 
@@ -225,6 +227,11 @@ function App() {
   const [addressType, setAddressType] = useState<'transparent' | 'shielded'>('transparent');
   const [mnemonic, setMnemonic] = useState('');
 
+  const handleGenerateMnemonic = () => {
+    const newMnemonic = generateMnemonic();
+    setMnemonic(newMnemonic);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -267,12 +274,29 @@ function App() {
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
             }}
           >
-            <Typography
-              variant="caption"
-              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
-            >
-              Mnemonic Phrase
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary' }}
+              >
+                Mnemonic Phrase
+              </Typography>
+              <Button
+                onClick={handleGenerateMnemonic}
+                size="small"
+                sx={{
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  color: '#F3B724',
+                  textTransform: 'none',
+                  '&:hover': {
+                    backgroundColor: 'rgba(243, 183, 36, 0.1)',
+                  },
+                }}
+              >
+                Generate New
+              </Button>
+            </Box>
             <TextField
               fullWidth
               value={mnemonic}
