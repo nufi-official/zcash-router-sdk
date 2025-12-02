@@ -8,15 +8,19 @@ import { SwapTimeline } from './RouteToZecForm/SwapTimeline';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
 import { useSwapQuote } from './RouteToZecForm/useSwapQuote';
 import { useSwapExecution } from './RouteToZecForm/useSwapExecution';
+import { getZcashAccount } from './RouteToZecForm/zcashAccountManager';
 import { CARVED_BOX_STYLES, SLIDE_DOWN_ANIMATION } from './RouteToZecForm/constants';
 import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 
-// Temporary placeholder addresses - replace with real wallet integration
+// Temporary placeholder address - replace with real wallet integration
 const PLACEHOLDER_SOL_ADDRESS = 'So11111111111111111111111111111111111111112';
-// Valid Zcash transparent address format (t-address)
-const PLACEHOLDER_ZEC_ADDRESS = 't1gQn3cVQDM5Cnez96dAAZfKZydJDKq73cX';
 
-export function RouteToZecForm() {
+interface RouteToZecFormProps {
+  addressType: 'transparent' | 'shielded';
+  zcashMnemonic: string;
+}
+
+export function RouteToZecForm({ addressType, zcashMnemonic }: RouteToZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
   const [swapStatus, setSwapStatus] = useState<'idle' | 'fetching-quote' | 'monitoring' | 'success' | 'error'>('idle');
@@ -101,6 +105,32 @@ export function RouteToZecForm() {
       setSwapStatus('fetching-quote');
       setSwapError(undefined);
 
+      // Validate mnemonic
+      if (!zcashMnemonic || !zcashMnemonic.trim()) {
+        alert('Please enter a Zcash mnemonic');
+        setSwapStatus('idle');
+        return;
+      }
+
+      // Get lightwalletd URL from environment variable
+      const lightwalletdUrl =
+        import.meta.env.VITE_LIGHTWALLETD_URL ||
+        'https://zcash-mainnet.chainsafe.dev';
+
+      // Get Zcash account and address
+      const zcashAccount = await getZcashAccount({
+        addressType,
+        mnemonic: zcashMnemonic,
+        lightwalletdUrl,
+      });
+
+      const recipientAddress = await zcashAccount.getAddress();
+
+      console.log('[RouteToZecForm] Using Zcash address:', {
+        addressType,
+        recipientAddress,
+      });
+
       // For now, we need to get the assets to get their assetIds
       // In a real app, you'd cache this or get it from the token price hook
       const { getSwapApiAssets } = await import('@asset-route-sdk/core');
@@ -130,7 +160,7 @@ export function RouteToZecForm() {
         sourceAsset,
         destinationAsset,
         senderAddress: PLACEHOLDER_SOL_ADDRESS,
-        recipientAddress: PLACEHOLDER_ZEC_ADDRESS,
+        recipientAddress,
       });
 
       // Set flag to auto-start monitoring when quote is received
