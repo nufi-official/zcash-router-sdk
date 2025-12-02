@@ -223,6 +223,7 @@ const theme = createTheme({
 
 function App() {
   const [addressType, setAddressType] = useState<'transparent' | 'shielded'>('transparent');
+  const [zcashMnemonic, setZcashMnemonic] = useState('');
 
   return (
     <ThemeProvider theme={theme}>
@@ -274,6 +275,8 @@ function App() {
             </Typography>
             <TextField
               fullWidth
+              value={zcashMnemonic}
+              onChange={(e) => setZcashMnemonic(e.target.value)}
               placeholder="your twelve or twenty-four word mnemonic..."
               multiline
               rows={3}
@@ -519,7 +522,7 @@ function App() {
                   </Typography>
                 </Box>
                 <Box sx={{ p: 3, flex: 1 }}>
-                  <RouteFromZecForm />
+                  <RouteFromZecForm addressType={addressType} zcashMnemonic={zcashMnemonic} />
                 </Box>
               </Paper>
             </Box>
