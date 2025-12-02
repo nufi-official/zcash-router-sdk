@@ -7,9 +7,11 @@ import type { ZcashCryptoProvider } from '../domain/cryptoProvider';
 import type { WebWalletManager } from '../domain/webWalletManager';
 import type { ZcashWallet } from '../domain/zcashWallet';
 import { zecToZatoshis } from '../domain/parseUtils';
+import type { Zatoshis } from '../domain/transaction';
+import { ZEC_FEE_ZATOSHIS } from '../domain';
 
 export const ZCASH_ASSET: RouteAsset = {
-  blockchain: 'zcash',
+  blockchain: 'zec',
   tokenId: undefined,
 };
 
@@ -60,7 +62,7 @@ export class ZcashAccount implements AccountFull {
     );
     return this.addressType === 'transparent'
       ? networkInfo.unshieldedBalance
-      : networkInfo.shieldedBalance;
+      : ((networkInfo.shieldedBalance - ZEC_FEE_ZATOSHIS) as Zatoshis);
   }
 
   assetToBaseUnits(amount: string): bigint {
@@ -74,7 +76,8 @@ export class ZcashAccount implements AccountFull {
     address: string;
     amount: string;
   }): Promise<string> {
-    const amountZatoshis = zecToZatoshis(amount);
+    // Amount is expected to be in zatoshis (base units) as a string
+    const amountZatoshis = BigInt(amount) as Zatoshis;
 
     // Create transaction plan
     const txPlan = {

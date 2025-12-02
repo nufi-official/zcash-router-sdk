@@ -152,8 +152,17 @@ export function RouteFromZecForm({
         },
       };
 
+      // Convert SOL amount (what user wants to receive) to ZEC amount (what needs to be sent)
+      // User entered SOL amount, we need to calculate equivalent ZEC amount
+      const solAmountInUsd = numAmount * assetPrice;
+      const zecAmountNeeded = solAmountInUsd / zecPrice;
+
       console.log('[RouteFromZecForm] Starting swap:', {
-        amount: numAmount,
+        solAmountRequested: numAmount,
+        solPriceUsd: assetPrice,
+        zecPriceUsd: zecPrice,
+        solAmountInUsd,
+        zecAmountNeeded,
         from: 'ZEC',
         to: asset,
         sourceAddress: await zcashAccount.getAddress(),
@@ -163,11 +172,11 @@ export function RouteFromZecForm({
       // Start monitoring
       setSwapStatus('monitoring');
 
-      // Execute the swap
+      // Execute the swap - pass ZEC amount (source asset amount)
       await routeFromZcash({
         zcashAccount,
         destinationAccount,
-        amount: numAmount.toString(),
+        amount: zecAmountNeeded.toString(),
         onSwapStatusChange: (event) => {
           console.log('[RouteFromZecForm] Swap status:', event);
           setCurrentState(event);
