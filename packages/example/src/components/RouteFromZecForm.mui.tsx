@@ -52,31 +52,28 @@ export function RouteFromZecForm() {
           <Box sx={{ flex: 1 }}>
             <AmountInput value={amount} onChange={setAmount} />
           </Box>
-          <Box sx={{ position: 'relative' }}>
-            <AssetSelect value={asset} onChange={setAsset} />
-            <Typography
-              onClick={() => setAmount(maxBalance)}
-              sx={{
-                position: 'absolute',
-                top: '100%',
-                right: 0,
-                mt: 0.5,
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                color: '#F3B724',
-                cursor: 'pointer',
-                '&:hover': {
-                  textDecoration: 'underline',
-                },
-              }}
-            >
-              MAX: {maxBalance} {asset}
-            </Typography>
-          </Box>
+          <AssetSelect value={asset} onChange={setAsset} />
         </Box>
-        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-          {priceLoading ? 'Loading price...' : usdValue}
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {priceLoading ? 'Loading price...' : usdValue}
+          </Typography>
+          <Typography
+            onClick={() => setAmount(maxBalance)}
+            sx={{
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              color: '#F3B724',
+              cursor: 'pointer',
+              mr: '14px',
+              '&:hover': {
+                textDecoration: 'underline',
+              },
+            }}
+          >
+            MAX: {maxBalance} {asset}
+          </Typography>
+        </Box>
       </Box>
 
       {/* Submit Button */}
