@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-hot-shielded-full';
-import { createZcashTransparentAccount } from '@asset-route-sdk/zcash-hot-transparent-full';
+import { getZcashAccount } from './zcashAccountManager';
 
 export function useZecBalance(
   addressType: 'transparent' | 'shielded',
@@ -30,23 +29,12 @@ export function useZecBalance(
           import.meta.env.VITE_LIGHTWALLETD_URL ||
           'https://zcash-mainnet.chainsafe.dev';
 
-        // Create the appropriate Zcash account based on address type
-        const account =
-          addressType === 'shielded'
-            ? await createZcashShieldedAccount({
-                mnemonic: mnemonic.trim(),
-                accountIndex: 0,
-                network: 'main',
-                lightwalletdUrl,
-                minConfirmations: 1,
-              })
-            : await createZcashTransparentAccount({
-                mnemonic: mnemonic.trim(),
-                accountIndex: 0,
-                network: 'main',
-                lightwalletdUrl,
-                minConfirmations: 1,
-              });
+        // Get or create the Zcash account (singleton)
+        const account = await getZcashAccount({
+          addressType,
+          mnemonic,
+          lightwalletdUrl,
+        });
 
         // Get balance in base units (zatoshis)
         const balanceInZatoshis = await account.getBalance();
