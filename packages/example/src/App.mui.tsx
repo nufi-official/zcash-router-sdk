@@ -466,7 +466,7 @@ function App() {
                   </Typography>
                 </Box>
                 <Box sx={{ p: 3, flex: 1 }}>
-                  <RouteToZecForm />
+                  <RouteToZecForm addressType={addressType} zcashMnemonic={zcashMnemonic} />
                 </Box>
               </Paper>
             </Box>
