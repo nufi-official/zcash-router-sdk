@@ -247,6 +247,7 @@ function App() {
       return;
     }
     setMnemonic(mnemonicInput.trim());
+    setIsConnected(false); // Close the panel after login
   };
 
   const handleDisconnect = () => {
