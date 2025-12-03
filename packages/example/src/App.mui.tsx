@@ -293,6 +293,13 @@ function App() {
         {/* Connect Wallet - Top Right */}
         <Box
           sx={{ position: 'absolute', top: 20, right: 20, maxWidth: '500px' }}
+          onBlur={(e) => {
+            // Check if the new focus target is outside this container
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+              setIsConnected(false);
+            }
+          }}
+          tabIndex={-1}
         >
           <Box
             sx={{
