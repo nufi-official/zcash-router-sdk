@@ -160,11 +160,11 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@chainsafe/webzjs-keys':
-        specifier: https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-keys-0.1.0.tgz
-        version: https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-keys-0.1.0.tgz
+        specifier: file:/Users/peter/Documents/GitHub/ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz
+        version: file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz
       '@chainsafe/webzjs-wallet':
-        specifier: https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-wallet-0.1.0.tgz
-        version: https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-wallet-0.1.0.tgz
+        specifier: file:/Users/peter/Documents/GitHub/ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz
+        version: file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz
       bip39:
         specifier: ^3.1.0
         version: 3.1.0
@@ -312,13 +312,13 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@chainsafe/webzjs-keys@https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-keys-0.1.0.tgz':
-    resolution: {tarball: https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-keys-0.1.0.tgz}
-    version: 0.1.0
+  '@chainsafe/webzjs-keys@file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz':
+    resolution: {integrity: sha512-yxljIfDLFWKu8Ca5E7C8Rlb2zrs231fNV5uL9nbgdoCj00EY4ynFFXCTGCNbNiVc42vPbx0QWZSdCrcCPaeLCg==, tarball: file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz}
+    version: 0.3.0
 
-  '@chainsafe/webzjs-wallet@https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-wallet-0.1.0.tgz':
-    resolution: {tarball: https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-wallet-0.1.0.tgz}
-    version: 0.1.0
+  '@chainsafe/webzjs-wallet@file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz':
+    resolution: {integrity: sha512-0avO6DqiyPeL+tXRjqgXR0efeOTiZ6OpxPE0vrAgUVHWI4ptLOXDz6EifzMAxJDDRoQxW5d1GOk7Mi51spzK4Q==, tarball: file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz}
+    version: 0.3.0
 
   '@csstools/color-helpers@5.1.0':
     resolution: {integrity: sha512-S11EXWJyy0Mz5SYvRmY8nJYTFFd1LCNV+7cXyAgQtOOuzb4EsgfqDufL+9esx72/eLhsRdGZwaldu/h+E4t4BA==}
@@ -3208,9 +3208,9 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@chainsafe/webzjs-keys@https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-keys-0.1.0.tgz': {}
+  '@chainsafe/webzjs-keys@file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz': {}
 
-  '@chainsafe/webzjs-wallet@https://github.com/tkviet/WebZjs/releases/download/0.1.0/chainsafe-webzjs-wallet-0.1.0.tgz': {}
+  '@chainsafe/webzjs-wallet@file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz': {}
 
   '@csstools/color-helpers@5.1.0': {}
 
