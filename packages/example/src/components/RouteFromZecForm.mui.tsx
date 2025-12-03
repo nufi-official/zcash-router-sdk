@@ -229,7 +229,7 @@ export function RouteFromZecForm({
             sx={{
               fontSize: '0.75rem',
               fontWeight: 600,
-              color: '#F3B724',
+              color: 'white',
               cursor: 'pointer',
               mr: '14px',
               '&:hover': {
