@@ -14,7 +14,10 @@ import {
 import { generateMnemonic } from 'bip39';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
 import { RouteFromZecForm } from './components/RouteFromZecForm.mui';
-import { loadAndInitWebZjs, resetZcashWallet } from '@asset-route-sdk/zcash-core';
+import {
+  loadAndInitWebZjs,
+  resetZcashWallet,
+} from '@asset-route-sdk/zcash-core';
 
 // Theme with official Solana and Zcash brand colors
 const theme = createTheme({
@@ -225,13 +228,25 @@ const theme = createTheme({
 });
 
 function App() {
-  const [addressType, setAddressType] = useState<'transparent' | 'shielded'>('transparent');
+  const [addressType, setAddressType] = useState<'transparent' | 'shielded'>(
+    'transparent'
+  );
   const [mnemonic, setMnemonic] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
 
   // Initialize WASM on mount (but don't block UI)
   useEffect(() => {
     void loadAndInitWebZjs();
   }, []);
+
+  const handleConnect = () => {
+    setIsConnected(true);
+  };
+
+  const handleDisconnect = () => {
+    setIsConnected(false);
+    setMnemonic('');
+  };
 
   const handleGenerateMnemonic = () => {
     const newMnemonic = generateMnemonic();
@@ -239,7 +254,11 @@ function App() {
   };
 
   const handleResetWallet = () => {
-    if (confirm('This will clear all Zcash wallet data and birthday blocks from localStorage. Continue?')) {
+    if (
+      confirm(
+        'This will clear all Zcash wallet data and birthday blocks from localStorage. Continue?'
+      )
+    ) {
       resetZcashWallet();
       alert('Zcash wallet reset complete. Please refresh the page.');
     }
@@ -275,96 +294,177 @@ function App() {
           </Alert>
         </Box>
 
-        {/* Mnemonic Input - Top Right */}
+        {/* Connect Wallet - Top Right */}
         <Box
           sx={{ position: 'absolute', top: 20, right: 20, maxWidth: '500px' }}
         >
           <Box
             sx={{
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: 3,
-              p: 3,
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              alignItems: 'flex-start',
             }}
           >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-              <Typography
-                variant="caption"
-                sx={{ color: 'text.secondary' }}
-              >
-                Mnemonic Phrase
-              </Typography>
-              <Button
-                onClick={handleGenerateMnemonic}
-                size="small"
-                sx={{
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
-                  color: '#F3B724',
-                  textTransform: 'none',
-                  '&:hover': {
-                    backgroundColor: 'rgba(243, 183, 36, 0.1)',
-                  },
-                }}
-              >
-                Generate New
-              </Button>
-            </Box>
-            <TextField
-              fullWidth
-              value={mnemonic}
-              onChange={(e) => setMnemonic(e.target.value.trim())}
-              placeholder="your twelve or twenty-four word mnemonic..."
-              multiline
-              rows={3}
-              variant="standard"
-              slotProps={{
-                input: {
-                  disableUnderline: true,
-                  sx: {
-                    fontFamily: '"JetBrains Mono", "Consolas", "Monaco", monospace',
-                    fontSize: '0.875rem',
-                    color: 'white',
-                    fontWeight: 400,
-                    lineHeight: 1.8,
-                    '& textarea': {
-                      padding: 0,
-                    },
-                    '& textarea::placeholder': {
-                      color: 'rgba(255, 255, 255, 0.3)',
-                      opacity: 1,
-                    },
-                  },
+            <Button
+              onClick={handleConnect}
+              variant="contained"
+              size="large"
+              sx={{
+                background:
+                  'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
+                color: 'white',
+                fontWeight: 700,
+                fontSize: '1rem',
+                px: 4,
+                py: 1.5,
+                borderRadius: 3,
+                textTransform: 'none',
+                boxShadow: '0 4px 20px rgba(20, 241, 149, 0.4)',
+                minWidth: 'auto',
+                alignSelf: 'flex-end',
+                '&:hover': {
+                  background:
+                    'linear-gradient(135deg, #10c177 0%, #7a2ecc 50%, #c9981d 100%)',
+                  boxShadow: '0 6px 25px rgba(20, 241, 149, 0.6)',
                 },
               }}
-            />
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
-              <Typography
-                variant="caption"
+            >
+              Connect
+            </Button>
+
+            {isConnected && (
+              <Box
                 sx={{
-                  color: 'text.secondary',
-                }}
-              >
-                ⚠️ Never share your mnemonic
-              </Typography>
-              <Button
-                onClick={handleResetWallet}
-                size="small"
-                sx={{
-                  fontSize: '0.7rem',
-                  fontWeight: 600,
-                  color: 'error.main',
-                  textTransform: 'none',
-                  padding: '4px 8px',
-                  minWidth: 'auto',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 23, 68, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: 3,
+                  p: 3,
+                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                  animation: 'slideDown 0.3s ease-out',
+                  '@keyframes slideDown': {
+                    from: {
+                      opacity: 0,
+                      transform: 'translateY(-20px)',
+                    },
+                    to: {
+                      opacity: 1,
+                      transform: 'translateY(0)',
+                    },
                   },
                 }}
               >
-                Reset Wallet
-              </Button>
-            </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 1,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'text.secondary' }}
+                  >
+                    Mnemonic Phrase
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Button
+                      onClick={handleGenerateMnemonic}
+                      size="small"
+                      sx={{
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        color: '#F3B724',
+                        textTransform: 'none',
+                        '&:hover': {
+                          backgroundColor: 'rgba(243, 183, 36, 0.1)',
+                        },
+                      }}
+                    >
+                      Generate New
+                    </Button>
+                    <Button
+                      onClick={handleDisconnect}
+                      size="small"
+                      sx={{
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        color: 'error.main',
+                        textTransform: 'none',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 23, 68, 0.1)',
+                        },
+                      }}
+                    >
+                      Disconnect
+                    </Button>
+                  </Box>
+                </Box>
+                <TextField
+                  fullWidth
+                  value={mnemonic}
+                  onChange={(e) => setMnemonic(e.target.value.trim())}
+                  placeholder="your twelve or twenty-four word mnemonic..."
+                  multiline
+                  rows={3}
+                  variant="standard"
+                  slotProps={{
+                    input: {
+                      disableUnderline: true,
+                      sx: {
+                        fontFamily:
+                          '"JetBrains Mono", "Consolas", "Monaco", monospace',
+                        fontSize: '0.875rem',
+                        color: 'white',
+                        fontWeight: 400,
+                        lineHeight: 1.8,
+                        '& textarea': {
+                          padding: 0,
+                        },
+                        '& textarea::placeholder': {
+                          color: 'rgba(255, 255, 255, 0.3)',
+                          opacity: 1,
+                        },
+                      },
+                    },
+                  }}
+                />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mt: 1,
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: 'text.secondary',
+                    }}
+                  >
+                    ⚠️ Never share your mnemonic
+                  </Typography>
+                  <Button
+                    onClick={handleResetWallet}
+                    size="small"
+                    sx={{
+                      fontSize: '0.7rem',
+                      fontWeight: 600,
+                      color: 'error.main',
+                      textTransform: 'none',
+                      padding: '4px 8px',
+                      minWidth: 'auto',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 23, 68, 0.1)',
+                      },
+                    }}
+                  >
+                    Reset Wallet
+                  </Button>
+                </Box>
+              </Box>
+            )}
           </Box>
         </Box>
 
@@ -406,7 +506,8 @@ function App() {
                     left: addressType === 'transparent' ? 4 : 'calc(50%)',
                     width: 'calc(50% - 4px)',
                     height: 'calc(100% - 8px)',
-                    background: 'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
+                    background:
+                      'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
                     boxShadow: '0 4px 16px rgba(243, 183, 36, 0.4)',
                     borderRadius: '28px',
                     transition: 'left 0.3s ease',
@@ -423,14 +524,18 @@ function App() {
                     borderRadius: '28px',
                     cursor: 'pointer',
                     transition: 'color 0.3s ease',
-                    color: addressType === 'transparent' ? 'white' : 'rgba(243, 183, 36, 0.8)',
+                    color:
+                      addressType === 'transparent'
+                        ? 'white'
+                        : 'rgba(243, 183, 36, 0.8)',
                     fontWeight: 600,
                     minWidth: '140px',
                     textAlign: 'center',
                     position: 'relative',
                     zIndex: 1,
                     '&:hover': {
-                      color: addressType === 'transparent' ? 'white' : '#F3B724',
+                      color:
+                        addressType === 'transparent' ? 'white' : '#F3B724',
                     },
                   }}
                 >
@@ -446,7 +551,10 @@ function App() {
                     borderRadius: '28px',
                     cursor: 'pointer',
                     transition: 'color 0.3s ease',
-                    color: addressType === 'shielded' ? 'white' : 'rgba(243, 183, 36, 0.8)',
+                    color:
+                      addressType === 'shielded'
+                        ? 'white'
+                        : 'rgba(243, 183, 36, 0.8)',
                     fontWeight: 600,
                     minWidth: '140px',
                     textAlign: 'center',
@@ -469,121 +577,128 @@ function App() {
               alignItems="stretch"
               sx={{ width: '100%' }}
             >
-            {/* Route to Zcash */}
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Paper
-                elevation={3}
-                sx={{
-                  overflow: 'hidden',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  background:
-                    'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
-                  borderRadius: 3,
-                }}
-              >
-                <Box
+              {/* Route to Zcash */}
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Paper
+                  elevation={3}
                   sx={{
+                    overflow: 'hidden',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
                     background:
-                      'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
-                    color: 'white',
-                    p: 3,
-                    position: 'relative',
-                    borderRadius: '24px 24px 48px 48px',
-                    boxShadow: '0 0 32px rgba(20, 241, 149, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
-                    zIndex: 1,
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      background:
-                        'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
-                      borderRadius: '24px 24px 48px 48px',
-                    },
+                      'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
+                    borderRadius: 3,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}
+                  <Box
+                    sx={{
+                      background:
+                        'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
+                      color: 'white',
+                      p: 3,
+                      position: 'relative',
+                      borderRadius: '24px 24px 48px 48px',
+                      boxShadow:
+                        '0 0 32px rgba(20, 241, 149, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
+                      zIndex: 1,
+                      '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background:
+                          'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
+                        borderRadius: '24px 24px 48px 48px',
+                      },
+                    }}
                   >
-                    Route to Zcash
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}
-                  >
-                    Swap SOL → ZEC
-                  </Typography>
-                </Box>
-                <Box sx={{ p: 3, flex: 1 }}>
-                  <RouteToZecForm addressType={addressType} mnemonic={mnemonic} />
-                </Box>
-              </Paper>
-            </Box>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}
+                    >
+                      Route to Zcash
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}
+                    >
+                      Swap SOL → ZEC
+                    </Typography>
+                  </Box>
+                  <Box sx={{ p: 3, flex: 1 }}>
+                    <RouteToZecForm
+                      addressType={addressType}
+                      mnemonic={mnemonic}
+                    />
+                  </Box>
+                </Paper>
+              </Box>
 
-            {/* Route from Zcash */}
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Paper
-                elevation={3}
-                sx={{
-                  overflow: 'hidden',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  background:
-                    'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
-                  borderRadius: 3,
-                }}
-              >
-                <Box
+              {/* Route from Zcash */}
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Paper
+                  elevation={3}
                   sx={{
+                    overflow: 'hidden',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
                     background:
-                      'linear-gradient(135deg, #F3B724 0%, #9945FF 50%, #14F195 100%)',
-                    color: 'white',
-                    p: 3,
-                    position: 'relative',
-                    borderRadius: '24px 24px 48px 48px',
-                    boxShadow: '0 0 32px rgba(243, 183, 36, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
-                    zIndex: 1,
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      background:
-                        'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
-                      borderRadius: '24px 24px 48px 48px',
-                    },
+                      'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
+                    borderRadius: 3,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}
+                  <Box
+                    sx={{
+                      background:
+                        'linear-gradient(135deg, #F3B724 0%, #9945FF 50%, #14F195 100%)',
+                      color: 'white',
+                      p: 3,
+                      position: 'relative',
+                      borderRadius: '24px 24px 48px 48px',
+                      boxShadow:
+                        '0 0 32px rgba(243, 183, 36, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
+                      zIndex: 1,
+                      '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background:
+                          'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
+                        borderRadius: '24px 24px 48px 48px',
+                      },
+                    }}
                   >
-                    Route from Zcash
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}
-                  >
-                    Swap ZEC → SOL
-                  </Typography>
-                </Box>
-                <Box sx={{ p: 3, flex: 1 }}>
-                  <RouteFromZecForm addressType={addressType} mnemonic={mnemonic} />
-                </Box>
-              </Paper>
-            </Box>
-          </Stack>
+                    <Typography
+                      variant="h6"
+                      sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}
+                    >
+                      Route from Zcash
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}
+                    >
+                      Swap ZEC → SOL
+                    </Typography>
+                  </Box>
+                  <Box sx={{ p: 3, flex: 1 }}>
+                    <RouteFromZecForm
+                      addressType={addressType}
+                      mnemonic={mnemonic}
+                    />
+                  </Box>
+                </Paper>
+              </Box>
+            </Stack>
           </Box>
         </Box>
-
       </Box>
     </ThemeProvider>
   );
