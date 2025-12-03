@@ -310,33 +310,38 @@ function App() {
             }}
           >
             <Button
-              onClick={handleConnect}
+              onClick={mnemonic ? () => setIsConnected(!isConnected) : handleConnect}
               variant="contained"
               size="large"
               sx={{
-                background:
-                  'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
-                color: 'white',
+                background: mnemonic
+                  ? 'rgba(0, 0, 0, 0.5)'
+                  : 'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
+                backdropFilter: mnemonic ? 'blur(10px)' : 'none',
+                color: mnemonic ? 'rgba(243, 183, 36, 0.8)' : 'white',
                 fontWeight: 700,
                 fontSize: '1rem',
                 px: 4,
                 py: 1.5,
                 borderRadius: 3,
                 textTransform: 'none',
-                boxShadow: '0 4px 20px rgba(20, 241, 149, 0.4)',
+                boxShadow: mnemonic ? 'none' : '0 4px 20px rgba(20, 241, 149, 0.4)',
                 minWidth: 'auto',
                 alignSelf: 'flex-end',
+                border: mnemonic ? '2px solid rgba(243, 183, 36, 0.3)' : 'none',
                 '&:hover': {
-                  background:
-                    'linear-gradient(135deg, #10c177 0%, #7a2ecc 50%, #c9981d 100%)',
-                  boxShadow: '0 6px 25px rgba(20, 241, 149, 0.6)',
+                  background: mnemonic
+                    ? 'rgba(0, 0, 0, 0.7)'
+                    : 'linear-gradient(135deg, #10c177 0%, #7a2ecc 50%, #c9981d 100%)',
+                  color: mnemonic ? '#F3B724' : 'white',
+                  boxShadow: mnemonic ? 'none' : '0 6px 25px rgba(20, 241, 149, 0.6)',
                 },
               }}
             >
-              Connect
+              {mnemonic ? `Mnemonic: ${mnemonic.split(' ')[0]}...` : 'Connect'}
             </Button>
 
-            {isConnected && (
+            {isConnected && !mnemonic && (
               <Box
                 sx={{
                   border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -459,7 +464,7 @@ function App() {
                       },
                     }}
                   >
-                    Login
+                    Confirm
                   </Button>
                 </Box>
               </Box>
