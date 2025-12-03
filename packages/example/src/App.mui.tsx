@@ -341,13 +341,55 @@ function App() {
               {mnemonic ? `Mnemonic: ${mnemonic.split(' ')[0]}...` : 'Connect'}
             </Button>
 
+            {isConnected && mnemonic && (
+              <Button
+                onClick={handleDisconnect}
+                variant="contained"
+                size="large"
+                sx={{
+                  background: 'rgba(0, 0, 0, 0.5)',
+                  backdropFilter: 'blur(10px)',
+                  color: 'error.main',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 3,
+                  textTransform: 'none',
+                  boxShadow: 'none',
+                  minWidth: 'auto',
+                  alignSelf: 'flex-end',
+                  border: '2px solid rgba(243, 183, 36, 0.3)',
+                  animation: 'slideDown 0.3s ease-out',
+                  '@keyframes slideDown': {
+                    from: {
+                      opacity: 0,
+                      transform: 'translateY(-20px)',
+                    },
+                    to: {
+                      opacity: 1,
+                      transform: 'translateY(0)',
+                    },
+                  },
+                  '&:hover': {
+                    background: 'rgba(0, 0, 0, 0.7)',
+                    color: '#ff1744',
+                    boxShadow: 'none',
+                  },
+                }}
+              >
+                Disconnect
+              </Button>
+            )}
+
             {isConnected && !mnemonic && (
               <Box
                 sx={{
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: '2px solid rgba(243, 183, 36, 0.3)',
                   borderRadius: 3,
                   p: 3,
-                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  backdropFilter: 'blur(10px)',
                   animation: 'slideDown 0.3s ease-out',
                   '@keyframes slideDown': {
                     from: {
@@ -375,38 +417,21 @@ function App() {
                   >
                     Mnemonic Phrase
                   </Typography>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Button
-                      onClick={handleGenerateMnemonic}
-                      size="small"
-                      sx={{
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        color: '#F3B724',
-                        textTransform: 'none',
-                        '&:hover': {
-                          backgroundColor: 'rgba(243, 183, 36, 0.1)',
-                        },
-                      }}
-                    >
-                      Generate New
-                    </Button>
-                    <Button
-                      onClick={handleDisconnect}
-                      size="small"
-                      sx={{
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        color: 'error.main',
-                        textTransform: 'none',
-                        '&:hover': {
-                          backgroundColor: 'rgba(255, 23, 68, 0.1)',
-                        },
-                      }}
-                    >
-                      Disconnect
-                    </Button>
-                  </Box>
+                  <Button
+                    onClick={handleGenerateMnemonic}
+                    size="small"
+                    sx={{
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      color: '#F3B724',
+                      textTransform: 'none',
+                      '&:hover': {
+                        backgroundColor: 'rgba(243, 183, 36, 0.1)',
+                      },
+                    }}
+                  >
+                    Generate New
+                  </Button>
                 </Box>
                 <TextField
                   fullWidth
