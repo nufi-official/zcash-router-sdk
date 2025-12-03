@@ -41,6 +41,10 @@ export type WebWalletManager = {
     amount: Zatoshis,
   ): Promise<ZcashPcztHex>
 
+  createShieldPczt(
+    account: ZcashAccountStoredData,
+  ): Promise<ZcashPcztHex>
+
   provePczt(signedPcztHex: ZcashSignedPcztHex): Promise<ZcashProvedPcztHex>
 
   submitTransaction(provedPcztHex: string): Promise<string>
@@ -49,6 +53,8 @@ export type WebWalletManager = {
     shieldedBalance: Zatoshis
     unshieldedBalance: Zatoshis
   }>
+
+  sync(): Promise<void>
 
   destroy(): void
 }

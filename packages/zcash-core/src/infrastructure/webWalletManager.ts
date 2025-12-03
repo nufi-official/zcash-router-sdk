@@ -145,7 +145,7 @@ export class WebWalletManagerImpl implements WebWalletManager {
    * If a sync is already in progress, this will await the pending sync
    * instead of creating a new one to prevent concurrent syncs.
    */
-  private async sync(): Promise<void> {
+  async sync(): Promise<void> {
     const wallet = await this.getOrCreateWallet();
 
     // if there are no accounts, the sync fails
@@ -223,6 +223,33 @@ export class WebWalletManagerImpl implements WebWalletManager {
       toAddress,
       BigInt(amount.toString())
     );
+
+    try {
+      // Serialize PCZT to bytes and convert to hex
+      const pcztBytes = pczt.serialize();
+      return Buffer.from(pcztBytes).toString('hex') as ZcashPcztHex;
+    } finally {
+      // Clean up WASM memory
+      pczt.free();
+    }
+  }
+
+  /**
+   * Create a PCZT to shield all transparent funds
+   *
+   * @param account - Account to shield funds for
+   * @returns Hex-encoded PCZT
+   */
+  async createShieldPczt(
+    account: ZcashAccountStoredData
+  ): Promise<ZcashPcztHex> {
+    const accountId = await this.importOrGetAccount(account);
+    const wallet = await this.getOrCreateWallet();
+    await this.sync();
+
+    console.log('[WebWalletManager] Creating shield PCZT for account:', accountId);
+
+    const pczt = await wallet.pczt_shield(accountId);
 
     try {
       // Serialize PCZT to bytes and convert to hex
