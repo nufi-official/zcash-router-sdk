@@ -231,7 +231,8 @@ function App() {
   const [addressType, setAddressType] = useState<'transparent' | 'shielded'>(
     'transparent'
   );
-  const [mnemonic, setMnemonic] = useState('');
+  const [mnemonic, setMnemonic] = useState(''); // The confirmed mnemonic used by forms
+  const [mnemonicInput, setMnemonicInput] = useState(''); // The input field value
   const [isConnected, setIsConnected] = useState(false);
 
   // Initialize WASM on mount (but don't block UI)
@@ -243,14 +244,23 @@ function App() {
     setIsConnected(true);
   };
 
+  const handleLogin = () => {
+    if (!mnemonicInput.trim()) {
+      alert('Please enter a mnemonic phrase');
+      return;
+    }
+    setMnemonic(mnemonicInput.trim());
+  };
+
   const handleDisconnect = () => {
     setIsConnected(false);
     setMnemonic('');
+    setMnemonicInput('');
   };
 
   const handleGenerateMnemonic = () => {
     const newMnemonic = generateMnemonic();
-    setMnemonic(newMnemonic);
+    setMnemonicInput(newMnemonic);
   };
 
   const handleResetWallet = () => {
@@ -402,8 +412,8 @@ function App() {
                 </Box>
                 <TextField
                   fullWidth
-                  value={mnemonic}
-                  onChange={(e) => setMnemonic(e.target.value.trim())}
+                  value={mnemonicInput}
+                  onChange={(e) => setMnemonicInput(e.target.value)}
                   placeholder="your twelve or twenty-four word mnemonic..."
                   multiline
                   rows={3}
@@ -429,6 +439,36 @@ function App() {
                     },
                   }}
                 />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    mt: 2,
+                  }}
+                >
+                  <Button
+                    onClick={handleLogin}
+                    variant="contained"
+                    fullWidth
+                    sx={{
+                      background: 'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
+                      color: 'white',
+                      fontWeight: 700,
+                      fontSize: '0.9rem',
+                      py: 1.2,
+                      borderRadius: 2,
+                      textTransform: 'none',
+                      boxShadow: '0 2px 10px rgba(20, 241, 149, 0.3)',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #10c177 0%, #7a2ecc 50%, #c9981d 100%)',
+                        boxShadow: '0 4px 15px rgba(20, 241, 149, 0.5)',
+                      },
+                    }}
+                  >
+                    Login
+                  </Button>
+                </Box>
                 <Box
                   sx={{
                     display: 'flex',
