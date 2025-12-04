@@ -72,7 +72,7 @@ export function AssetSelect({ value, onChange }: AssetSelectProps) {
           renderValue,
           IconComponent,
           sx: {
-            backgroundColor: 'black',
+            backgroundColor: 'transparent',
             borderRadius: 3,
             px: 3,
             py: 1.5,
@@ -80,7 +80,7 @@ export function AssetSelect({ value, onChange }: AssetSelectProps) {
             display: 'flex',
             alignItems: 'center',
             '&:focus': {
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              backgroundColor: 'transparent',
             },
             '& .MuiSelect-select': {
               display: 'flex',
