@@ -306,7 +306,7 @@ function App() {
 
         {/* Connect Wallet - Top Right */}
         <Box
-          sx={{ position: 'absolute', top: 20, right: 20, maxWidth: '500px' }}
+          sx={{ position: 'absolute', top: 20, right: 20, width: '500px' }}
           onBlur={(e) => {
             // Check if the new focus target is outside this container
             if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -430,6 +430,7 @@ function App() {
             {isConnected && !mnemonic && (
               <Box
                 sx={{
+                  width: '100%',
                   border: '2px solid rgba(243, 183, 36, 0.3)',
                   borderRadius: 3,
                   p: 3,
