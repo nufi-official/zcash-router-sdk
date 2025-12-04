@@ -6,8 +6,8 @@ import {
   ReactNode,
 } from 'react';
 import type { AccountFull } from '@asset-route-sdk/core';
-import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-core';
-import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-core';
+import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-account-mnemonic';
+import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-account-mnemonic';
 import { createSolanaAccountFull } from '@asset-route-sdk/solana-hot-address-only';
 
 interface AccountContextType {

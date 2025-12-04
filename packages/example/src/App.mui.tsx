@@ -17,7 +17,7 @@ import { Refresh as RefreshIcon } from '@mui/icons-material';
 import { generateMnemonic } from 'bip39';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
 import { RouteFromZecForm } from './components/RouteFromZecForm.mui';
-import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-core';
+import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-account-mnemonic';
 import { AccountProvider } from './contexts/AccountContext';
 
 // Theme with official Solana and Zcash brand colors
