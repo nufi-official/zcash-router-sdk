@@ -7,8 +7,8 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=18.0.0",
-    "pnpm": ">=8.0.0"
+    "node": "18.x",
+    "pnpm": "8.x"
   },
   "scripts": {
     "build": "pnpm --filter \"./packages/*\" run build",
