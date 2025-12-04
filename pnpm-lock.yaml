@@ -169,28 +169,6 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
 
-  packages/zcash-hot-transparent-full:
-    dependencies:
-      '@asset-route-sdk/core':
-        specifier: workspace:*
-        version: link:../core
-      '@asset-route-sdk/zcash-core':
-        specifier: workspace:*
-        version: link:../zcash-core
-    devDependencies:
-      '@types/node':
-        specifier: ^22.10.2
-        version: 22.19.1
-      tsup:
-        specifier: ^8.3.5
-        version: 8.5.1(@swc/core@1.15.3(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.7.2
-        version: 5.9.3
-      vitest:
-        specifier: ^2.1.8
-        version: 2.1.9(@types/node@22.19.1)(happy-dom@15.11.7)(jsdom@25.0.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-
 packages:
 
   '@ampproject/remapping@2.3.0':
