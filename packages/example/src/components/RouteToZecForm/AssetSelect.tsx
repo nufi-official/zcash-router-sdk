@@ -72,7 +72,7 @@ export function AssetSelect({ value, onChange }: AssetSelectProps) {
           renderValue,
           IconComponent,
           sx: {
-            backgroundColor: 'transparent',
+            backgroundColor: 'black',
             borderRadius: 3,
             px: 3,
             py: 1.5,
@@ -95,7 +95,7 @@ export function AssetSelect({ value, onChange }: AssetSelectProps) {
         MenuProps: {
           PaperProps: {
             sx: {
-              backgroundColor: 'rgba(10, 10, 10, 0.98)',
+              backgroundColor: '#000000',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               borderTop: 'none',
@@ -115,13 +115,18 @@ export function AssetSelect({ value, onChange }: AssetSelectProps) {
         sx={{
           fontSize: '1.25rem',
           py: 1.5,
+          backgroundColor: '#000000',
+          color: 'white',
           '&:hover': {
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            backgroundColor: '#000000',
+            color: '#F3B724',
           },
           '&.Mui-selected': {
-            backgroundColor: 'rgba(255, 255, 255, 0.12)',
+            backgroundColor: '#000000',
+            color: 'white',
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.15)',
+              backgroundColor: '#000000',
+              color: '#F3B724',
             },
           },
         }}
