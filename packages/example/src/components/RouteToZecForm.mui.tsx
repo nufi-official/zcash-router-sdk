@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Link } from '@mui/material';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
@@ -30,6 +30,7 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
   >('idle');
   const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
   const [swapError, setSwapError] = useState<string>();
+  const [depositTxHash, setDepositTxHash] = useState<string>();
 
   const { price, loading: priceLoading } = useTokenPrice(asset);
   const { balance: solBalance, loading: balanceLoading, refresh: refreshSolBalance } =
@@ -44,13 +45,9 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
     }
   }, [onRefreshBalance, refreshSolBalance]);
 
-  // Clear form values after success and refresh balance after success or error
+  // Refresh balance after success or error
   useEffect(() => {
-    if (swapStatus === 'success') {
-      setAmount('');
-      setAsset('SOL');
-      refreshSolBalance();
-    } else if (swapStatus === 'error') {
+    if (swapStatus === 'success' || swapStatus === 'error') {
       refreshSolBalance();
     }
   }, [swapStatus, refreshSolBalance]);
@@ -90,6 +87,7 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
       setSwapStatus('monitoring');
       setSwapError(undefined);
       setCurrentState(undefined);
+      setDepositTxHash(undefined);
 
       // Validate mnemonic
       if (!mnemonic || !mnemonic.trim()) {
@@ -165,6 +163,10 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
           setCurrentState(event);
 
           if (event.status === 'DEPOSIT_SENT') {
+            // Capture deposit txHash
+            if ('txHash' in event && event.txHash) {
+              setDepositTxHash(event.txHash);
+            }
             // Deposit sent, continue monitoring
             setSwapStatus('monitoring');
           } else if (event.status === 'SUCCESS') {
@@ -259,6 +261,35 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
             isFetchingQuote={false}
             hasQuote={true}
           />
+        </Box>
+      )}
+
+      {/* Transaction Info - Show when we have a deposit tx */}
+      {depositTxHash && (
+        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
+          <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
+                Deposit SOL tx:
+              </Typography>
+              <Link
+                href={`https://explorer.solana.com/tx/${depositTxHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  color: '#F3B724',
+                  fontFamily: 'monospace',
+                  fontSize: '0.875rem',
+                  textDecoration: 'none',
+                  '&:hover': {
+                    textDecoration: 'underline',
+                  },
+                }}
+              >
+                {depositTxHash.slice(0, 8)}...{depositTxHash.slice(-8)}
+              </Link>
+            </Box>
+          </Box>
         </Box>
       )}
 
