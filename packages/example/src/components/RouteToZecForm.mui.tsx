@@ -44,6 +44,14 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
     }
   }, [onRefreshBalance, refreshSolBalance]);
 
+  // Clear form values after success
+  useEffect(() => {
+    if (swapStatus === 'success') {
+      setAmount('');
+      setAsset('SOL');
+    }
+  }, [swapStatus]);
+
   // Max balance is the SOL balance (only shown for SOL asset)
   const maxBalance = useMemo(() => {
     if (asset !== 'SOL' || balanceLoading) return '0';
@@ -198,8 +206,8 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
           />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <AmountInput value={amount} onChange={setAmount} />
-          <AssetSelect value={asset} onChange={setAsset} />
+          <AmountInput value={amount} onChange={setAmount} disabled={swapStatus === 'monitoring'} />
+          <AssetSelect value={asset} onChange={setAsset} disabled={swapStatus === 'monitoring'} />
         </Box>
         <Box
           sx={{

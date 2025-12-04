@@ -4,6 +4,7 @@ import { SolanaIcon } from './SolanaIcon';
 interface AssetSelectProps {
   value: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
 const renderValue = (value: unknown) => {
@@ -50,7 +51,7 @@ const IconComponent = (props: any) => (
   </Box>
 );
 
-export function AssetSelect({ value, onChange }: AssetSelectProps) {
+export function AssetSelect({ value, onChange, disabled }: AssetSelectProps) {
   return (
     <TextField
       sx={{ minWidth: 140 }}
@@ -58,6 +59,7 @@ export function AssetSelect({ value, onChange }: AssetSelectProps) {
       value={value}
       onChange={(e) => onChange(e.target.value)}
       variant="standard"
+      disabled={disabled}
       slotProps={{
         input: {
           disableUnderline: true,

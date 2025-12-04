@@ -54,6 +54,15 @@ export function RouteFromZecForm({
     }
   }, [onRefreshBalance, refreshZecBalance]);
 
+  // Clear form values after success
+  useEffect(() => {
+    if (swapStatus === 'success') {
+      setAmount('');
+      setAsset('SOL');
+      setDestinationAddress('');
+    }
+  }, [swapStatus]);
+
   // Calculate max SOL amount based on ZEC balance
   const maxBalance = useMemo(() => {
     if (balanceLoading || zecPriceLoading || priceLoading) return '0';
@@ -238,8 +247,16 @@ export function RouteFromZecForm({
           />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <AmountInput value={amount} onChange={setAmount} />
-          <AssetSelect value={asset} onChange={setAsset} />
+          <AmountInput
+            value={amount}
+            onChange={setAmount}
+            disabled={swapStatus === 'initiating' || swapStatus === 'monitoring'}
+          />
+          <AssetSelect
+            value={asset}
+            onChange={setAsset}
+            disabled={swapStatus === 'initiating' || swapStatus === 'monitoring'}
+          />
         </Box>
         <Box
           sx={{
@@ -280,6 +297,7 @@ export function RouteFromZecForm({
           onChange={(e) => setDestinationAddress(e.target.value)}
           placeholder="Destination address"
           variant="standard"
+          disabled={swapStatus === 'initiating' || swapStatus === 'monitoring'}
           sx={{
             '& .MuiInput-root': {
               color: 'white',
