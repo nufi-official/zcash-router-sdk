@@ -111,7 +111,7 @@ export class SolanaAccountFull implements AccountFull {
       const balance = await this.connection.getBalance(publicKey);
 
       // Reserve 10,000 lamports for transaction fees
-      const FEE_RESERVE = 20000n;
+      const FEE_RESERVE = 3_000_000n;
       const balanceBigInt = BigInt(balance);
 
       // Return balance minus fee reserve, or 0 if balance is less than fee
