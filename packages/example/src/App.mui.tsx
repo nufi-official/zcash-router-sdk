@@ -704,6 +704,7 @@ function App() {
                       onRefreshBalance={(refresh) => {
                         refreshSolBalanceRef.current = refresh;
                       }}
+                      onRefreshAllBalances={handleRefreshBalances}
                     />
                   </Box>
                 </Paper>
@@ -767,6 +768,7 @@ function App() {
                       onRefreshBalance={(refresh) => {
                         refreshZecBalanceRef.current = refresh;
                       }}
+                      onRefreshAllBalances={handleRefreshBalances}
                     />
                   </Box>
                 </Paper>
