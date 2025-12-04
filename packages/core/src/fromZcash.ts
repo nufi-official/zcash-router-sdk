@@ -44,7 +44,8 @@ export async function routeFromZcash(params: {
       amount: params.zcashAccount.assetToBaseUnits(params.amount).toString(),
       slippageTolerance: 100, // TODO: adjust in ui
     },
-    sendDeposit: (depositParams) => params.zcashAccount.sendDeposit(depositParams),
+    sendDeposit: (depositParams) =>
+      params.zcashAccount.sendDeposit(depositParams),
     onStatusChange: params.onSwapStatusChange,
   });
 }
