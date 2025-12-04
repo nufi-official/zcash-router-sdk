@@ -1,0 +1,6 @@
+import { OneClickApi } from '../infrastructure';
+export const swapApi = OneClickApi({
+    jwtToken: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjIwMjUtMDQtMjMtdjEifQ.eyJ2IjoxLCJrZXlfdHlwZSI6ImRpc3RyaWJ1dGlvbl9jaGFubmVsIiwicGFydG5lcl9pZCI6InZhY3V1bWxhYnMiLCJpYXQiOjE3NjI3ODI1NTcsImV4cCI6MTc5NDMxODU1N30.pV0dO1-0WsD-omDLE9xJxJ0Xus5jqal_x5YqTOu3lxUBiIT1tyxr5avNT80mhKvwdsRxeudMZt6nJCjYbUPlY8WcSR7zdKkMk-8xyo62BQPHxzqxn6LLp3krZohtkGkiu8bw4jGlNvEqljmSSsRIIOcLdPHMFgNIb2k7V7dzXs2_DBFaeCOpKy8fbi6gVwT-wuWN3qV5ZJkLigILh11-o_X_drdGglQ7jxQf4hwvrzcSFe8ymKq-qcz_Y3IgKvQndfecQgF78Gu_wB60fl3de74z-hmiiJglyoqZ7F2jn9DU8gVb5K4fr1BnIFYAaHMxMyRnoY2JLSvvBY40Dn1XnA',
+    apiBaseUrl: 'https://1click.chaindefuser.com',
+});
+//# sourceMappingURL=index.js.map
