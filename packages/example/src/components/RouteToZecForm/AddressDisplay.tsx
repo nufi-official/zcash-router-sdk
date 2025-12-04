@@ -41,7 +41,7 @@ export function AddressDisplay({ label, address, loading = false }: AddressDispl
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-      <Typography variant="caption" sx={{ color: 'white', fontFamily: 'monospace' }}>
+      <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'monospace' }}>
         {ellipsizeAddress(address)}
       </Typography>
       <Tooltip title={copied ? 'Copied!' : 'Copy address'}>
