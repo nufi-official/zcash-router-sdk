@@ -298,7 +298,7 @@ export function RouteFromZecForm({
           fullWidth
           value={destinationAddress}
           onChange={(e) => setDestinationAddress(e.target.value)}
-          placeholder="Destination address"
+          placeholder="Destination SOL address"
           variant="standard"
           disabled={swapStatus === 'initiating' || swapStatus === 'monitoring'}
           sx={{
