@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@asset-route-sdk/core": "workspace:*",
-    "@asset-route-sdk/solana-hot-address-only": "workspace:*",
+    "@asset-route-sdk/solana-account-mnemonic": "workspace:*",
     "@asset-route-sdk/zcash-account-mnemonic": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",

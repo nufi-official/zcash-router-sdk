@@ -1,6 +1,6 @@
-# @asset-route-sdk/solana-hot-address-only
+# @asset-route-sdk/solana-account-mnemonic
 
-Solana hot address-only account management library for the Asset Route SDK.
+Solana account management library with mnemonic support for the Asset Route SDK.
 
 ## Features
 
@@ -14,7 +14,7 @@ Solana hot address-only account management library for the Asset Route SDK.
 ## Installation
 
 ```bash
-pnpm add @asset-route-sdk/solana-hot-address-only
+pnpm add @asset-route-sdk/solana-account-mnemonic
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ pnpm add @asset-route-sdk/solana-hot-address-only
 ### Basic Example
 
 ```typescript
-import { createSolanaAccount } from '@asset-route-sdk/solana-hot-address-only';
+import { createSolanaAccount } from '@asset-route-sdk/solana-account-mnemonic';
 
 // Create a Solana account (address-only)
 const account = await createSolanaAccount({
@@ -44,7 +44,7 @@ console.log('Lamports:', lamports); // 1500000000n
 ### SPL Token Support
 
 ```typescript
-import { createSolanaAccount } from '@asset-route-sdk/solana-hot-address-only';
+import { createSolanaAccount } from '@asset-route-sdk/solana-account-mnemonic';
 
 // Create an account for USDC token
 const usdcAccount = await createSolanaAccount({
@@ -159,7 +159,7 @@ import {
   SOLANA_ASSET,
   SOLANA_DECIMALS,
   LAMPORTS_PER_SOL,
-} from '@asset-route-sdk/solana-hot-address-only';
+} from '@asset-route-sdk/solana-account-mnemonic';
 
 console.log(SOLANA_DECIMALS); // 9
 console.log(LAMPORTS_PER_SOL); // 1000000000n
@@ -175,7 +175,7 @@ import {
   deriveKeypairFromMnemonic,
   getAddressFromKeypair,
   deriveAddressFromMnemonic,
-} from '@asset-route-sdk/solana-hot-address-only';
+} from '@asset-route-sdk/solana-account-mnemonic';
 
 // Derive keypair
 const keypair = deriveKeypairFromMnemonic('your mnemonic...', 0);

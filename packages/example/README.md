@@ -103,7 +103,7 @@ The form will display real-time progress through these stages:
 ### Dependencies
 
 - **@asset-route-sdk/core**: Core swap functionality
-- **@asset-route-sdk/solana-hot-address-only**: Solana account management
+- **@asset-route-sdk/solana-account-mnemonic**: Solana account management with mnemonic support
 - **@asset-route-sdk/zcash-account-mnemonic**: Zcash account management with mnemonic support
 - **React 18**: UI framework
 - **Vite**: Build tool and dev server with WASM support plugins
