@@ -104,7 +104,7 @@ const theme = createTheme({
       fontWeight: 400,
     },
     button: {
-      fontWeight: 600,
+      fontWeight: 700,
       textTransform: 'none',
       letterSpacing: '0.01em',
       fontSize: '1rem',
@@ -602,7 +602,7 @@ function App() {
                         cursor: 'not-allowed',
                         transition: 'color 0.3s ease',
                         color: 'rgba(243, 183, 36, 0.8)',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         minWidth: '140px',
                         textAlign: 'center',
                         position: 'relative',
@@ -626,7 +626,7 @@ function App() {
                         addressType === 'shielded'
                           ? 'white'
                           : 'rgba(243, 183, 36, 0.8)',
-                      fontWeight: 600,
+                      fontWeight: 700,
                       minWidth: '140px',
                       textAlign: 'center',
                       position: 'relative',
