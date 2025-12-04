@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAccounts } from '../../contexts/AccountContext';
 
 export function useZcashAddress(
   mnemonic: string,
@@ -6,6 +7,8 @@ export function useZcashAddress(
 ) {
   const [address, setAddress] = useState<string>('');
   const [loading, setLoading] = useState(false);
+
+  const { zcashTransparentAccount, zcashShieldedAccount, isLoading: accountsLoading } = useAccounts();
 
   useEffect(() => {
     let mounted = true;
@@ -17,19 +20,15 @@ export function useZcashAddress(
         return;
       }
 
+      // Wait for account to be available
+      const zcashAccount = addressType === 'shielded' ? zcashShieldedAccount : zcashTransparentAccount;
+      if (accountsLoading || !zcashAccount) {
+        setLoading(true);
+        return;
+      }
+
       try {
         setLoading(true);
-        const lightwalletdUrl =
-          import.meta.env.VITE_LIGHTWALLETD_URL ||
-          'https://zcash-mainnet.chainsafe.dev';
-
-        const { getZcashAccount } = await import('./zcashAccountManager');
-        const zcashAccount = await getZcashAccount({
-          addressType,
-          mnemonic: mnemonic.trim(),
-          lightwalletdUrl,
-        });
-
         const addr = await zcashAccount.getAddress();
         if (!mounted) return;
 
@@ -50,7 +49,7 @@ export function useZcashAddress(
     return () => {
       mounted = false;
     };
-  }, [mnemonic, addressType]);
+  }, [mnemonic, addressType, accountsLoading, zcashTransparentAccount, zcashShieldedAccount]);
 
   return { address, loading };
 }

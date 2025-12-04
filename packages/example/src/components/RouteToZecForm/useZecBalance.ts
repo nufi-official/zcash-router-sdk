@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getZcashAccount } from './zcashAccountManager';
+import { useAccounts } from '../../contexts/AccountContext';
 
 export function useZecBalance(
   addressType: 'transparent' | 'shielded',
@@ -9,6 +9,8 @@ export function useZecBalance(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const { zcashTransparentAccount, zcashShieldedAccount, isLoading: accountsLoading } = useAccounts();
 
   const refresh = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
@@ -25,21 +27,16 @@ export function useZecBalance(
         return;
       }
 
+      // Wait for account to be available
+      const account = addressType === 'shielded' ? zcashShieldedAccount : zcashTransparentAccount;
+      if (accountsLoading || !account) {
+        setLoading(true);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(undefined);
-
-        // Get lightwalletd URL from environment variable
-        const lightwalletdUrl =
-          import.meta.env.VITE_LIGHTWALLETD_URL ||
-          'https://zcash-mainnet.chainsafe.dev';
-
-        // Get or create the Zcash account (singleton)
-        const account = await getZcashAccount({
-          addressType,
-          mnemonic,
-          lightwalletdUrl,
-        });
 
         // Get balance in base units (zatoshis)
         const balanceInZatoshis = await account.getBalance();
@@ -75,7 +72,7 @@ export function useZecBalance(
     return () => {
       mounted = false;
     };
-  }, [addressType, mnemonic, refreshTrigger]);
+  }, [addressType, mnemonic, refreshTrigger, accountsLoading, zcashTransparentAccount, zcashShieldedAccount]);
 
   return { balance, loading, error, refresh };
 }

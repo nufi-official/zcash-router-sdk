@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useAccounts } from '../../contexts/AccountContext';
 
 export function useSolanaAddress(mnemonic: string) {
   const [address, setAddress] = useState<string>('');
   const [loading, setLoading] = useState(false);
+
+  const { solanaAccount, isLoading: accountsLoading } = useAccounts();
 
   useEffect(() => {
     let mounted = true;
@@ -14,20 +17,14 @@ export function useSolanaAddress(mnemonic: string) {
         return;
       }
 
+      // Wait for account to be available
+      if (accountsLoading || !solanaAccount) {
+        setLoading(true);
+        return;
+      }
+
       try {
         setLoading(true);
-        const rpcUrl = import.meta.env.VITE_SOLANA_RPC_URL;
-        const { createSolanaAccountFull } = await import(
-          '@asset-route-sdk/solana-hot-address-only'
-        );
-        const solanaAccount = await createSolanaAccountFull({
-          mnemonic: mnemonic.trim(),
-          accountIndex: 0,
-          network: 'mainnet',
-          tokenId: undefined,
-          rpcUrl,
-        });
-
         const addr = await solanaAccount.getAddress();
         if (!mounted) return;
 
@@ -48,7 +45,7 @@ export function useSolanaAddress(mnemonic: string) {
     return () => {
       mounted = false;
     };
-  }, [mnemonic]);
+  }, [mnemonic, accountsLoading, solanaAccount]);
 
   return { address, loading };
 }

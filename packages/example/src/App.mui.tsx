@@ -18,6 +18,7 @@ import { generateMnemonic } from 'bip39';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
 import { RouteFromZecForm } from './components/RouteFromZecForm.mui';
 import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-core';
+import { AccountProvider } from './contexts/AccountContext';
 
 // Theme with official Solana and Zcash brand colors
 const theme = createTheme({
@@ -544,15 +545,16 @@ function App() {
         </Box>
 
         {/* Centered Forms Container */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-          }}
-        >
-          <Box sx={{ maxWidth: '1200px', width: '100%' }}>
+        <AccountProvider mnemonic={mnemonic}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+            }}
+          >
+            <Box sx={{ maxWidth: '1200px', width: '100%' }}>
             {/* Zcash Address Type Selector */}
             <Box
               sx={{
@@ -776,6 +778,7 @@ function App() {
             </Stack>
           </Box>
         </Box>
+        </AccountProvider>
       </Box>
     </ThemeProvider>
   );

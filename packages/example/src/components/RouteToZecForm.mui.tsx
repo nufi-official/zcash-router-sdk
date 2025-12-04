@@ -9,7 +9,7 @@ import { AddressDisplay } from './RouteToZecForm/AddressDisplay';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
 import { useSolBalance } from './RouteToZecForm/useSolBalance';
 import { useSolanaAddress } from './RouteToZecForm/useSolanaAddress';
-import { getZcashAccount } from './RouteToZecForm/zcashAccountManager';
+import { useAccounts } from '../contexts/AccountContext';
 import {
   CARVED_BOX_STYLES,
   SLIDE_DOWN_ANIMATION,
@@ -40,6 +40,9 @@ export function RouteToZecForm({
   const [swapError, setSwapError] = useState<string>();
   const [depositTxHash, setDepositTxHash] = useState<string>();
   const [depositAddress, setDepositAddress] = useState<string>();
+
+  // Get accounts from context
+  const { solanaAccount, zcashTransparentAccount, zcashShieldedAccount, isLoading: accountsLoading } = useAccounts();
 
   const { price, loading: priceLoading } = useTokenPrice(asset);
   const {
@@ -98,6 +101,23 @@ export function RouteToZecForm({
       return;
     }
 
+    // Validate accounts from context
+    if (accountsLoading) {
+      alert('Accounts are still loading...');
+      return;
+    }
+
+    if (!solanaAccount) {
+      alert('Solana account not available');
+      return;
+    }
+
+    const zcashAccount = addressType === 'shielded' ? zcashShieldedAccount : zcashTransparentAccount;
+    if (!zcashAccount) {
+      alert(`Zcash ${addressType} account not available`);
+      return;
+    }
+
     try {
       // Set status to monitoring to show processing UI
       setSwapStatus('monitoring');
@@ -105,61 +125,6 @@ export function RouteToZecForm({
       setCurrentState(undefined);
       setDepositTxHash(undefined);
       setDepositAddress(undefined);
-
-      // Validate mnemonic
-      if (!mnemonic || !mnemonic.trim()) {
-        alert('Please enter a mnemonic');
-        setSwapStatus('idle');
-        return;
-      }
-
-      // Get lightwalletd URL from environment variable
-      const lightwalletdUrl =
-        import.meta.env.VITE_LIGHTWALLETD_URL ||
-        'https://zcash-mainnet.chainsafe.dev';
-
-      // Get Zcash account
-      let zcashAccount;
-
-      try {
-        zcashAccount = await getZcashAccount({
-          addressType,
-          mnemonic,
-          lightwalletdUrl,
-        });
-      } catch (zcashErr) {
-        console.error(
-          '[RouteToZecForm] Failed to create Zcash account:',
-          zcashErr
-        );
-        setSwapStatus('idle');
-        const errorMsg =
-          zcashErr instanceof Error ? zcashErr.message : 'Unknown error';
-        if (
-          addressType === 'shielded' &&
-          errorMsg.includes('UnifiedSpendingKey')
-        ) {
-          alert(
-            `Failed to create Zcash shielded account. This may require additional WASM initialization. Try using "Transparent" address type instead.`
-          );
-        } else {
-          alert(`Failed to create Zcash ${addressType} account: ${errorMsg}`);
-        }
-        return;
-      }
-
-      // Get Solana account (full account with balance and send capabilities)
-      const rpcUrl = import.meta.env.VITE_SOLANA_RPC_URL;
-      const { createSolanaAccountFull } = await import(
-        '@asset-route-sdk/solana-hot-address-only'
-      );
-      const solanaAccount = await createSolanaAccountFull({
-        mnemonic: mnemonic.trim(),
-        accountIndex: 0,
-        network: 'mainnet',
-        tokenId: undefined,
-        rpcUrl, // Will use Ankr if not specified
-      });
 
       console.log('[RouteToZecForm] Starting swap with routeToZcash:', {
         amount: numAmount,
