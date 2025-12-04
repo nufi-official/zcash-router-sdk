@@ -225,19 +225,20 @@ export function RouteFromZecForm({
             {priceLoading ? 'Loading price...' : usdValue}
           </Typography>
           <Typography
-            onClick={() => setAmount(maxBalance)}
+            onClick={() => !balanceLoading && setAmount(maxBalance)}
             sx={{
               fontSize: '0.75rem',
               fontWeight: 600,
               color: 'white',
-              cursor: 'pointer',
+              cursor: balanceLoading ? 'default' : 'pointer',
               mr: '14px',
+              opacity: balanceLoading ? 0.6 : 1,
               '&:hover': {
-                textDecoration: 'underline',
+                textDecoration: balanceLoading ? 'none' : 'underline',
               },
             }}
           >
-            MAX: {maxBalance} {asset}
+            {balanceLoading ? 'Loading balance...' : `MAX: ${maxBalance} ${asset}`}
           </Typography>
         </Box>
       </Box>
