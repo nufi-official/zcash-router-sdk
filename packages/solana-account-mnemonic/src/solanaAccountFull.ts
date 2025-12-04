@@ -38,8 +38,6 @@ export class SolanaAccountFull implements AccountFull {
 
     // Initialize connection with provided RPC URL or default
     const rpcUrl = params.rpcUrl || this.getDefaultRpcUrl();
-    // eslint-disable-next-line no-console
-    console.log('[SolanaAccountFull] Using RPC URL:', rpcUrl);
     this.connection = new Connection(rpcUrl, 'confirmed');
 
     this.asset = {
@@ -117,8 +115,6 @@ export class SolanaAccountFull implements AccountFull {
       // Return balance minus fee reserve, or 0 if balance is less than fee
       return balanceBigInt > FEE_RESERVE ? balanceBigInt - FEE_RESERVE : 0n;
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('[SolanaAccountFull] Failed to get balance:', error);
       throw new Error(
         `Failed to fetch Solana balance: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
@@ -199,15 +195,6 @@ export class SolanaAccountFull implements AccountFull {
         commitment: 'confirmed',
       }
     );
-
-    // Transaction successfully sent
-    // eslint-disable-next-line no-console
-    console.log('[SolanaAccountFull] Transaction sent:', {
-      signature,
-      from: fromPubkey.toBase58(),
-      to: toPubkey.toBase58(),
-      amount: amountLamports.toString(),
-    });
 
     return signature;
   };
