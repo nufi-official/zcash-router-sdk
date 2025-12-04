@@ -104,7 +104,7 @@ The form will display real-time progress through these stages:
 
 - **@asset-route-sdk/core**: Core swap functionality
 - **@asset-route-sdk/solana-hot-address-only**: Solana account management
-- **@asset-route-sdk/zcash-hot-shielded-full**: Zcash account management
+- **@asset-route-sdk/zcash-core**: Zcash account management
 - **React 18**: UI framework
 - **Vite**: Build tool and dev server with WASM support plugins
 - **Tailwind CSS**: Styling

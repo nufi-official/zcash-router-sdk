@@ -71,12 +71,6 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
-      '@esbuild-plugins/node-globals-polyfill':
-        specifier: ^0.2.3
-        version: 0.2.3(esbuild@0.27.0)
-      '@esbuild-plugins/node-modules-polyfill':
-        specifier: ^0.2.2
-        version: 0.2.2(esbuild@0.27.0)
       '@mui/icons-material':
         specifier: ^7.3.5
         version: 7.3.5(@mui/material@7.3.5(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
@@ -86,18 +80,12 @@ importers:
       '@solana/web3.js':
         specifier: ^1.95.8
         version: 1.98.4(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)
-      '@vitejs/plugin-react':
-        specifier: ^4.3.4
-        version: 4.7.0(vite@6.4.1(@types/node@22.19.1)(jiti@1.21.7))
       bip39:
         specifier: ^3.1.0
         version: 3.1.0
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
-      crypto-browserify:
-        specifier: ^3.12.0
-        version: 3.12.1
       events:
         specifier: ^3.3.0
         version: 3.3.0
@@ -113,6 +101,25 @@ importers:
       stream-browserify:
         specifier: ^3.0.0
         version: 3.0.0
+    devDependencies:
+      '@esbuild-plugins/node-globals-polyfill':
+        specifier: ^0.2.3
+        version: 0.2.3(esbuild@0.27.0)
+      '@esbuild-plugins/node-modules-polyfill':
+        specifier: ^0.2.2
+        version: 0.2.2(esbuild@0.27.0)
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.27
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.7(@types/react@18.3.27)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@6.4.1(@types/node@22.19.1)(jiti@1.21.7))
+      crypto-browserify:
+        specifier: ^3.12.0
+        version: 3.12.1
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
@@ -128,13 +135,6 @@ importers:
       vite-plugin-wasm:
         specifier: ^3.5.0
         version: 3.5.0(vite@6.4.1(@types/node@22.19.1)(jiti@1.21.7))
-    devDependencies:
-      '@types/react':
-        specifier: ^18.3.12
-        version: 18.3.27
-      '@types/react-dom':
-        specifier: ^18.3.1
-        version: 18.3.7(@types/react@18.3.27)
 
   packages/solana-hot-address-only:
     dependencies:
@@ -168,28 +168,6 @@ importers:
       bip39:
         specifier: ^3.1.0
         version: 3.1.0
-
-  packages/zcash-hot-shielded-full:
-    dependencies:
-      '@asset-route-sdk/core':
-        specifier: workspace:*
-        version: link:../core
-      '@asset-route-sdk/zcash-core':
-        specifier: workspace:*
-        version: link:../zcash-core
-    devDependencies:
-      '@types/node':
-        specifier: ^22.10.2
-        version: 22.19.1
-      tsup:
-        specifier: ^8.3.5
-        version: 8.5.1(@swc/core@1.15.3(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.7.2
-        version: 5.9.3
-      vitest:
-        specifier: ^2.1.8
-        version: 2.1.9(@types/node@22.19.1)(happy-dom@15.11.7)(jsdom@25.0.1(bufferutil@4.0.9)(utf-8-validate@5.0.10))
 
   packages/zcash-hot-transparent-full:
     dependencies:
