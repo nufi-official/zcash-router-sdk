@@ -115,8 +115,8 @@ export function AssetSelect({ value, onChange, disabled }: AssetSelectProps) {
       <MenuItem
         value="SOL"
         sx={{
-          fontSize: '1.25rem',
-          py: 1.5,
+          fontSize: '1rem',
+          py: 1.0,
           backgroundColor: '#000000',
           color: 'white',
           '&:hover': {
@@ -133,8 +133,8 @@ export function AssetSelect({ value, onChange, disabled }: AssetSelectProps) {
           },
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <SolanaIcon size={28} />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
+          <SolanaIcon size={22} />
           SOL
         </Box>
       </MenuItem>
