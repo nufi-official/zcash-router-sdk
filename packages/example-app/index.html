@@ -94,15 +94,31 @@
     <script type="module" src="/src/main.tsx"></script>
 
     <script>
-      // Hide splash screen once React app is loaded
+      // Hide splash screen once React app is fully rendered
+      // Wait for React to mount and render before hiding splash
+      function hideSplash() {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+          splash.classList.add('hidden');
+          setTimeout(() => splash.remove(), 500);
+        }
+      }
+
+      // Check if root has content, meaning React has rendered
+      function checkReactReady() {
+        const root = document.getElementById('root');
+        if (root && root.children.length > 0) {
+          // Add small delay to ensure all transforms are applied
+          setTimeout(hideSplash, 100);
+        } else {
+          // Check again in 50ms
+          setTimeout(checkReactReady, 50);
+        }
+      }
+
+      // Start checking after page load
       window.addEventListener('load', () => {
-        setTimeout(() => {
-          const splash = document.getElementById('splash-screen');
-          if (splash) {
-            splash.classList.add('hidden');
-            setTimeout(() => splash.remove(), 500);
-          }
-        }, 1000);
+        setTimeout(checkReactReady, 500);
       });
     </script>
   </body>
