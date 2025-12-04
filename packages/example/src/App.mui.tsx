@@ -555,229 +555,229 @@ function App() {
             }}
           >
             <Box sx={{ maxWidth: '1200px', width: '100%' }}>
-            {/* Zcash Address Type Selector */}
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                mb: 4,
-              }}
-            >
+              {/* Zcash Address Type Selector */}
               <Box
                 sx={{
-                  display: 'inline-flex',
-                  border: '2px solid rgba(243, 183, 36, 0.3)',
-                  borderRadius: '32px',
-                  p: 0.5,
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  backdropFilter: 'blur(10px)',
-                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  mb: 4,
                 }}
               >
-                {/* Sliding background */}
                 <Box
                   sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    left: addressType === 'transparent' ? 4 : 'calc(50%)',
-                    width: 'calc(50% - 4px)',
-                    height: 'calc(100% - 8px)',
-                    background:
-                      'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
-                    boxShadow: '0 4px 16px rgba(243, 183, 36, 0.4)',
-                    borderRadius: '28px',
-                    transition: 'left 0.3s ease',
-                    pointerEvents: 'none',
+                    display: 'inline-flex',
+                    border: '2px solid rgba(243, 183, 36, 0.3)',
+                    borderRadius: '32px',
+                    p: 0.5,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(10px)',
+                    position: 'relative',
                   }}
-                />
-
-                {/* Transparent option */}
-                <Tooltip title="Coming soon" placement="top">
+                >
+                  {/* Sliding background */}
                   <Box
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      left: addressType === 'transparent' ? 4 : 'calc(50%)',
+                      width: 'calc(50% - 4px)',
+                      height: 'calc(100% - 8px)',
+                      background:
+                        'linear-gradient(135deg, #F3B724 0%, #9945FF 100%)',
+                      boxShadow: '0 4px 16px rgba(243, 183, 36, 0.4)',
+                      borderRadius: '28px',
+                      transition: 'left 0.3s ease',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Transparent option */}
+                  <Tooltip title="Coming soon" placement="top">
+                    <Box
+                      sx={{
+                        px: 4,
+                        py: 1.5,
+                        borderRadius: '28px',
+                        cursor: 'not-allowed',
+                        transition: 'color 0.3s ease',
+                        color: 'rgba(243, 183, 36, 0.8)',
+                        fontWeight: 600,
+                        minWidth: '140px',
+                        textAlign: 'center',
+                        position: 'relative',
+                        zIndex: 1,
+                      }}
+                    >
+                      Transparent
+                    </Box>
+                  </Tooltip>
+
+                  {/* Shielded option */}
+                  <Box
+                    onClick={() => setAddressType('shielded')}
                     sx={{
                       px: 4,
                       py: 1.5,
                       borderRadius: '28px',
-                      cursor: 'not-allowed',
+                      cursor: 'pointer',
                       transition: 'color 0.3s ease',
-                      color: 'rgba(243, 183, 36, 0.8)',
+                      color:
+                        addressType === 'shielded'
+                          ? 'white'
+                          : 'rgba(243, 183, 36, 0.8)',
                       fontWeight: 600,
                       minWidth: '140px',
                       textAlign: 'center',
                       position: 'relative',
                       zIndex: 1,
+                      '&:hover': {
+                        color: addressType === 'shielded' ? 'white' : '#F3B724',
+                      },
                     }}
                   >
-                    Transparent
+                    Shielded
                   </Box>
-                </Tooltip>
-
-                {/* Shielded option */}
-                <Box
-                  onClick={() => setAddressType('shielded')}
-                  sx={{
-                    px: 4,
-                    py: 1.5,
-                    borderRadius: '28px',
-                    cursor: 'pointer',
-                    transition: 'color 0.3s ease',
-                    color:
-                      addressType === 'shielded'
-                        ? 'white'
-                        : 'rgba(243, 183, 36, 0.8)',
-                    fontWeight: 600,
-                    minWidth: '140px',
-                    textAlign: 'center',
-                    position: 'relative',
-                    zIndex: 1,
-                    '&:hover': {
-                      color: addressType === 'shielded' ? 'white' : '#F3B724',
-                    },
-                  }}
-                >
-                  Shielded
                 </Box>
               </Box>
+
+              {/* Swap Forms Grid - Centered */}
+              <Stack
+                direction={{ xs: 'column', md: 'row' }}
+                spacing={4}
+                alignItems="flex-start"
+                sx={{ width: '100%' }}
+              >
+                {/* Route to Zcash */}
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      overflow: 'hidden',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      background:
+                        'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
+                      borderRadius: 3,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        background:
+                          'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
+                        color: 'white',
+                        p: 3,
+                        position: 'relative',
+                        borderRadius: '24px 24px 48px 48px',
+                        boxShadow:
+                          '0 0 32px rgba(20, 241, 149, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
+                        zIndex: 1,
+                        '&::after': {
+                          content: '""',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background:
+                            'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
+                          borderRadius: '24px 24px 48px 48px',
+                        },
+                      }}
+                    >
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          fontWeight: 700,
+                          position: 'relative',
+                          zIndex: 1,
+                          textAlign: 'center',
+                          lineHeight: 1.8,
+                        }}
+                      >
+                        Deposit to Zcash
+                      </Typography>
+                    </Box>
+                    <Box sx={{ p: 3, flex: 1 }}>
+                      <RouteToZecForm
+                        addressType={addressType}
+                        mnemonic={mnemonic}
+                        onConnectClick={handleConnect}
+                        onRefreshBalance={(refresh) => {
+                          refreshSolBalanceRef.current = refresh;
+                        }}
+                        onRefreshAllBalances={handleRefreshBalances}
+                      />
+                    </Box>
+                  </Paper>
+                </Box>
+
+                {/* Route from Zcash */}
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      overflow: 'hidden',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      background:
+                        'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
+                      borderRadius: 3,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        background:
+                          'linear-gradient(135deg, #F3B724 0%, #9945FF 50%, #14F195 100%)',
+                        color: 'white',
+                        p: 3,
+                        position: 'relative',
+                        borderRadius: '24px 24px 48px 48px',
+                        boxShadow:
+                          '0 0 32px rgba(243, 183, 36, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
+                        zIndex: 1,
+                        '&::after': {
+                          content: '""',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          background:
+                            'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
+                          borderRadius: '24px 24px 48px 48px',
+                        },
+                      }}
+                    >
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          fontWeight: 700,
+                          position: 'relative',
+                          zIndex: 1,
+                          textAlign: 'center',
+                          lineHeight: 1.8,
+                        }}
+                      >
+                        Withdraw from Zcash
+                      </Typography>
+                    </Box>
+                    <Box sx={{ p: 3, flex: 1 }}>
+                      <RouteFromZecForm
+                        addressType={addressType}
+                        mnemonic={mnemonic}
+                        onConnectClick={handleConnect}
+                        onRefreshBalance={(refresh) => {
+                          refreshZecBalanceRef.current = refresh;
+                        }}
+                        onRefreshAllBalances={handleRefreshBalances}
+                      />
+                    </Box>
+                  </Paper>
+                </Box>
+              </Stack>
             </Box>
-
-            {/* Swap Forms Grid - Centered */}
-            <Stack
-              direction={{ xs: 'column', md: 'row' }}
-              spacing={4}
-              alignItems="flex-start"
-              sx={{ width: '100%' }}
-            >
-              {/* Route to Zcash */}
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Paper
-                  elevation={3}
-                  sx={{
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    background:
-                      'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
-                    borderRadius: 3,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      background:
-                        'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
-                      color: 'white',
-                      p: 3,
-                      position: 'relative',
-                      borderRadius: '24px 24px 48px 48px',
-                      boxShadow:
-                        '0 0 32px rgba(20, 241, 149, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
-                      zIndex: 1,
-                      '&::after': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background:
-                          'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
-                        borderRadius: '24px 24px 48px 48px',
-                      },
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}
-                    >
-                      Route to Zcash
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}
-                    >
-                      Swap SOL → ZEC
-                    </Typography>
-                  </Box>
-                  <Box sx={{ p: 3, flex: 1 }}>
-                    <RouteToZecForm
-                      addressType={addressType}
-                      mnemonic={mnemonic}
-                      onConnectClick={handleConnect}
-                      onRefreshBalance={(refresh) => {
-                        refreshSolBalanceRef.current = refresh;
-                      }}
-                      onRefreshAllBalances={handleRefreshBalances}
-                    />
-                  </Box>
-                </Paper>
-              </Box>
-
-              {/* Route from Zcash */}
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <Paper
-                  elevation={3}
-                  sx={{
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    background:
-                      'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
-                    borderRadius: 3,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      background:
-                        'linear-gradient(135deg, #F3B724 0%, #9945FF 50%, #14F195 100%)',
-                      color: 'white',
-                      p: 3,
-                      position: 'relative',
-                      borderRadius: '24px 24px 48px 48px',
-                      boxShadow:
-                        '0 0 32px rgba(243, 183, 36, 0.5), 0 0 16px rgba(153, 69, 255, 0.4)',
-                      zIndex: 1,
-                      '&::after': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background:
-                          'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.1) 100%)',
-                        borderRadius: '24px 24px 48px 48px',
-                      },
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{ fontWeight: 600, position: 'relative', zIndex: 1 }}
-                    >
-                      Route from Zcash
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ opacity: 0.95, position: 'relative', zIndex: 1 }}
-                    >
-                      Swap ZEC → SOL
-                    </Typography>
-                  </Box>
-                  <Box sx={{ p: 3, flex: 1 }}>
-                    <RouteFromZecForm
-                      addressType={addressType}
-                      mnemonic={mnemonic}
-                      onConnectClick={handleConnect}
-                      onRefreshBalance={(refresh) => {
-                        refreshZecBalanceRef.current = refresh;
-                      }}
-                      onRefreshAllBalances={handleRefreshBalances}
-                    />
-                  </Box>
-                </Paper>
-              </Box>
-            </Stack>
           </Box>
-        </Box>
         </AccountProvider>
       </Box>
     </ThemeProvider>

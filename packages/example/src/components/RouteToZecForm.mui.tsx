@@ -237,7 +237,7 @@ export function RouteToZecForm({
       {/* Submit Button */}
       <SwapButton
         isProcessing={swapStatus === 'monitoring'}
-        text="Swap"
+        text="Deposit"
         isLoggedIn={!!mnemonic && !!mnemonic.trim()}
         onConnectClick={onConnectClick}
       />
