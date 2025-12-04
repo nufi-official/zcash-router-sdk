@@ -1,4 +1,4 @@
-import type { RouteAsset } from '@asset-route-sdk/core';
+import type { RouteAsset } from '@zcash-router-sdk/core';
 
 /**
  * Solana network types

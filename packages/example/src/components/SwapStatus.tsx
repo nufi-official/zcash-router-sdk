@@ -1,4 +1,4 @@
-import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
+import type { SwapStateChangeEvent } from '@zcash-router-sdk/core';
 
 interface SwapStatusProps {
   status: 'idle' | 'processing' | 'success' | 'error';

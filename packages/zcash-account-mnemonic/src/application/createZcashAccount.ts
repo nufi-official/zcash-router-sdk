@@ -1,4 +1,4 @@
-import type { AccountFull } from '@asset-route-sdk/core';
+import type { AccountFull } from '@zcash-router-sdk/core';
 
 import type { ZcashNetwork } from '../domain/network';
 import { MnemonicCryptoProvider } from '../infrastructure/mnemonicCryptoProvider';

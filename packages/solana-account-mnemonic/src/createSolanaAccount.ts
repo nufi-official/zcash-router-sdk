@@ -1,4 +1,4 @@
-import type { AccountAddressOnly } from '@asset-route-sdk/core';
+import type { AccountAddressOnly } from '@zcash-router-sdk/core';
 import type { CreateSolanaAccountParams } from './types';
 import { SolanaAccountAddressOnly } from './solanaAccountAddressOnly';
 

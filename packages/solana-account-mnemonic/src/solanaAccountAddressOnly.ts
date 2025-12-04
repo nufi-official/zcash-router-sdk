@@ -1,4 +1,4 @@
-import type { AccountAddressOnly, RouteAsset } from '@asset-route-sdk/core';
+import type { AccountAddressOnly, RouteAsset } from '@zcash-router-sdk/core';
 import type { SolanaAddress, SolanaNetwork, SolanaTokenId } from './types';
 import { deriveAddressFromMnemonic } from './utils/keyDerivation';
 

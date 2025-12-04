@@ -90,8 +90,7 @@ export const ZCashAccountManager = (
       await webWalletManager.provePczt(signedShieldPcztHex);
 
     // Submit the shield transaction
-    const shieldTxHash =
-      await webWalletManager.submitTransaction(provedShieldPcztHex);
+    await webWalletManager.submitTransaction(provedShieldPcztHex);
 
     // Wait for the transaction to be confirmed
     // TODO: Poll for confirmation instead of fixed delay

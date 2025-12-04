@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { swapApi } from '@asset-route-sdk/core';
-import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
+import { swapApi } from '@zcash-router-sdk/core';
+import type { SwapStateChangeEvent } from '@zcash-router-sdk/core';
 
 interface StartSwapParams {
   depositAddress: string;

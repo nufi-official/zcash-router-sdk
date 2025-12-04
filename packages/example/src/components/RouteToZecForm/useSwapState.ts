@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
+import type { SwapStateChangeEvent } from '@zcash-router-sdk/core';
 import { createMockSwapStates } from './mockSwapStates';
 
 export function useSwapState() {

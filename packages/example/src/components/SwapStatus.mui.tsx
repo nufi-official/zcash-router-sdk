@@ -1,5 +1,5 @@
-import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
-import { SWAP_HAPPY_PATH_TIMELINE, SWAP_END_STATES } from '@asset-route-sdk/core';
+import type { SwapStateChangeEvent } from '@zcash-router-sdk/core';
+import { SWAP_HAPPY_PATH_TIMELINE, SWAP_END_STATES } from '@zcash-router-sdk/core';
 import {
   Box,
   Typography,
