@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Box, Typography, TextField, Link } from '@mui/material';
+import { OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
@@ -382,12 +383,16 @@ export function RouteFromZecForm({
                   color: '#F3B724',
                   fontSize: '0.875rem',
                   textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
                   '&:hover': {
                     textDecoration: 'underline',
                   },
                 }}
               >
                 NEAR Intents Explorer
+                <OpenInNewIcon sx={{ fontSize: '0.875rem' }} />
               </Link>
             </Box>
           </Box>
@@ -411,12 +416,16 @@ export function RouteFromZecForm({
                   fontFamily: 'monospace',
                   fontSize: '0.875rem',
                   textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
                   '&:hover': {
                     textDecoration: 'underline',
                   },
                 }}
               >
                 {depositTxHash.slice(0, 8)}...{depositTxHash.slice(-8)}
+                <OpenInNewIcon sx={{ fontSize: '0.875rem' }} />
               </Link>
             </Box>
           </Box>
