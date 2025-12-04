@@ -3,9 +3,9 @@ set -e
 
 echo "-----> Building monorepo for Heroku"
 
-# Install pnpm
-echo "-----> Installing pnpm"
-npm install -g pnpm
+# Check pnpm version (already installed by Heroku)
+echo "-----> Using pnpm version:"
+pnpm --version
 
 # Install all dependencies at root (without frozen lockfile to allow updates)
 echo "-----> Installing dependencies"
