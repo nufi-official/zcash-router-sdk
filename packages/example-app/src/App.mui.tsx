@@ -286,9 +286,30 @@ function App() {
           overflow: 'hidden',
         }}
       >
-        {/* Development Notice - Top Left */}
+        {/* Testing Instructions - Top Left */}
         <Box
-          sx={{ position: 'absolute', top: 20, left: 20, maxWidth: '500px' }}
+          sx={{ position: 'absolute', top: 20, left: 20, maxWidth: '400px' }}
+        >
+          <Alert severity="info">
+            <AlertTitle>Testing Instructions</AlertTitle>
+            <Box
+              component="ol"
+              sx={{ mt: 1, mb: 0, pl: 2, fontSize: '0.85rem' }}
+            >
+              <li>Connect wallet (preferably generate a new mnemonic)</li>
+              <li>
+                Use Solana address displayed in the "Deposit to Zcash" amount
+                field to fund the account (at least 0.01 SOL)
+              </li>
+              <li>Click refresh to update balance</li>
+              <li>Deposit to Zcash account and withdraw to Solana address</li>
+            </Box>
+          </Alert>
+        </Box>
+
+        {/* Development Notice - Top, next to Testing Instructions */}
+        <Box
+          sx={{ position: 'absolute', top: 20, left: 440, maxWidth: '300px' }}
         >
           <Alert severity="warning">
             <AlertTitle>Development Notice</AlertTitle>
@@ -296,9 +317,7 @@ function App() {
               component="ul"
               sx={{ mt: 1, mb: 0, pl: 2, fontSize: '0.85rem' }}
             >
-              <li>Wallet integration not implemented</li>
-              <li>API configuration required via env vars</li>
-              <li>Demo only - do not use with real funds</li>
+              <li>Demo only</li>
               <li>Test mnemonics only</li>
             </Box>
           </Alert>
