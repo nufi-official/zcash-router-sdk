@@ -205,7 +205,7 @@ export function RouteFromZecForm({
           variant="caption"
           sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
         >
-          Buy
+          Zcash →
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Box sx={{ flex: 1 }}>

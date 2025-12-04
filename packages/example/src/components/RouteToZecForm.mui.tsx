@@ -204,7 +204,7 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
           variant="caption"
           sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
         >
-          Sell
+          → Zcash
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <AmountInput value={amount} onChange={setAmount} />
