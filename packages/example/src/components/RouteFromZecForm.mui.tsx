@@ -330,7 +330,7 @@ export function RouteFromZecForm({
         isProcessing={
           swapStatus === 'initiating' || swapStatus === 'monitoring'
         }
-        text="Swap"
+        text="Withdraw"
         isLoggedIn={!!mnemonic && !!mnemonic.trim()}
         onConnectClick={onConnectClick}
       />
