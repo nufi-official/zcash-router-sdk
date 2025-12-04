@@ -604,7 +604,7 @@ function App() {
             <Stack
               direction={{ xs: 'column', md: 'row' }}
               spacing={4}
-              alignItems="stretch"
+              alignItems="flex-start"
               sx={{ width: '100%' }}
             >
               {/* Route to Zcash */}
@@ -613,7 +613,6 @@ function App() {
                   elevation={3}
                   sx={{
                     overflow: 'hidden',
-                    height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     background:
@@ -673,7 +672,6 @@ function App() {
                   elevation={3}
                   sx={{
                     overflow: 'hidden',
-                    height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     background:
