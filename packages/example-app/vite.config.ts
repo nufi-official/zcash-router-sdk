@@ -16,6 +16,7 @@ export default defineConfig({
       'nu.fi',
       'localhost',
       '127.0.0.1',
+      'zcash.nu.fi',
     ],
     headers: {
       'Cross-Origin-Embedder-Policy': 'require-corp',
