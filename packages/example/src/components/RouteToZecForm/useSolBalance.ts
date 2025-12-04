@@ -1,9 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export function useSolBalance(mnemonic: string) {
   const [balance, setBalance] = useState<string>('0');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const refresh = useCallback(() => {
+    setRefreshTrigger((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -68,7 +73,7 @@ export function useSolBalance(mnemonic: string) {
     return () => {
       mounted = false;
     };
-  }, [mnemonic]);
+  }, [mnemonic, refreshTrigger]);
 
-  return { balance, loading, error };
+  return { balance, loading, error, refresh };
 }

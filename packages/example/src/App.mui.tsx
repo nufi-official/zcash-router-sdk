@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   CssBaseline,
@@ -10,7 +10,9 @@ import {
   Stack,
   TextField,
   Button,
+  IconButton,
 } from '@mui/material';
+import { Refresh as RefreshIcon } from '@mui/icons-material';
 import { generateMnemonic } from 'bip39';
 import { RouteToZecForm } from './components/RouteToZecForm.mui';
 import { RouteFromZecForm } from './components/RouteFromZecForm.mui';
@@ -232,6 +234,10 @@ function App() {
   const [mnemonicInput, setMnemonicInput] = useState(''); // The input field value
   const [isConnected, setIsConnected] = useState(false);
 
+  // Store refresh functions from forms using refs to avoid stale closures
+  const refreshSolBalanceRef = useRef<(() => void) | null>(null);
+  const refreshZecBalanceRef = useRef<(() => void) | null>(null);
+
   // Initialize WASM on mount (but don't block UI)
   useEffect(() => {
     void loadAndInitWebZjs();
@@ -254,6 +260,11 @@ function App() {
     setIsConnected(false);
     setMnemonic('');
     setMnemonicInput('');
+  };
+
+  const handleRefreshBalances = () => {
+    if (refreshSolBalanceRef.current) refreshSolBalanceRef.current();
+    if (refreshZecBalanceRef.current) refreshZecBalanceRef.current();
   };
 
   const handleGenerateMnemonic = () => {
@@ -310,37 +321,68 @@ function App() {
               alignItems: 'flex-start',
             }}
           >
-            <Button
-              onClick={mnemonic ? () => setIsConnected(!isConnected) : handleConnect}
-              variant="contained"
-              size="large"
-              sx={{
-                background: mnemonic
-                  ? 'rgba(0, 0, 0, 0.5)'
-                  : 'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
-                backdropFilter: mnemonic ? 'blur(10px)' : 'none',
-                color: mnemonic ? 'rgba(243, 183, 36, 0.8)' : 'white',
-                fontWeight: 700,
-                fontSize: '1rem',
-                px: 4,
-                py: 1.5,
-                borderRadius: 3,
-                textTransform: 'none',
-                boxShadow: mnemonic ? 'none' : '0 4px 20px rgba(20, 241, 149, 0.4)',
-                minWidth: 'auto',
-                alignSelf: 'flex-end',
-                border: mnemonic ? '2px solid rgba(243, 183, 36, 0.3)' : 'none',
-                '&:hover': {
+            <Box sx={{ display: 'flex', gap: 1, alignSelf: 'flex-end' }}>
+              {mnemonic && (
+                <IconButton
+                  onClick={handleRefreshBalances}
+                  sx={{
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(10px)',
+                    color: 'rgba(243, 183, 36, 0.8)',
+                    border: '2px solid rgba(243, 183, 36, 0.3)',
+                    width: 56,
+                    height: 56,
+                    borderRadius: '50%',
+                    '&:hover': {
+                      background: 'rgba(0, 0, 0, 0.7)',
+                      color: '#F3B724',
+                    },
+                  }}
+                >
+                  <RefreshIcon />
+                </IconButton>
+              )}
+              <Button
+                onClick={
+                  mnemonic ? () => setIsConnected(!isConnected) : handleConnect
+                }
+                variant="contained"
+                size="large"
+                sx={{
                   background: mnemonic
-                    ? 'rgba(0, 0, 0, 0.7)'
-                    : 'linear-gradient(135deg, #10c177 0%, #7a2ecc 50%, #c9981d 100%)',
-                  color: mnemonic ? '#F3B724' : 'white',
-                  boxShadow: mnemonic ? 'none' : '0 6px 25px rgba(20, 241, 149, 0.6)',
-                },
-              }}
-            >
-              {mnemonic ? `Mnemonic: ${mnemonic.split(' ')[0]}...` : 'Connect'}
-            </Button>
+                    ? 'rgba(0, 0, 0, 0.5)'
+                    : 'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
+                  backdropFilter: mnemonic ? 'blur(10px)' : 'none',
+                  color: mnemonic ? 'rgba(243, 183, 36, 0.8)' : 'white',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 3,
+                  textTransform: 'none',
+                  boxShadow: mnemonic
+                    ? 'none'
+                    : '0 4px 20px rgba(20, 241, 149, 0.4)',
+                  minWidth: 'auto',
+                  border: mnemonic
+                    ? '2px solid rgba(243, 183, 36, 0.3)'
+                    : 'none',
+                  '&:hover': {
+                    background: mnemonic
+                      ? 'rgba(0, 0, 0, 0.7)'
+                      : 'linear-gradient(135deg, #10c177 0%, #7a2ecc 50%, #c9981d 100%)',
+                    color: mnemonic ? '#F3B724' : 'white',
+                    boxShadow: mnemonic
+                      ? 'none'
+                      : '0 6px 25px rgba(20, 241, 149, 0.6)',
+                  },
+                }}
+              >
+                {mnemonic
+                  ? `Mnemonic: ${mnemonic.split(' ')[0]}...`
+                  : 'Connect'}
+              </Button>
+            </Box>
 
             {isConnected && mnemonic && (
               <Button
@@ -476,7 +518,8 @@ function App() {
                     variant="contained"
                     fullWidth
                     sx={{
-                      background: 'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
+                      background:
+                        'linear-gradient(135deg, #14F195 0%, #9945FF 50%, #F3B724 100%)',
                       color: 'white',
                       fontWeight: 700,
                       fontSize: '0.9rem',
@@ -485,7 +528,8 @@ function App() {
                       textTransform: 'none',
                       boxShadow: '0 2px 10px rgba(20, 241, 149, 0.3)',
                       '&:hover': {
-                        background: 'linear-gradient(135deg, #10c177 0%, #7a2ecc 50%, #c9981d 100%)',
+                        background:
+                          'linear-gradient(135deg, #10c177 0%, #7a2ecc 50%, #c9981d 100%)',
                         boxShadow: '0 4px 15px rgba(20, 241, 149, 0.5)',
                       },
                     }}
@@ -662,6 +706,9 @@ function App() {
                       addressType={addressType}
                       mnemonic={mnemonic}
                       onConnectClick={handleConnect}
+                      onRefreshBalance={(refresh) => {
+                        refreshSolBalanceRef.current = refresh;
+                      }}
                     />
                   </Box>
                 </Paper>
@@ -722,6 +769,9 @@ function App() {
                       addressType={addressType}
                       mnemonic={mnemonic}
                       onConnectClick={handleConnect}
+                      onRefreshBalance={(refresh) => {
+                        refreshZecBalanceRef.current = refresh;
+                      }}
                     />
                   </Box>
                 </Paper>

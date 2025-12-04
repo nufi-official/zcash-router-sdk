@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
@@ -19,9 +19,10 @@ interface RouteToZecFormProps {
   addressType: 'transparent' | 'shielded';
   mnemonic: string;
   onConnectClick?: () => void;
+  onRefreshBalance?: (refresh: () => void) => void;
 }
 
-export function RouteToZecForm({ addressType, mnemonic, onConnectClick }: RouteToZecFormProps) {
+export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefreshBalance }: RouteToZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
   const [swapStatus, setSwapStatus] = useState<
@@ -31,10 +32,17 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick }: RouteT
   const [swapError, setSwapError] = useState<string>();
 
   const { price, loading: priceLoading } = useTokenPrice(asset);
-  const { balance: solBalance, loading: balanceLoading } =
+  const { balance: solBalance, loading: balanceLoading, refresh: refreshSolBalance } =
     useSolBalance(mnemonic);
   const { address: solanaAddress, loading: addressLoading } =
     useSolanaAddress(mnemonic);
+
+  // Pass refresh function to parent
+  useEffect(() => {
+    if (onRefreshBalance) {
+      onRefreshBalance(refreshSolBalance);
+    }
+  }, [onRefreshBalance, refreshSolBalance]);
 
   // Max balance is the SOL balance (only shown for SOL asset)
   const maxBalance = useMemo(() => {
