@@ -487,9 +487,16 @@ function App() {
                   multiline
                   rows={3}
                   variant="standard"
+                  autoComplete="off"
+                  spellCheck={false}
                   slotProps={{
                     input: {
                       disableUnderline: true,
+                      inputProps: {
+                        'data-gramm': 'false',
+                        'data-gramm_editor': 'false',
+                        'data-enable-grammarly': 'false',
+                      },
                       sx: {
                         fontFamily:
                           '"JetBrains Mono", "Consolas", "Monaco", monospace',
