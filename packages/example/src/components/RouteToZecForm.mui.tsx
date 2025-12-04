@@ -16,9 +16,10 @@ import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 interface RouteToZecFormProps {
   addressType: 'transparent' | 'shielded';
   mnemonic: string;
+  onConnectClick?: () => void;
 }
 
-export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
+export function RouteToZecForm({ addressType, mnemonic, onConnectClick }: RouteToZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
   const [swapStatus, setSwapStatus] = useState<
@@ -207,7 +208,12 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
       </Box>
 
       {/* Submit Button */}
-      <SwapButton isProcessing={swapStatus === 'monitoring'} text="Swap" />
+      <SwapButton
+        isProcessing={swapStatus === 'monitoring'}
+        text="Swap"
+        isLoggedIn={!!mnemonic && !!mnemonic.trim()}
+        onConnectClick={onConnectClick}
+      />
 
       {/* Timeline - Show during swap execution */}
       {(swapStatus === 'monitoring' || swapStatus === 'success') && (
