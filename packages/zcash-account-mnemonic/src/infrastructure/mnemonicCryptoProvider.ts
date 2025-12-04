@@ -70,7 +70,6 @@ export class MnemonicCryptoProvider implements ZcashCryptoProvider {
         new Uint8Array(Buffer.from(seedFingerprint, 'hex'))
       )
     );
-    console.log('Signed PCZT:', signedPczt);
     return Buffer.from(signedPczt.serialize()).toString(
       'hex'
     ) as ZcashSignedPcztHex;
