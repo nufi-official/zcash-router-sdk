@@ -44,13 +44,16 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
     }
   }, [onRefreshBalance, refreshSolBalance]);
 
-  // Clear form values after success
+  // Clear form values after success and refresh balance after success or error
   useEffect(() => {
     if (swapStatus === 'success') {
       setAmount('');
       setAsset('SOL');
+      refreshSolBalance();
+    } else if (swapStatus === 'error') {
+      refreshSolBalance();
     }
-  }, [swapStatus]);
+  }, [swapStatus, refreshSolBalance]);
 
   // Max balance is the SOL balance (only shown for SOL asset)
   const maxBalance = useMemo(() => {
