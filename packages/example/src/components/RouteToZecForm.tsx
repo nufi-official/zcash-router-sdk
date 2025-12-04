@@ -70,7 +70,7 @@ export function RouteToZecForm() {
           mnemonic: solanaMnemonic.trim(),
           accountIndex: 0,
           network: 'mainnet',
-          tokenId: 'native',
+          tokenId: undefined,
         });
 
         // TODO: In production, integrate with real Solana wallet SDK

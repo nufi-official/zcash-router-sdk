@@ -1,15 +1,16 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
-import { QuoteDisplay } from './RouteToZecForm/QuoteDisplay';
 import { SwapTimeline } from './RouteToZecForm/SwapTimeline';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
-import { useSwapQuote } from './RouteToZecForm/useSwapQuote';
-import { useSwapExecution } from './RouteToZecForm/useSwapExecution';
+import { useSolBalance } from './RouteToZecForm/useSolBalance';
 import { getZcashAccount } from './RouteToZecForm/zcashAccountManager';
-import { CARVED_BOX_STYLES, SLIDE_DOWN_ANIMATION } from './RouteToZecForm/constants';
+import {
+  CARVED_BOX_STYLES,
+  SLIDE_DOWN_ANIMATION,
+} from './RouteToZecForm/constants';
 import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
 
 interface RouteToZecFormProps {
@@ -20,14 +21,21 @@ interface RouteToZecFormProps {
 export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
-  const [swapStatus, setSwapStatus] = useState<'idle' | 'fetching-quote' | 'monitoring' | 'success' | 'error'>('idle');
+  const [swapStatus, setSwapStatus] = useState<
+    'idle' | 'monitoring' | 'success' | 'error'
+  >('idle');
   const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
   const [swapError, setSwapError] = useState<string>();
-  const shouldAutoStartRef = useRef(false);
 
   const { price, loading: priceLoading } = useTokenPrice(asset);
-  const { quote, loading: quoteLoading, error: quoteError, fetchQuote } = useSwapQuote();
-  const { startSwapExecution } = useSwapExecution();
+  const { balance: solBalance, loading: balanceLoading } =
+    useSolBalance(mnemonic);
+
+  // Max balance is the SOL balance (only shown for SOL asset)
+  const maxBalance = useMemo(() => {
+    if (asset !== 'SOL' || balanceLoading) return '0';
+    return solBalance;
+  }, [asset, solBalance, balanceLoading]);
 
   const usdValue = useMemo(() => {
     const numAmount = parseFloat(amount);
@@ -37,50 +45,6 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
     const value = numAmount * price;
     return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }, [amount, price]);
-
-  // Auto-start monitoring when quote is received
-  useEffect(() => {
-    if (quote && shouldAutoStartRef.current && swapStatus === 'fetching-quote') {
-      console.log('[RouteToZecForm] Quote received, auto-starting monitoring...');
-      shouldAutoStartRef.current = false; // Reset flag
-
-      // Start monitoring immediately after quote
-      handleStartMonitoring();
-    }
-  }, [quote, swapStatus]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleStartMonitoring = useCallback(async () => {
-    if (!quote?.quote.depositAddress) {
-      alert('No deposit address available');
-      return;
-    }
-
-    try {
-      console.log('[RouteToZecForm] Starting swap monitoring...');
-      setSwapStatus('monitoring');
-      setSwapError(undefined);
-
-      await startSwapExecution({
-        depositAddress: quote.quote.depositAddress,
-        onStatusChange: (event) => {
-          console.log('[RouteToZecForm] Status update:', event);
-          setCurrentState(event);
-
-          // Update swap status based on event
-          if (event.status === 'SUCCESS') {
-            setSwapStatus('success');
-          } else if (event.status === 'FAILED' || event.status === 'REFUNDED') {
-            setSwapStatus('error');
-            setSwapError(`Swap ${event.status.toLowerCase()}`);
-          }
-        },
-      });
-    } catch (err) {
-      console.error('[RouteToZecForm] Swap monitoring failed:', err);
-      setSwapStatus('error');
-      setSwapError(err instanceof Error ? err.message : 'Swap monitoring failed');
-    }
-  }, [quote, startSwapExecution]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,9 +62,10 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
     }
 
     try {
-      // Set status to fetching-quote to show processing UI
-      setSwapStatus('fetching-quote');
+      // Set status to monitoring to show processing UI
+      setSwapStatus('monitoring');
       setSwapError(undefined);
+      setCurrentState(undefined);
 
       // Validate mnemonic
       if (!mnemonic || !mnemonic.trim()) {
@@ -114,9 +79,8 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
         import.meta.env.VITE_LIGHTWALLETD_URL ||
         'https://zcash-mainnet.chainsafe.dev';
 
-      // Get Zcash account and address
+      // Get Zcash account
       let zcashAccount;
-      let recipientAddress;
 
       try {
         zcashAccount = await getZcashAccount({
@@ -124,75 +88,76 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
           mnemonic,
           lightwalletdUrl,
         });
-
-        recipientAddress = await zcashAccount.getAddress();
       } catch (zcashErr) {
-        console.error('[RouteToZecForm] Failed to create Zcash account:', zcashErr);
+        console.error(
+          '[RouteToZecForm] Failed to create Zcash account:',
+          zcashErr
+        );
         setSwapStatus('idle');
-        const errorMsg = zcashErr instanceof Error ? zcashErr.message : 'Unknown error';
-        if (addressType === 'shielded' && errorMsg.includes('UnifiedSpendingKey')) {
-          alert(`Failed to create Zcash shielded account. This may require additional WASM initialization. Try using "Transparent" address type instead.`);
+        const errorMsg =
+          zcashErr instanceof Error ? zcashErr.message : 'Unknown error';
+        if (
+          addressType === 'shielded' &&
+          errorMsg.includes('UnifiedSpendingKey')
+        ) {
+          alert(
+            `Failed to create Zcash shielded account. This may require additional WASM initialization. Try using "Transparent" address type instead.`
+          );
         } else {
           alert(`Failed to create Zcash ${addressType} account: ${errorMsg}`);
         }
         return;
       }
 
-      // Get Solana account and address
-      const { createSolanaAccount } = await import('@asset-route-sdk/solana-hot-address-only');
-      const solanaAccount = await createSolanaAccount({
+      // Get Solana account (full account with balance and send capabilities)
+      const rpcUrl = import.meta.env.VITE_SOLANA_RPC_URL;
+      const { createSolanaAccountFull } = await import(
+        '@asset-route-sdk/solana-hot-address-only'
+      );
+      const solanaAccount = await createSolanaAccountFull({
         mnemonic: mnemonic.trim(),
         accountIndex: 0,
         network: 'mainnet',
-        tokenId: 'native',
+        tokenId: undefined,
+        rpcUrl, // Will use Ankr if not specified
       });
 
-      const senderAddress = await solanaAccount.getAddress();
-
-      console.log('[RouteToZecForm] Using addresses:', {
-        addressType,
-        senderAddress,
-        recipientAddress,
-      });
-
-      // For now, we need to get the assets to get their assetIds
-      // In a real app, you'd cache this or get it from the token price hook
-      const { getSwapApiAssets } = await import('@asset-route-sdk/core');
-      const assets = await getSwapApiAssets();
-
-      const sourceAsset = assets.find(a => a.symbol === asset);
-      const destinationAsset = assets.find(a => a.symbol === 'ZEC');
-
-      if (!sourceAsset || !destinationAsset) {
-        alert('Asset not found');
-        setSwapStatus('idle');
-        return;
-      }
-
-      // Convert amount to base units (considering decimals)
-      const amountInBaseUnits = (numAmount * Math.pow(10, sourceAsset.decimals)).toString();
-
-      console.log('[RouteToZecForm] Fetching quote for swap:', {
+      console.log('[RouteToZecForm] Starting swap with routeToZcash:', {
         amount: numAmount,
-        amountInBaseUnits,
-        from: sourceAsset.symbol,
-        to: destinationAsset.symbol,
+        asset,
+        addressType,
       });
 
-      await fetchQuote({
-        amount: amountInBaseUnits,
-        sourceAsset,
-        destinationAsset,
-        senderAddress,
-        recipientAddress,
-      });
+      // Execute the swap using routeToZcash
+      const { routeToZcash } = await import('@asset-route-sdk/core');
 
-      // Set flag to auto-start monitoring when quote is received
-      shouldAutoStartRef.current = true;
+      await routeToZcash({
+        sourceAccount: solanaAccount,
+        zcashAccount: zcashAccount,
+        amount: numAmount.toString(),
+        onSwapStatusChange: (event) => {
+          // eslint-disable-next-line no-console
+          console.log('[RouteToZecForm] Swap status:', event);
+          setCurrentState(event);
+
+          if (event.status === 'DEPOSIT_SENT') {
+            // Deposit sent, continue monitoring
+            setSwapStatus('monitoring');
+          } else if (event.status === 'SUCCESS') {
+            setSwapStatus('success');
+          } else if (event.status === 'FAILED' || event.status === 'REFUNDED') {
+            setSwapStatus('error');
+            setSwapError(`Swap ${event.status.toLowerCase()}`);
+          }
+        },
+      });
     } catch (err) {
-      console.error('[RouteToZecForm] Failed to get quote:', err);
-      setSwapStatus('idle');
-      alert(`Failed to get quote: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      console.error('[RouteToZecForm] Failed to execute swap:', err);
+      setSwapStatus('error');
+      setSwapError(err instanceof Error ? err.message : 'Unknown error');
+      alert(
+        `Failed to execute swap: ${err instanceof Error ? err.message : 'Unknown error'}`
+      );
     }
   };
 
@@ -210,45 +175,46 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
           <AmountInput value={amount} onChange={setAmount} />
           <AssetSelect value={asset} onChange={setAsset} />
         </Box>
-        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-          {priceLoading ? 'Loading price...' : usdValue}
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mt: 1,
+          }}
+        >
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {priceLoading ? 'Loading price...' : usdValue}
+          </Typography>
+          <Typography
+            onClick={() => setAmount(maxBalance)}
+            sx={{
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              color: 'white',
+              cursor: 'pointer',
+              mr: '14px',
+              '&:hover': {
+                textDecoration: 'underline',
+              },
+            }}
+          >
+            MAX: {maxBalance} {asset}
+          </Typography>
+        </Box>
       </Box>
 
       {/* Submit Button */}
-      <SwapButton
-        isProcessing={quoteLoading || swapStatus === 'fetching-quote'}
-        text={quote && swapStatus === 'idle' ? 'Get New Quote' : 'Get Quote'}
-      />
+      <SwapButton isProcessing={swapStatus === 'monitoring'} text="Swap" />
 
-      {/* Timeline - Show immediately after submit */}
-      {(swapStatus === 'fetching-quote' || swapStatus === 'monitoring' || swapStatus === 'success') && (
+      {/* Timeline - Show during swap execution */}
+      {(swapStatus === 'monitoring' || swapStatus === 'success') && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <SwapTimeline
             currentState={currentState}
-            isFetchingQuote={swapStatus === 'fetching-quote' && !quote}
-            hasQuote={!!quote}
+            isFetchingQuote={false}
+            hasQuote={true}
           />
-        </Box>
-      )}
-
-      {/* Quote Display - Show once we have the quote (after Getting Quote step is complete) */}
-      {quote && !quoteError && swapStatus !== 'idle' && (
-        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
-          <QuoteDisplay
-            quote={quote}
-            sourceSymbol={asset}
-            destinationSymbol="ZEC"
-          />
-        </Box>
-      )}
-
-      {/* Error Display */}
-      {quoteError && (
-        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
-          <Typography color="error" variant="body2">
-            {quoteError}
-          </Typography>
         </Box>
       )}
 

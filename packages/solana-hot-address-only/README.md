@@ -29,7 +29,7 @@ const account = await createSolanaAccount({
   mnemonic: 'your twelve word mnemonic phrase here...',
   accountIndex: 0,
   network: 'mainnet-beta',
-  tokenId: 'native', // optional, defaults to 'native' (SOL)
+  tokenId: undefined, // optional, defaults to 'native' (SOL)
 });
 
 // Get the Solana address

@@ -27,7 +27,7 @@ import { SolanaAccountAddressOnly } from './solanaAccountAddressOnly';
 export async function createSolanaAccount(
   params: CreateSolanaAccountParams
 ): Promise<AccountAddressOnly> {
-  const { mnemonic, accountIndex, network, tokenId = 'native' } = params;
+  const { mnemonic, accountIndex, network, tokenId } = params;
 
   return new SolanaAccountAddressOnly({
     mnemonic,

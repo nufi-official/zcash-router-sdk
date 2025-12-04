@@ -1,22 +1,16 @@
-import { AccountAddressOnly, AccountFull } from './types';
+import { AccountFull } from './types';
 import { swapApi } from './swapApi/application';
 import { swap, SwapStateChangeEvent } from './swapApi';
 
 export async function routeToZcash(params: {
-  sourceAccount: AccountAddressOnly | AccountFull;
-  zcashAccount: Extract<
-    AccountFull & {
-      asset: {
-        blockchain: 'zcash';
-        tokenId: undefined;
-      };
-    },
-    AccountFull
-  >;
+  sourceAccount: AccountFull;
+  zcashAccount: AccountFull;
   amount: string;
   onSwapStatusChange: (event: SwapStateChangeEvent) => void;
 }) {
   const swapApiAssets = await swapApi.getTokens();
+
+  console.log('swapApiAssets', swapApiAssets, params.sourceAccount.asset);
 
   const sourceSwapApiAsset = swapApiAssets.find(
     (asset) =>
@@ -50,7 +44,7 @@ export async function routeToZcash(params: {
     },
     sendDeposit:
       params.sourceAccount.type === 'full'
-        ? params.sourceAccount.sendDeposit
+        ? (depositParams) => params.sourceAccount.sendDeposit(depositParams)
         : undefined,
     onStatusChange: params.onSwapStatusChange,
   });

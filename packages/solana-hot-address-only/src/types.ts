@@ -11,18 +11,24 @@ export type SolanaNetwork = 'mainnet';
 export type SolanaAddress = string;
 
 /**
- * Solana token mint address
- */
-export type SolanaTokenId = string;
-
-/**
- * Parameters for creating a Solana account
+ * Parameters for creating a Solana account (address only)
  */
 export interface CreateSolanaAccountParams {
   mnemonic: string;
   accountIndex: number;
   network: SolanaNetwork;
-  tokenId?: SolanaTokenId; // Optional SPL token, defaults to SOL (native)
+  tokenId?: string | undefined; // Optional SPL token, defaults to SOL (native)
+}
+
+/**
+ * Parameters for creating a full Solana account
+ */
+export interface CreateSolanaAccountFullParams {
+  mnemonic: string;
+  accountIndex: number;
+  network: SolanaNetwork;
+  tokenId?: string | undefined; // Optional SPL token, defaults to SOL (native)
+  rpcUrl?: string; // Optional custom RPC URL
 }
 
 /**
