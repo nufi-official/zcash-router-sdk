@@ -5,7 +5,7 @@ import {
   type SwapStateChangeEvent,
   type AccountFull,
 } from '@zcash-router-sdk/core';
-import { createSolanaAccount } from '@zcash-router-sdk/solana-account-mnemonic';
+import { createSolanaAccountFull } from '@zcash-router-sdk/solana-account-mnemonic';
 import { createZcashShieldedAccount } from '@zcash-router-sdk/zcash-account-mnemonic';
 import { SwapStatus } from './SwapStatus';
 
@@ -65,31 +65,13 @@ export function RouteToZecForm() {
         setTxHash(undefined);
         setCurrentState(undefined);
 
-        // Create Solana account (address-only, we'll wrap it as AccountFull for demo)
-        const solanaAddressOnly = await createSolanaAccount({
+        // Create Solana account (full account with balance and transaction support)
+        const solanaAccount = await createSolanaAccountFull({
           mnemonic: solanaMnemonic.trim(),
           accountIndex: 0,
           network: 'mainnet',
           tokenId: undefined,
         });
-
-        // TODO: In production, integrate with real Solana wallet SDK
-        // For now, create a mock AccountFull wrapper
-        const solanaAccount: AccountFull = {
-          ...solanaAddressOnly,
-          type: 'full',
-          async getBalance() {
-            // TODO: Implement real balance fetching
-            return BigInt(0);
-          },
-          async sendDeposit({ address, amount }) {
-            // TODO: Implement real transaction sending
-            console.log('Mock sendDeposit called:', { address, amount });
-            throw new Error(
-              'Wallet integration not implemented yet. Please implement sendDeposit with a real Solana wallet SDK.'
-            );
-          },
-        };
 
         // Create Zcash account
         const zcashAccount = await createZcashShieldedAccount({
