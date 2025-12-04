@@ -661,6 +661,7 @@ function App() {
                     <RouteToZecForm
                       addressType={addressType}
                       mnemonic={mnemonic}
+                      onConnectClick={handleConnect}
                     />
                   </Box>
                 </Paper>
@@ -720,6 +721,7 @@ function App() {
                     <RouteFromZecForm
                       addressType={addressType}
                       mnemonic={mnemonic}
+                      onConnectClick={handleConnect}
                     />
                   </Box>
                 </Paper>
