@@ -277,7 +277,7 @@ export function RouteFromZecForm({
             sx={{
               fontSize: '0.75rem',
               fontWeight: 600,
-              color: 'white',
+              color: 'text.secondary',
               cursor: balanceLoading ? 'default' : 'pointer',
               opacity: balanceLoading ? 0.6 : 1,
               '&:hover': {
