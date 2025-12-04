@@ -16,7 +16,7 @@ export default defineConfig({
       'nu.fi',
       'localhost',
       '127.0.0.1',
-      'zcash.nu.fi',
+      'zcash-router-ccc8aed03ba9.herokuapp.com',
     ],
     headers: {
       'Cross-Origin-Embedder-Policy': 'require-corp',
