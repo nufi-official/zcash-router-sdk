@@ -208,9 +208,7 @@ export function RouteFromZecForm({
           Zcash →
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box sx={{ flex: 1 }}>
-            <AmountInput value={amount} onChange={setAmount} />
-          </Box>
+          <AmountInput value={amount} onChange={setAmount} />
           <AssetSelect value={asset} onChange={setAsset} />
         </Box>
         <Box
@@ -231,14 +229,15 @@ export function RouteFromZecForm({
               fontWeight: 600,
               color: 'white',
               cursor: balanceLoading ? 'default' : 'pointer',
-              mr: '14px',
               opacity: balanceLoading ? 0.6 : 1,
               '&:hover': {
                 textDecoration: balanceLoading ? 'none' : 'underline',
               },
             }}
           >
-            {balanceLoading ? 'Loading balance...' : `MAX: ${maxBalance} ${asset}`}
+            {balanceLoading
+              ? 'Loading balance...'
+              : `MAX: ${maxBalance} ${asset}`}
           </Typography>
         </Box>
       </Box>
