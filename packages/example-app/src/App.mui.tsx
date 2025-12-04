@@ -240,10 +240,31 @@ function App() {
   const refreshSolBalanceRef = useRef<(() => void) | null>(null);
   const refreshZecBalanceRef = useRef<(() => void) | null>(null);
 
+  // Ref for the connect wallet box to handle click-outside
+  const connectWalletRef = useRef<HTMLDivElement>(null);
+
   // Initialize WASM on mount (but don't block UI)
   useEffect(() => {
     void loadAndInitWebZjs();
   }, []);
+
+  // Close connect panel when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isConnected &&
+        connectWalletRef.current &&
+        !connectWalletRef.current.contains(event.target as Node)
+      ) {
+        setIsConnected(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isConnected]);
 
   const handleConnect = () => {
     setIsConnected(true);
@@ -339,6 +360,7 @@ function App() {
 
         {/* Connect Wallet - Top Right */}
         <Box
+          ref={connectWalletRef}
           sx={{
             position: 'absolute',
             top: 20,
@@ -347,13 +369,6 @@ function App() {
             transform: 'scale(0.85)',
             transformOrigin: 'top right',
           }}
-          onBlur={(e) => {
-            // Check if the new focus target is outside this container
-            if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-              setIsConnected(false);
-            }
-          }}
-          tabIndex={-1}
         >
           <Box
             sx={{
