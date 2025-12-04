@@ -62,7 +62,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily:
-      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      '"Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     h1: {
       fontWeight: 800,
       letterSpacing: '-0.04em',
