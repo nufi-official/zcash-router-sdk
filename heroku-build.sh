@@ -11,10 +11,10 @@ pnpm --version
 echo "-----> Installing dependencies"
 pnpm install --no-frozen-lockfile
 
-# Build all workspace packages that example depends on
+# Build all workspace packages that example-app depends on
 echo "-----> Building workspace dependencies"
-pnpm --filter @asset-route-sdk/core run build || echo "Core package has no build script"
-pnpm --filter @asset-route-sdk/solana-hot-address-only run build || echo "Solana package has no build script"
-pnpm --filter @asset-route-sdk/zcash-core run build || echo "Zcash package has no build script"
+pnpm --filter @zcash-router-sdk/core run build || echo "Core package has no build script"
+pnpm --filter @zcash-router-sdk/solana-account-mnemonic run build || echo "Solana package has no build script"
+pnpm --filter @zcash-router-sdk/zcash-account-mnemonic run build || echo "Zcash package has no build script"
 
 echo "-----> Build complete"

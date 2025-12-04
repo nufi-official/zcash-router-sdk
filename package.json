@@ -23,7 +23,7 @@
     "typecheck": "pnpm --filter \"./packages/*\" run typecheck",
     "clean": "pnpm --filter \"./packages/*\" run clean",
     "heroku-postbuild": "./heroku-build.sh",
-    "start": "cd packages/example && pnpm run start"
+    "start": "cd packages/example-app && pnpm run start"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
