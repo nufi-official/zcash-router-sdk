@@ -11,6 +11,7 @@ import {
   TextField,
   Button,
   IconButton,
+  Tooltip,
 } from '@mui/material';
 import { Refresh as RefreshIcon } from '@mui/icons-material';
 import { generateMnemonic } from 'bip39';
@@ -228,7 +229,7 @@ const theme = createTheme({
 
 function App() {
   const [addressType, setAddressType] = useState<'transparent' | 'shielded'>(
-    'transparent'
+    'shielded'
   );
   const [mnemonic, setMnemonic] = useState(''); // The confirmed mnemonic used by forms
   const [mnemonicInput, setMnemonicInput] = useState(''); // The input field value
@@ -590,31 +591,25 @@ function App() {
                 />
 
                 {/* Transparent option */}
-                <Box
-                  onClick={() => setAddressType('transparent')}
-                  sx={{
-                    px: 4,
-                    py: 1.5,
-                    borderRadius: '28px',
-                    cursor: 'pointer',
-                    transition: 'color 0.3s ease',
-                    color:
-                      addressType === 'transparent'
-                        ? 'white'
-                        : 'rgba(243, 183, 36, 0.8)',
-                    fontWeight: 600,
-                    minWidth: '140px',
-                    textAlign: 'center',
-                    position: 'relative',
-                    zIndex: 1,
-                    '&:hover': {
-                      color:
-                        addressType === 'transparent' ? 'white' : '#F3B724',
-                    },
-                  }}
-                >
-                  Transparent
-                </Box>
+                <Tooltip title="Coming soon" placement="top">
+                  <Box
+                    sx={{
+                      px: 4,
+                      py: 1.5,
+                      borderRadius: '28px',
+                      cursor: 'not-allowed',
+                      transition: 'color 0.3s ease',
+                      color: 'rgba(243, 183, 36, 0.8)',
+                      fontWeight: 600,
+                      minWidth: '140px',
+                      textAlign: 'center',
+                      position: 'relative',
+                      zIndex: 1,
+                    }}
+                  >
+                    Transparent
+                  </Box>
+                </Tooltip>
 
                 {/* Shielded option */}
                 <Box
