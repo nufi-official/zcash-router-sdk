@@ -19,6 +19,7 @@ interface RouteFromZecFormProps {
   mnemonic: string;
   onConnectClick?: () => void;
   onRefreshBalance?: (refresh: () => void) => void;
+  onRefreshAllBalances?: () => void;
 }
 
 export function RouteFromZecForm({
@@ -26,6 +27,7 @@ export function RouteFromZecForm({
   mnemonic,
   onConnectClick,
   onRefreshBalance,
+  onRefreshAllBalances,
 }: RouteFromZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
@@ -56,12 +58,16 @@ export function RouteFromZecForm({
     }
   }, [onRefreshBalance, refreshZecBalance]);
 
-  // Refresh balance after success or error
+  // Refresh both balances after success or error
   useEffect(() => {
     if (swapStatus === 'success' || swapStatus === 'error') {
-      refreshZecBalance();
+      if (onRefreshAllBalances) {
+        onRefreshAllBalances();
+      } else {
+        refreshZecBalance();
+      }
     }
-  }, [swapStatus, refreshZecBalance]);
+  }, [swapStatus, onRefreshAllBalances, refreshZecBalance]);
 
   // Calculate max SOL amount based on ZEC balance
   const maxBalance = useMemo(() => {

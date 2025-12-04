@@ -20,9 +20,10 @@ interface RouteToZecFormProps {
   mnemonic: string;
   onConnectClick?: () => void;
   onRefreshBalance?: (refresh: () => void) => void;
+  onRefreshAllBalances?: () => void;
 }
 
-export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefreshBalance }: RouteToZecFormProps) {
+export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefreshBalance, onRefreshAllBalances }: RouteToZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
   const [swapStatus, setSwapStatus] = useState<
@@ -46,12 +47,16 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
     }
   }, [onRefreshBalance, refreshSolBalance]);
 
-  // Refresh balance after success or error
+  // Refresh both balances after success or error
   useEffect(() => {
     if (swapStatus === 'success' || swapStatus === 'error') {
-      refreshSolBalance();
+      if (onRefreshAllBalances) {
+        onRefreshAllBalances();
+      } else {
+        refreshSolBalance();
+      }
     }
-  }, [swapStatus, refreshSolBalance]);
+  }, [swapStatus, onRefreshAllBalances, refreshSolBalance]);
 
   // Max balance is the SOL balance (only shown for SOL asset)
   const maxBalance = useMemo(() => {
