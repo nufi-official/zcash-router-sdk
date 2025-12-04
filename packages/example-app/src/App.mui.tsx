@@ -288,7 +288,14 @@ function App() {
       >
         {/* Testing Instructions - Top Left */}
         <Box
-          sx={{ position: 'absolute', top: 20, left: 20, maxWidth: '400px' }}
+          sx={{
+            position: 'absolute',
+            top: 20,
+            left: 20,
+            maxWidth: '400px',
+            transform: 'scale(0.85)',
+            transformOrigin: 'top left',
+          }}
         >
           <Alert severity="info">
             <AlertTitle>Testing Instructions</AlertTitle>
@@ -296,20 +303,27 @@ function App() {
               component="ol"
               sx={{ mt: 1, mb: 0, pl: 2, fontSize: '0.85rem' }}
             >
-              <li>Connect wallet (preferably generate a new mnemonic)</li>
+              <li>Connect wallet or generate a new mnemonic</li>
               <li>
                 Use Solana address displayed in the "Deposit to Zcash" amount
                 field to fund the account (at least 0.01 SOL)
               </li>
               <li>Click refresh to update balance</li>
-              <li>Deposit to Zcash account and withdraw to Solana address</li>
+              <li>Deposit to Zcash and withdraw to Solana</li>
             </Box>
           </Alert>
         </Box>
 
         {/* Development Notice - Top, next to Testing Instructions */}
         <Box
-          sx={{ position: 'absolute', top: 20, left: 440, maxWidth: '300px' }}
+          sx={{
+            position: 'absolute',
+            top: 20,
+            left: 380,
+            maxWidth: '300px',
+            transform: 'scale(0.85)',
+            transformOrigin: 'top left',
+          }}
         >
           <Alert severity="warning">
             <AlertTitle>Development Notice</AlertTitle>
@@ -325,7 +339,14 @@ function App() {
 
         {/* Connect Wallet - Top Right */}
         <Box
-          sx={{ position: 'absolute', top: 20, right: 20, width: '500px' }}
+          sx={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            width: '500px',
+            transform: 'scale(0.85)',
+            transformOrigin: 'top right',
+          }}
           onBlur={(e) => {
             // Check if the new focus target is outside this container
             if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -579,6 +600,8 @@ function App() {
               alignItems: 'center',
               justifyContent: 'center',
               height: '100%',
+              transform: 'scale(0.80)',
+              transformOrigin: 'center center',
             }}
           >
             <Box sx={{ maxWidth: '1200px', width: '100%' }}>
