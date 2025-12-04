@@ -62,9 +62,9 @@ importers:
       '@asset-route-sdk/solana-hot-address-only':
         specifier: workspace:*
         version: link:../solana-hot-address-only
-      '@asset-route-sdk/zcash-core':
+      '@asset-route-sdk/zcash-account-mnemonic':
         specifier: workspace:*
-        version: link:../zcash-core
+        version: link:../zcash-account-mnemonic
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.27)(react@18.3.1)
@@ -154,7 +154,7 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
 
-  packages/zcash-core:
+  packages/zcash-account-mnemonic:
     dependencies:
       '@asset-route-sdk/core':
         specifier: workspace:*

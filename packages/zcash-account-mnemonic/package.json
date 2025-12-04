@@ -1,7 +1,7 @@
 {
-  "name": "@asset-route-sdk/zcash-core",
+  "name": "@asset-route-sdk/zcash-account-mnemonic",
   "version": "0.1.0",
-  "description": "Zcash core account management library",
+  "description": "Zcash account management library with mnemonic support",
   "author": "",
   "license": "MIT",
   "type": "module",
@@ -47,7 +47,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tkviet/asset-route-sdk.git",
-    "directory": "packages/zcash-core"
+    "directory": "packages/zcash-account-mnemonic"
   },
   "bugs": {
     "url": "https://github.com/tkviet/asset-route-sdk/issues"
