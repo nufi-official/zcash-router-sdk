@@ -4,8 +4,10 @@ import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
 import { SwapTimeline } from './RouteToZecForm/SwapTimeline';
+import { AddressDisplay } from './RouteToZecForm/AddressDisplay';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
 import { useZecBalance } from './RouteToZecForm/useZecBalance';
+import { useZcashAddress } from './RouteToZecForm/useZcashAddress';
 import {
   CARVED_BOX_STYLES,
   SLIDE_DOWN_ANIMATION,
@@ -37,6 +39,10 @@ export function RouteFromZecForm({
   const { balance: zecBalance, loading: balanceLoading } = useZecBalance(
     addressType,
     mnemonic
+  );
+  const { address: zcashAddress, loading: addressLoading } = useZcashAddress(
+    mnemonic,
+    addressType
   );
 
   // Calculate max SOL amount based on ZEC balance
@@ -203,12 +209,25 @@ export function RouteFromZecForm({
     <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
       {/* Amount and Asset Selector */}
       <Box sx={{ ...CARVED_BOX_STYLES, p: 3, mb: 3 }}>
-        <Typography
-          variant="caption"
-          sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 1,
+          }}
         >
-          Zcash →
-        </Typography>
+          <Typography
+            variant="caption"
+            sx={{ color: 'text.secondary' }}
+          >
+            Zcash →
+          </Typography>
+          <AddressDisplay
+            address={zcashAddress}
+            loading={addressLoading}
+          />
+        </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <AmountInput value={amount} onChange={setAmount} />
           <AssetSelect value={asset} onChange={setAsset} />
