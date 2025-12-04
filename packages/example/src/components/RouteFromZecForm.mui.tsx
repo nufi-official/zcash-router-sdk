@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Box, Typography, TextField } from '@mui/material';
+import { Box, Typography, TextField, Link } from '@mui/material';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
@@ -35,6 +35,7 @@ export function RouteFromZecForm({
   >('idle');
   const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
   const [swapError, setSwapError] = useState<string>();
+  const [depositTxHash, setDepositTxHash] = useState<string>();
 
   const { price: assetPrice, loading: priceLoading } = useTokenPrice(asset);
   const { price: zecPrice, loading: zecPriceLoading } = useTokenPrice('ZEC');
@@ -54,14 +55,9 @@ export function RouteFromZecForm({
     }
   }, [onRefreshBalance, refreshZecBalance]);
 
-  // Clear form values after success and refresh balance after success or error
+  // Refresh balance after success or error
   useEffect(() => {
-    if (swapStatus === 'success') {
-      setAmount('');
-      setAsset('SOL');
-      setDestinationAddress('');
-      refreshZecBalance();
-    } else if (swapStatus === 'error') {
+    if (swapStatus === 'success' || swapStatus === 'error') {
       refreshZecBalance();
     }
   }, [swapStatus, refreshZecBalance]);
@@ -129,6 +125,7 @@ export function RouteFromZecForm({
     try {
       setSwapStatus('initiating');
       setSwapError(undefined);
+      setDepositTxHash(undefined);
 
       // Get lightwalletd URL from environment variable
       const lightwalletdUrl =
@@ -209,6 +206,13 @@ export function RouteFromZecForm({
         onSwapStatusChange: (event) => {
           console.log('[RouteFromZecForm] Swap status:', event);
           setCurrentState(event);
+
+          if (event.status === 'DEPOSIT_SENT') {
+            // Capture deposit txHash
+            if ('txHash' in event && event.txHash) {
+              setDepositTxHash(event.txHash);
+            }
+          }
 
           // Update swap status based on event
           if (event.status === 'SUCCESS') {
@@ -346,6 +350,35 @@ export function RouteFromZecForm({
             isFetchingQuote={swapStatus === 'initiating'}
             hasQuote={swapStatus !== 'initiating'}
           />
+        </Box>
+      )}
+
+      {/* Transaction Info - Show when we have a deposit tx */}
+      {depositTxHash && (
+        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
+          <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
+                Deposit ZEC tx:
+              </Typography>
+              <Link
+                href={`https://mainnet.zcashexplorer.app/transactions/${depositTxHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  color: '#F3B724',
+                  fontFamily: 'monospace',
+                  fontSize: '0.875rem',
+                  textDecoration: 'none',
+                  '&:hover': {
+                    textDecoration: 'underline',
+                  },
+                }}
+              >
+                {depositTxHash.slice(0, 8)}...{depositTxHash.slice(-8)}
+              </Link>
+            </Box>
+          </Box>
         </Box>
       )}
 
