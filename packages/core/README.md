@@ -1,17 +1,20 @@
 # @zcash-router-sdk/core
 
-A TypeScript SDK for Zcash routing that supports both ESM and CommonJS, and runs in Node.js and browsers.
+Core swap and routing SDK for the Zcash Router SDK. Provides functionality for routing assets to and from Zcash, managing swap quotes, and tracking swap status.
 
 ## Features
 
+- 🔄 **Asset Routing** - Route assets to and from Zcash
+- 💱 **Swap Management** - Get quotes, execute swaps, and track status
+- 📊 **Status Tracking** - Real-time swap status updates with event callbacks
 - ✅ **TypeScript** - Full TypeScript support with type declarations
-- ✅ **Dual Format** - Supports both ESM and CommonJS
-- ✅ **Browser Compatible** - Works in Node.js and browsers
-- ✅ **Tree-shakeable** - Optimized for bundle size
-- ✅ **Fully Tested** - Comprehensive test coverage with Vitest
-- ✅ **Modern Tooling** - Built with tsup, ESLint, and Prettier
+- 🌍 **Browser Compatible** - Works in Node.js and browsers
 
 ## Installation
+
+```bash
+pnpm add @zcash-router-sdk/core
+```
 
 ```bash
 npm install @zcash-router-sdk/core
@@ -21,151 +24,229 @@ npm install @zcash-router-sdk/core
 yarn add @zcash-router-sdk/core
 ```
 
-```bash
-pnpm add @zcash-router-sdk/core
-```
-
 ## Usage
 
-### Basic Usage
+### Route to Zcash
 
 ```typescript
-import { AssetRouteSDK } from '@zcash-router-sdk/core';
+import {
+  routeToZcash,
+  type SwapStateChangeEvent,
+} from '@zcash-router-sdk/core';
+import { createSolanaAccountFull } from '@zcash-router-sdk/solana-account-mnemonic';
+import { createZcashShieldedAccount } from '@zcash-router-sdk/zcash-account-mnemonic';
 
-// Create an instance
-const sdk = new AssetRouteSDK({
-  baseUrl: 'https://api.example.com',
-  timeout: 5000,
-  headers: {
-    'X-API-Key': 'your-api-key',
+// Create source account (e.g., Solana)
+const sourceAccount = await createSolanaAccountFull({
+  mnemonic: 'your solana mnemonic...',
+  accountIndex: 0,
+  network: 'mainnet',
+});
+
+// Create destination Zcash account
+const zcashAccount = await createZcashShieldedAccount({
+  mnemonic: 'your zcash mnemonic...',
+  accountIndex: 0,
+  network: 'main',
+  lightwalletdUrl: 'https://zcash-mainnet.chainsafe.dev',
+  minConfirmations: 10,
+});
+
+// Route assets to Zcash
+await routeToZcash({
+  sourceAccount,
+  zcashAccount,
+  amount: '1.5', // Amount in source asset units
+  onSwapStatusChange: (event) => {
+    console.log('Swap status:', event.status);
+    if (event.status === 'DEPOSIT_SENT') {
+      console.log('Transaction hash:', event.txHash);
+    }
+    if (event.status === 'SUCCESS') {
+      console.log('Swap completed successfully!');
+    }
   },
 });
-
-// Route an asset
-const result = await sdk.route('/assets/image.png');
-
-if (result.success) {
-  console.log('Asset routed successfully:', result.data);
-} else {
-  console.error('Routing failed:', result.error);
-}
 ```
 
-### Using the Factory Function
+### Route from Zcash
 
 ```typescript
-import { createAssetRouteSDK } from '@zcash-router-sdk/core';
+import {
+  routeFromZcash,
+  type SwapStateChangeEvent,
+} from '@zcash-router-sdk/core';
+import { createSolanaAccountFull } from '@zcash-router-sdk/solana-account-mnemonic';
+import { createZcashShieldedAccount } from '@zcash-router-sdk/zcash-account-mnemonic';
 
-const sdk = createAssetRouteSDK({
-  baseUrl: 'https://api.example.com',
+// Create Zcash source account
+const zcashAccount = await createZcashShieldedAccount({
+  mnemonic: 'your zcash mnemonic...',
+  accountIndex: 0,
+  network: 'main',
+  lightwalletdUrl: 'https://zcash-mainnet.chainsafe.dev',
+  minConfirmations: 10,
 });
-```
 
-### Updating Configuration
+// Create destination account (e.g., Solana)
+const destinationAccount = await createSolanaAccountFull({
+  mnemonic: 'your solana mnemonic...',
+  accountIndex: 0,
+  network: 'mainnet',
+});
 
-```typescript
-// Update the base URL
-sdk.updateConfig({ baseUrl: 'https://new-api.example.com' });
-
-// Add or update headers
-sdk.updateConfig({
-  headers: {
-    'X-Another-Header': 'value',
+// Route assets from Zcash
+await routeFromZcash({
+  zcashAccount,
+  destinationAccount,
+  amount: '1.5', // Amount in ZEC
+  onSwapStatusChange: (event) => {
+    console.log('Swap status:', event.status);
   },
 });
-
-// Get current configuration
-const config = sdk.getConfig();
-console.log('Current config:', config);
 ```
 
-### CommonJS Usage
+### Get Swap API Assets
 
-```javascript
-const { AssetRouteSDK } = require('@zcash-router-sdk/core');
+```typescript
+import { getSwapApiAssets } from '@zcash-router-sdk/core';
 
-const sdk = new AssetRouteSDK({
-  baseUrl: 'https://api.example.com',
+// Get all available assets for swapping
+const assets = await getSwapApiAssets();
+console.log('Available assets:', assets);
+```
+
+### Get Swap Quote
+
+```typescript
+import { getSwapQuote } from '@zcash-router-sdk/core';
+
+// Get a quote for a swap
+const quote = await getSwapQuote({
+  dry: true, // Set to false to get a real quote
+  senderAddress: 'sourceAddress...',
+  recipientAddress: 'destinationAddress...',
+  originAsset: 'assetId1',
+  destinationAsset: 'assetId2',
+  amount: '1000000000', // Amount in base units
+  slippageTolerance: 100, // Slippage tolerance in basis points (100 = 1%)
 });
-```
-
-### Browser Usage
-
-```html
-<script type="module">
-  import { AssetRouteSDK } from 'https://unpkg.com/@zcash-router-sdk/core';
-
-  const sdk = new AssetRouteSDK({
-    baseUrl: 'https://api.example.com',
-  });
-</script>
 ```
 
 ## API Reference
 
-### `AssetRouteSDK`
+### Routing Functions
 
-The main SDK class.
+#### `routeToZcash(params): Promise<void>`
 
-#### Constructor
-
-```typescript
-new AssetRouteSDK(config: AssetRouteConfig)
-```
+Routes assets from a source account to Zcash.
 
 **Parameters:**
-- `config.baseUrl` (string, required) - Base URL for asset routing
-- `config.timeout` (number, optional) - Request timeout in milliseconds (default: 5000)
-- `config.headers` (Record<string, string>, optional) - Custom headers
+- `sourceAccount: AccountFull` - Source account (e.g., Solana)
+- `zcashAccount: AccountFull` - Destination Zcash account
+- `amount: string` - Amount to swap in source asset units
+- `onSwapStatusChange: (event: SwapStateChangeEvent) => void` - Callback for status updates
 
-#### Methods
+#### `routeFromZcash(params): Promise<void>`
 
-##### `route(path: string): Promise<AssetRouteResult>`
-
-Routes an asset request.
-
-**Parameters:**
-- `path` - The asset path to route
-
-**Returns:** Promise resolving to `AssetRouteResult`
-
-##### `getConfig(): Readonly<Required<AssetRouteConfig>>`
-
-Gets the current configuration.
-
-**Returns:** A readonly copy of the current configuration
-
-##### `updateConfig(config: Partial<AssetRouteConfig>): void`
-
-Updates the configuration. Headers are merged with existing headers.
+Routes assets from Zcash to a destination account.
 
 **Parameters:**
-- `config` - Partial configuration to update
+- `zcashAccount: AccountFull` - Source Zcash account
+- `destinationAccount: AccountAddressOnly` - Destination account
+- `amount: string` - Amount to swap in ZEC
+- `onSwapStatusChange: (event: SwapStateChangeEvent) => void` - Callback for status updates
 
-### `createAssetRouteSDK(config: AssetRouteConfig): AssetRouteSDK`
+### Swap API Functions
 
-Factory function to create a new SDK instance.
+#### `getSwapApiAssets(): Promise<SwapApiAsset[]>`
+
+Gets all available assets for swapping.
+
+**Returns:** Array of available swap assets
+
+#### `getSwapQuote(params: GetQuoteParams): Promise<SwapQuoteResponse>`
+
+Gets a quote for a swap.
+
+**Parameters:**
+- `dry: boolean` - If true, returns a dry-run quote
+- `senderAddress: string` - Sender address
+- `recipientAddress: string` - Recipient address
+- `originAsset: string` - Origin asset ID
+- `destinationAsset: string` - Destination asset ID
+- `amount: string` - Amount in base units
+- `slippageTolerance: number` - Slippage tolerance in basis points
+- `deadline?: string` - Optional deadline
+- `referral?: string` - Optional referral code
 
 ### Types
 
-#### `AssetRouteConfig`
+#### `AccountFull`
 
 ```typescript
-interface AssetRouteConfig {
-  baseUrl: string;
-  timeout?: number;
-  headers?: Record<string, string>;
+interface AccountFull {
+  readonly type: 'full';
+  readonly asset: RouteAsset;
+  
+  getAddress(): Promise<string>;
+  getBalance(): Promise<bigint>;
+  assetToBaseUnits(amount: string): bigint;
+  sendDeposit(params: { address: string; amount: string }): Promise<string>;
 }
 ```
 
-#### `AssetRouteResult`
+#### `AccountAddressOnly`
 
 ```typescript
-interface AssetRouteResult {
-  success: boolean;
-  data?: unknown;
-  error?: string;
+interface AccountAddressOnly {
+  readonly type: 'addressOnly';
+  readonly asset: RouteAsset;
+  
+  getAddress(): Promise<string>;
+  assetToBaseUnits(amount: string): bigint;
 }
+```
+
+#### `SwapStateChangeEvent`
+
+```typescript
+type SwapStateChangeEvent =
+  | { status: 'QUOTE_RECEIVED'; depositAddress: string }
+  | { status: 'DEPOSIT_SENT'; txHash: string }
+  | { status: CheckStatusResponse; statusResponse: GetExecutionStatusResponse };
+```
+
+#### `SwapApiAsset`
+
+```typescript
+interface SwapApiAsset {
+  assetId: string;
+  priceUpdatedAt: string;
+  price: number;
+  decimals: number;
+  symbol: string;
+  blockchain: string;
+  contractAddress?: string;
+}
+```
+
+### Constants
+
+#### `SWAP_HAPPY_PATH_TIMELINE`
+
+Expected status progression for a successful swap:
+
+```typescript
+['PENDING_DEPOSIT', 'KNOWN_DEPOSIT_TX', 'PROCESSING', 'SUCCESS']
+```
+
+#### `SWAP_END_STATES`
+
+Final states that terminate the swap:
+
+```typescript
+Set(['SUCCESS', 'FAILED', 'REFUNDED'])
 ```
 
 ## Development
@@ -173,76 +254,32 @@ interface AssetRouteResult {
 ### Prerequisites
 
 - Node.js 18+
-- npm, yarn, or pnpm
+- pnpm (recommended) or npm/yarn
 
 ### Setup
 
 ```bash
-# Install dependencies
-npm install
+# Install dependencies (from monorepo root)
+pnpm install
 
 # Run tests
-npm test
+pnpm test
 
 # Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm run test:coverage
+pnpm test:watch
 
 # Build the library
-npm run build
+pnpm build
 
 # Development mode (watch)
-npm run dev
+pnpm dev
 
 # Lint code
-npm run lint
+pnpm lint
 
 # Format code
-npm run format
-
-# Type check
-npm run typecheck
+pnpm format
 ```
-
-### Project Structure
-
-```
-zcash-router-sdk/
-├── src/
-│   ├── index.ts          # Main entry point
-│   └── types.ts          # Type definitions
-├── tests/
-│   └── index.test.ts     # Test files
-├── dist/                 # Build output (generated)
-│   ├── index.cjs         # CommonJS build
-│   ├── index.mjs         # ESM build
-│   ├── index.d.cts       # CommonJS types
-│   └── index.d.mts       # ESM types
-├── tsconfig.json         # TypeScript config (dev)
-├── tsconfig.build.json   # TypeScript config (build)
-├── tsup.config.ts        # Build configuration
-├── vitest.config.ts      # Test configuration
-├── .eslintrc.cjs         # ESLint configuration
-└── .prettierrc           # Prettier configuration
-```
-
-## Publishing
-
-Before publishing to npm:
-
-1. Update the version in `package.json`
-2. Run the prepublish checks:
-   ```bash
-   npm run prepublishOnly
-   ```
-3. Publish to npm:
-   ```bash
-   npm publish
-   ```
-
-The `prepublishOnly` script automatically runs type checking, tests, and builds before publishing.
 
 ## License
 
@@ -250,4 +287,4 @@ MIT
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please see the [root README](../../README.md) for contribution guidelines.

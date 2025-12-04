@@ -10,8 +10,6 @@ export async function routeFromZcash(params: {
 }) {
   const swapApiAssets = await swapApi.getTokens();
 
-  console.log('swapApiAssets', swapApiAssets);
-
   // destination asset is ZEC
   const zecSwapApiAsset = swapApiAssets.find(
     (asset) => asset.blockchain === 'zec' && asset.contractAddress === undefined
@@ -20,8 +18,6 @@ export async function routeFromZcash(params: {
   if (!zecSwapApiAsset) {
     throw new Error('ZEC swap API asset not found');
   }
-
-  console.log('destinationSwapApiAsset', params.destinationAccount.asset);
 
   const destinationSwapApiAsset = swapApiAssets.find(
     (asset) =>

@@ -10,8 +10,6 @@ export async function routeToZcash(params: {
 }) {
   const swapApiAssets = await swapApi.getTokens();
 
-  console.log('swapApiAssets', swapApiAssets, params.sourceAccount.asset);
-
   const sourceSwapApiAsset = swapApiAssets.find(
     (asset) =>
       asset.blockchain === params.sourceAccount.asset.blockchain &&
