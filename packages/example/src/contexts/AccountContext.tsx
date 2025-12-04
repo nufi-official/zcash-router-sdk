@@ -5,10 +5,10 @@ import {
   useEffect,
   ReactNode,
 } from 'react';
-import type { AccountFull } from '@asset-route-sdk/core';
-import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-account-mnemonic';
-import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-account-mnemonic';
-import { createSolanaAccountFull } from '@asset-route-sdk/solana-account-mnemonic';
+import type { AccountFull } from '@zcash-router-sdk/core';
+import { loadAndInitWebZjs } from '@zcash-router-sdk/zcash-account-mnemonic';
+import { createZcashShieldedAccount } from '@zcash-router-sdk/zcash-account-mnemonic';
+import { createSolanaAccountFull } from '@zcash-router-sdk/solana-account-mnemonic';
 
 interface AccountContextType {
   solanaAccount: AccountFull | null;

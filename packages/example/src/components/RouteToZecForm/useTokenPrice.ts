@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getSwapApiAssets } from '@asset-route-sdk/core';
-import type { SwapApiAsset } from '@asset-route-sdk/core';
+import { getSwapApiAssets } from '@zcash-router-sdk/core';
+import type { SwapApiAsset } from '@zcash-router-sdk/core';
 
 export function useTokenPrice(assetSymbol: string) {
   const [price, setPrice] = useState<number>(0);

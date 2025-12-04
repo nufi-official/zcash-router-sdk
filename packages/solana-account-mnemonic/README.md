@@ -1,6 +1,6 @@
-# @asset-route-sdk/solana-account-mnemonic
+# @zcash-router-sdk/solana-account-mnemonic
 
-Solana account management library with mnemonic support for the Asset Route SDK.
+Solana account management library with mnemonic support for the Zcash Router SDK.
 
 ## Features
 
@@ -9,12 +9,12 @@ Solana account management library with mnemonic support for the Asset Route SDK.
 - 🎯 Support for native SOL and SPL tokens
 - 🌐 Multi-network support (mainnet-beta, devnet, testnet)
 - 💯 Full TypeScript support with type definitions
-- ✅ Implements AccountAddressOnly interface from @asset-route-sdk/core
+- ✅ Implements AccountAddressOnly interface from @zcash-router-sdk/core
 
 ## Installation
 
 ```bash
-pnpm add @asset-route-sdk/solana-account-mnemonic
+pnpm add @zcash-router-sdk/solana-account-mnemonic
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ pnpm add @asset-route-sdk/solana-account-mnemonic
 ### Basic Example
 
 ```typescript
-import { createSolanaAccount } from '@asset-route-sdk/solana-account-mnemonic';
+import { createSolanaAccount } from '@zcash-router-sdk/solana-account-mnemonic';
 
 // Create a Solana account (address-only)
 const account = await createSolanaAccount({
@@ -44,7 +44,7 @@ console.log('Lamports:', lamports); // 1500000000n
 ### SPL Token Support
 
 ```typescript
-import { createSolanaAccount } from '@asset-route-sdk/solana-account-mnemonic';
+import { createSolanaAccount } from '@zcash-router-sdk/solana-account-mnemonic';
 
 // Create an account for USDC token
 const usdcAccount = await createSolanaAccount({
@@ -159,7 +159,7 @@ import {
   SOLANA_ASSET,
   SOLANA_DECIMALS,
   LAMPORTS_PER_SOL,
-} from '@asset-route-sdk/solana-account-mnemonic';
+} from '@zcash-router-sdk/solana-account-mnemonic';
 
 console.log(SOLANA_DECIMALS); // 9
 console.log(LAMPORTS_PER_SOL); // 1000000000n
@@ -175,7 +175,7 @@ import {
   deriveKeypairFromMnemonic,
   getAddressFromKeypair,
   deriveAddressFromMnemonic,
-} from '@asset-route-sdk/solana-account-mnemonic';
+} from '@zcash-router-sdk/solana-account-mnemonic';
 
 // Derive keypair
 const keypair = deriveKeypairFromMnemonic('your mnemonic...', 0);
@@ -204,7 +204,7 @@ This package implements **AccountAddressOnly**, which provides:
 - ❌ Balance fetching (not available)
 - ❌ Transaction signing (not available)
 
-For full account functionality with balance and transactions, use `@asset-route-sdk/solana-full` (coming soon).
+For full account functionality with balance and transactions, use `@zcash-router-sdk/solana-full` (coming soon).
 
 ## License
 
@@ -212,4 +212,4 @@ MIT
 
 ## Repository
 
-https://github.com/tkviet/asset-route-sdk
+https://github.com/tkviet/zcash-router-sdk

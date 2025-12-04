@@ -56,15 +56,6 @@ importers:
 
   packages/example:
     dependencies:
-      '@asset-route-sdk/core':
-        specifier: workspace:*
-        version: link:../core
-      '@asset-route-sdk/solana-account-mnemonic':
-        specifier: workspace:*
-        version: link:../solana-account-mnemonic
-      '@asset-route-sdk/zcash-account-mnemonic':
-        specifier: workspace:*
-        version: link:../zcash-account-mnemonic
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@18.3.27)(react@18.3.1)
@@ -80,6 +71,15 @@ importers:
       '@solana/web3.js':
         specifier: ^1.95.8
         version: 1.98.4(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)
+      '@zcash-router-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+      '@zcash-router-sdk/solana-account-mnemonic':
+        specifier: workspace:*
+        version: link:../solana-account-mnemonic
+      '@zcash-router-sdk/zcash-account-mnemonic':
+        specifier: workspace:*
+        version: link:../zcash-account-mnemonic
       bip39:
         specifier: ^3.1.0
         version: 3.1.0
@@ -138,12 +138,12 @@ importers:
 
   packages/solana-account-mnemonic:
     dependencies:
-      '@asset-route-sdk/core':
-        specifier: workspace:*
-        version: link:../core
       '@solana/web3.js':
         specifier: ^1.95.8
         version: 1.98.4(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)
+      '@zcash-router-sdk/core':
+        specifier: workspace:*
+        version: link:../core
       bip39:
         specifier: ^3.1.0
         version: 3.1.0
@@ -156,15 +156,15 @@ importers:
 
   packages/zcash-account-mnemonic:
     dependencies:
-      '@asset-route-sdk/core':
-        specifier: workspace:*
-        version: link:../core
       '@chainsafe/webzjs-keys':
         specifier: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-keys-0.3.0.tgz
         version: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-keys-0.3.0.tgz
       '@chainsafe/webzjs-wallet':
         specifier: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-wallet-0.3.0.tgz
         version: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-wallet-0.3.0.tgz
+      '@zcash-router-sdk/core':
+        specifier: workspace:*
+        version: link:../core
       bip39:
         specifier: ^3.1.0
         version: 3.1.0

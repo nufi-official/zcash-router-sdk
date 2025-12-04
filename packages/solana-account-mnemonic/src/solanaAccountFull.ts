@@ -1,4 +1,4 @@
-import type { AccountFull, RouteAsset } from '@asset-route-sdk/core';
+import type { AccountFull, RouteAsset } from '@zcash-router-sdk/core';
 import {
   Connection,
   Keypair,

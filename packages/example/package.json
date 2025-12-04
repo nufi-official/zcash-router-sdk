@@ -1,7 +1,7 @@
 {
-  "name": "@asset-route-sdk/example",
+  "name": "@zcash-router-sdk/example",
   "version": "0.1.0",
-  "description": "Example React app demonstrating asset-route-sdk usage",
+  "description": "Example React app demonstrating zcash-router-sdk usage",
   "type": "module",
   "private": true,
   "scripts": {
@@ -13,9 +13,9 @@
     "lint:fix": "eslint src --ext .ts,.tsx --fix"
   },
   "dependencies": {
-    "@asset-route-sdk/core": "workspace:*",
-    "@asset-route-sdk/solana-account-mnemonic": "workspace:*",
-    "@asset-route-sdk/zcash-account-mnemonic": "workspace:*",
+    "@zcash-router-sdk/core": "workspace:*",
+    "@zcash-router-sdk/solana-account-mnemonic": "workspace:*",
+    "@zcash-router-sdk/zcash-account-mnemonic": "workspace:*",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.5",

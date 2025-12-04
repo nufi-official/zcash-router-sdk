@@ -1,6 +1,6 @@
-# @asset-route-sdk/zcash-account-full
+# @zcash-router-sdk/zcash-account-mnemonic
 
-Zcash transparent account management library. Provides utilities for creating and managing Zcash transparent accounts.
+Zcash account management library with mnemonic support for the Zcash Router SDK.
 
 ## Features
 
@@ -13,23 +13,15 @@ Zcash transparent account management library. Provides utilities for creating an
 ## Installation
 
 ```bash
-npm install @asset-route-sdk/zcash-account-full
+npm install @zcash-router-sdk/zcash-account-mnemonic
 ```
 
 ```bash
-yarn add @asset-route-sdk/zcash-account-full
+yarn add @zcash-router-sdk/zcash-account-mnemonic
 ```
 
 ```bash
-pnpm add @asset-route-sdk/zcash-account-full
-```
-
-## Usage
-
-```typescript
-import { } from '@asset-route-sdk/zcash-account-full';
-
-// Usage examples will be added here
+pnpm add @zcash-router-sdk/zcash-account-mnemonic
 ```
 
 ## Development

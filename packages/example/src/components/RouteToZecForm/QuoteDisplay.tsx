@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Typography, Divider, Alert, IconButton, Tooltip } from '@mui/material';
 import { Info as InfoIcon, ContentCopy as CopyIcon, Check as CheckIcon } from '@mui/icons-material';
-import type { SwapQuoteResponse } from '@asset-route-sdk/core';
+import type { SwapQuoteResponse } from '@zcash-router-sdk/core';
 import { CARVED_BOX_STYLES } from './constants';
 
 interface QuoteDisplayProps {

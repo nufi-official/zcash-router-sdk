@@ -1,6 +1,6 @@
-# asset-route-sdk
+# @zcash-router-sdk/core
 
-A TypeScript SDK for asset routing that supports both ESM and CommonJS, and runs in Node.js and browsers.
+A TypeScript SDK for Zcash routing that supports both ESM and CommonJS, and runs in Node.js and browsers.
 
 ## Features
 
@@ -14,15 +14,15 @@ A TypeScript SDK for asset routing that supports both ESM and CommonJS, and runs
 ## Installation
 
 ```bash
-npm install asset-route-sdk
+npm install @zcash-router-sdk/core
 ```
 
 ```bash
-yarn add asset-route-sdk
+yarn add @zcash-router-sdk/core
 ```
 
 ```bash
-pnpm add asset-route-sdk
+pnpm add @zcash-router-sdk/core
 ```
 
 ## Usage
@@ -30,7 +30,7 @@ pnpm add asset-route-sdk
 ### Basic Usage
 
 ```typescript
-import { AssetRouteSDK } from 'asset-route-sdk';
+import { AssetRouteSDK } from '@zcash-router-sdk/core';
 
 // Create an instance
 const sdk = new AssetRouteSDK({
@@ -54,7 +54,7 @@ if (result.success) {
 ### Using the Factory Function
 
 ```typescript
-import { createAssetRouteSDK } from 'asset-route-sdk';
+import { createAssetRouteSDK } from '@zcash-router-sdk/core';
 
 const sdk = createAssetRouteSDK({
   baseUrl: 'https://api.example.com',
@@ -82,7 +82,7 @@ console.log('Current config:', config);
 ### CommonJS Usage
 
 ```javascript
-const { AssetRouteSDK } = require('asset-route-sdk');
+const { AssetRouteSDK } = require('@zcash-router-sdk/core');
 
 const sdk = new AssetRouteSDK({
   baseUrl: 'https://api.example.com',
@@ -93,7 +93,7 @@ const sdk = new AssetRouteSDK({
 
 ```html
 <script type="module">
-  import { AssetRouteSDK } from 'https://unpkg.com/asset-route-sdk';
+  import { AssetRouteSDK } from 'https://unpkg.com/@zcash-router-sdk/core';
 
   const sdk = new AssetRouteSDK({
     baseUrl: 'https://api.example.com',
@@ -209,7 +209,7 @@ npm run typecheck
 ### Project Structure
 
 ```
-asset-route-sdk/
+zcash-router-sdk/
 ├── src/
 │   ├── index.ts          # Main entry point
 │   └── types.ts          # Type definitions

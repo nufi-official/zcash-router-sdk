@@ -1,4 +1,4 @@
-import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
+import type { SwapStateChangeEvent } from '@zcash-router-sdk/core';
 
 export const createMockSwapStates = (): SwapStateChangeEvent[] => [
   { status: 'DEPOSIT_SENT', txHash: '0x123...abc' },

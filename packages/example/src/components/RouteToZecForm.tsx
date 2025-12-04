@@ -4,9 +4,9 @@ import {
   routeToZcash,
   type SwapStateChangeEvent,
   type AccountFull,
-} from '@asset-route-sdk/core';
-import { createSolanaAccount } from '@asset-route-sdk/solana-account-mnemonic';
-import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-account-mnemonic';
+} from '@zcash-router-sdk/core';
+import { createSolanaAccount } from '@zcash-router-sdk/solana-account-mnemonic';
+import { createZcashShieldedAccount } from '@zcash-router-sdk/zcash-account-mnemonic';
 import { SwapStatus } from './SwapStatus';
 
 export function RouteToZecForm() {

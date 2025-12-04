@@ -1,5 +1,5 @@
 {
-  "name": "@asset-route-sdk/solana-account-mnemonic",
+  "name": "@zcash-router-sdk/solana-account-mnemonic",
   "version": "0.1.0",
   "description": "Solana account management library with mnemonic support",
   "author": "",
@@ -46,15 +46,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tkviet/asset-route-sdk.git",
+    "url": "git+https://github.com/tkviet/zcash-router-sdk.git",
     "directory": "packages/solana-account-mnemonic"
   },
   "bugs": {
-    "url": "https://github.com/tkviet/asset-route-sdk/issues"
+    "url": "https://github.com/tkviet/zcash-router-sdk/issues"
   },
-  "homepage": "https://github.com/tkviet/asset-route-sdk#readme",
+  "homepage": "https://github.com/tkviet/zcash-router-sdk#readme",
   "dependencies": {
-    "@asset-route-sdk/core": "workspace:*",
+    "@zcash-router-sdk/core": "workspace:*",
     "@solana/web3.js": "^1.95.8",
     "bip39": "^3.1.0",
     "ed25519-hd-key": "^1.3.0",

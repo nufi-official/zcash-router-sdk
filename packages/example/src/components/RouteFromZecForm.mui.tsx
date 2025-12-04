@@ -14,7 +14,7 @@ import {
   CARVED_BOX_STYLES,
   SLIDE_DOWN_ANIMATION,
 } from './RouteToZecForm/constants';
-import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
+import type { SwapStateChangeEvent } from '@zcash-router-sdk/core';
 
 interface RouteFromZecFormProps {
   addressType: 'transparent' | 'shielded';
@@ -156,7 +156,7 @@ export function RouteFromZecForm({
       setDepositAddress(undefined);
 
       // Import required functions
-      const { routeFromZcash } = await import('@asset-route-sdk/core');
+      const { routeFromZcash } = await import('@zcash-router-sdk/core');
 
       console.log('[RouteFromZecForm] Using Zcash account from context:', {
         type: zcashAccount.type,

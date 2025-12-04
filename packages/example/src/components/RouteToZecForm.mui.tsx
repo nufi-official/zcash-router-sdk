@@ -14,7 +14,7 @@ import {
   CARVED_BOX_STYLES,
   SLIDE_DOWN_ANIMATION,
 } from './RouteToZecForm/constants';
-import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
+import type { SwapStateChangeEvent } from '@zcash-router-sdk/core';
 
 interface RouteToZecFormProps {
   addressType: 'transparent' | 'shielded';
@@ -133,7 +133,7 @@ export function RouteToZecForm({
       });
 
       // Execute the swap using routeToZcash
-      const { routeToZcash } = await import('@asset-route-sdk/core');
+      const { routeToZcash } = await import('@zcash-router-sdk/core');
 
       await routeToZcash({
         sourceAccount: solanaAccount,

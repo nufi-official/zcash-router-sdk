@@ -4,7 +4,7 @@ import {
   CheckCircle as CheckIcon,
   Pending as PendingIcon,
 } from '@mui/icons-material';
-import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
+import type { SwapStateChangeEvent } from '@zcash-router-sdk/core';
 
 import { CARVED_BOX_STYLES } from './constants';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@asset-route-sdk/zcash-account-mnemonic",
+  "name": "@zcash-router-sdk/zcash-account-mnemonic",
   "version": "0.1.0",
   "description": "Zcash account management library with mnemonic support",
   "author": "",
@@ -46,15 +46,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tkviet/asset-route-sdk.git",
+    "url": "git+https://github.com/tkviet/zcash-router-sdk.git",
     "directory": "packages/zcash-account-mnemonic"
   },
   "bugs": {
-    "url": "https://github.com/tkviet/asset-route-sdk/issues"
+    "url": "https://github.com/tkviet/zcash-router-sdk/issues"
   },
-  "homepage": "https://github.com/tkviet/asset-route-sdk#readme",
+  "homepage": "https://github.com/tkviet/zcash-router-sdk#readme",
   "dependencies": {
-    "@asset-route-sdk/core": "workspace:*",
+    "@zcash-router-sdk/core": "workspace:*",
     "@chainsafe/webzjs-keys": "https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-keys-0.3.0.tgz",
     "@chainsafe/webzjs-wallet": "https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-wallet-0.3.0.tgz",
     "bip39": "^3.1.0"

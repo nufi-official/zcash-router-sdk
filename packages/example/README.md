@@ -77,7 +77,7 @@ The form will display real-time progress through these stages:
    - TODO: Integrate with Phantom, Solflare, or other Solana wallet
 
 2. **API Configuration Required**
-   - JWT token and API base URL must be configured in `@asset-route-sdk/core`
+   - JWT token and API base URL must be configured in `@zcash-router-sdk/core`
    - See `packages/core/src/swapApi/application/index.ts`
 
 3. **Test Environment Only**
@@ -102,9 +102,9 @@ The form will display real-time progress through these stages:
 
 ### Dependencies
 
-- **@asset-route-sdk/core**: Core swap functionality
-- **@asset-route-sdk/solana-account-mnemonic**: Solana account management with mnemonic support
-- **@asset-route-sdk/zcash-account-mnemonic**: Zcash account management with mnemonic support
+- **@zcash-router-sdk/core**: Core swap functionality
+- **@zcash-router-sdk/solana-account-mnemonic**: Solana account management with mnemonic support
+- **@zcash-router-sdk/zcash-account-mnemonic**: Zcash account management with mnemonic support
 - **React 18**: UI framework
 - **Vite**: Build tool and dev server with WASM support plugins
 - **Tailwind CSS**: Styling

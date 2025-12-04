@@ -1,11 +1,12 @@
-# Asset Route SDK Monorepo
+# Zcash Router SDK Monorepo
 
-A monorepo containing TypeScript SDKs for asset routing. Built with pnpm workspaces, supporting both ESM and CommonJS, and compatible with Node.js and browsers.
+A monorepo containing TypeScript SDKs for Zcash routing. Built with pnpm workspaces, supporting both ESM and CommonJS, and compatible with Node.js and browsers.
 
 ## 📦 Packages
 
-- [`@asset-route-sdk/core`](./packages/core) - Core asset routing and swap SDK
-- [`@asset-route-sdk/zcash-account-full`](./packages/zcash-account-full) - Zcash account management
+- [`@zcash-router-sdk/core`](./packages/core) - Core Zcash routing and swap SDK
+- [`@zcash-router-sdk/zcash-account-mnemonic`](./packages/zcash-account-mnemonic) - Zcash account management with mnemonic support
+- [`@zcash-router-sdk/solana-account-mnemonic`](./packages/solana-account-mnemonic) - Solana account management with mnemonic support
 
 ## 🚀 Quick Start
 
@@ -72,13 +73,13 @@ pnpm clean
 
 ```bash
 # Build a specific package
-pnpm --filter @asset-route-sdk/core build
+pnpm --filter @zcash-router-sdk/core build
 
 # Test a specific package
-pnpm --filter @asset-route-sdk/core test
+pnpm --filter @zcash-router-sdk/core test
 
 # Run dev mode for a specific package
-pnpm --filter @asset-route-sdk/core dev
+pnpm --filter @zcash-router-sdk/core dev
 ```
 
 ### Adding a New Package
@@ -88,7 +89,7 @@ pnpm --filter @asset-route-sdk/core dev
    mkdir packages/new-package
    ```
 
-2. Create a `package.json` with the name `@asset-route-sdk/new-package`
+2. Create a `package.json` with the name `@zcash-router-sdk/new-package`
 
 3. Add your source code and configuration files
 
@@ -104,7 +105,7 @@ To use one package within another:
 ```json
 {
   "dependencies": {
-    "@asset-route-sdk/core": "workspace:*"
+    "@zcash-router-sdk/core": "workspace:*"
   }
 }
 ```
@@ -112,13 +113,12 @@ To use one package within another:
 ## 📁 Project Structure
 
 ```
-asset-route-sdk/
+zcash-router-sdk/
 ├── packages/
-│   └── core/                  # Core asset routing package
-│       ├── src/
-│       ├── tests/
-│       ├── package.json
-│       └── README.md
+│   ├── core/                  # Core Zcash routing package
+│   ├── zcash-account-mnemonic/ # Zcash account management
+│   ├── solana-account-mnemonic/ # Solana account management
+│   └── example/               # Example React app
 ├── .eslintrc.cjs              # Shared ESLint config
 ├── .prettierrc                # Shared Prettier config
 ├── pnpm-workspace.yaml        # pnpm workspace config
@@ -194,5 +194,5 @@ MIT
 
 ## 🔗 Links
 
-- [Repository](https://github.com/tkviet/asset-route-sdk)
-- [Issues](https://github.com/tkviet/asset-route-sdk/issues)
+- [Repository](https://github.com/tkviet/zcash-router-sdk)
+- [Issues](https://github.com/tkviet/zcash-router-sdk/issues)

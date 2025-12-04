@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { getSwapQuote, type SwapApiAsset } from '@asset-route-sdk/core';
-import type { SwapQuoteResponse } from '@asset-route-sdk/core';
+import { getSwapQuote, type SwapApiAsset } from '@zcash-router-sdk/core';
+import type { SwapQuoteResponse } from '@zcash-router-sdk/core';
 
 interface GetQuoteParams {
   amount: string;
