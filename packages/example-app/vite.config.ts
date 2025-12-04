@@ -15,7 +15,7 @@ export default defineConfig({
       '.nu.fi',
       'nu.fi',
       'localhost',
-      '127.0.0.1'
+      '127.0.0.1',
     ],
     headers: {
       'Cross-Origin-Embedder-Policy': 'require-corp',
