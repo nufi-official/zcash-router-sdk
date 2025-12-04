@@ -30,6 +30,7 @@ export class WebWalletManagerImpl implements WebWalletManager {
 
   private accountIdCache: Map<string, number> = new Map();
   private pendingSync: Promise<void> | null = null;
+  private pendingImports: Map<string, Promise<number>> = new Map();
 
   constructor(config: WebWalletConfig) {
     this.config = config;
@@ -96,53 +97,73 @@ export class WebWalletManagerImpl implements WebWalletManager {
       account,
     });
 
-    if (cachedAccountId) {
+    if (cachedAccountId !== undefined) {
       return cachedAccountId;
     }
 
-    // Try to get stored birthday block first
-    let birthdayHeight = getBirthdayBlock(
-      account.seedFingerprintHex,
-      accountIndex
-    );
-
-    // If no stored birthday block, fetch current and store it
-    if (birthdayHeight === null) {
-      const currentHeight = await this.getCurrentBlockHeight();
-      birthdayHeight = Number(currentHeight.toString()) - 1000;
-
-      // Store for future use
-      setBirthdayBlock(
-        account.seedFingerprintHex,
-        accountIndex,
-        birthdayHeight
-      );
-
-      console.log('[WebWalletManager] New account - storing birthday block:', {
-        fingerprintHex: account.seedFingerprintHex,
-        accountIndex,
-        birthdayHeight,
-      });
-    } else {
-      console.log('[WebWalletManager] Using stored birthday block:', {
-        fingerprintHex: account.seedFingerprintHex,
-        accountIndex,
-        birthdayHeight,
-      });
+    // If there's already an import in progress for this account, wait for it
+    const pendingImport = this.pendingImports.get(cacheKey);
+    if (pendingImport) {
+      console.log('[WebWalletManager] Waiting for pending import:', cacheKey);
+      return pendingImport;
     }
 
-    const wallet = await this.getOrCreateWallet();
-    const sfp = webzJsWallet.SeedFingerprint.from_bytes(seedFingerprint);
+    // Create the import promise
+    const importPromise = (async () => {
+      try {
+        // Try to get stored birthday block first
+        let birthdayHeight = getBirthdayBlock(
+          account.seedFingerprintHex,
+          accountIndex
+        );
 
-    const accountId = await wallet.create_account_ufvk(
-      accountName,
-      ufvk,
-      sfp,
-      accountIndex,
-      birthdayHeight
-    );
-    this.accountIdCache.set(cacheKey, accountId);
-    return accountId;
+        // If no stored birthday block, fetch current and store it
+        if (birthdayHeight === null) {
+          const currentHeight = await this.getCurrentBlockHeight();
+          birthdayHeight = Number(currentHeight.toString()) - 1000;
+
+          // Store for future use
+          setBirthdayBlock(
+            account.seedFingerprintHex,
+            accountIndex,
+            birthdayHeight
+          );
+
+          console.log('[WebWalletManager] New account - storing birthday block:', {
+            fingerprintHex: account.seedFingerprintHex,
+            accountIndex,
+            birthdayHeight,
+          });
+        } else {
+          console.log('[WebWalletManager] Using stored birthday block:', {
+            fingerprintHex: account.seedFingerprintHex,
+            accountIndex,
+            birthdayHeight,
+          });
+        }
+
+        const wallet = await this.getOrCreateWallet();
+        const sfp = webzJsWallet.SeedFingerprint.from_bytes(seedFingerprint);
+
+        const accountId = await wallet.create_account_ufvk(
+          accountName,
+          ufvk,
+          sfp,
+          accountIndex,
+          birthdayHeight
+        );
+
+        this.accountIdCache.set(cacheKey, accountId);
+        return accountId;
+      } finally {
+        // Clean up the pending import
+        this.pendingImports.delete(cacheKey);
+      }
+    })();
+
+    // Store the pending import promise
+    this.pendingImports.set(cacheKey, importPromise);
+    return importPromise;
   }
 
   /**
@@ -382,5 +403,6 @@ export class WebWalletManagerImpl implements WebWalletManager {
     this.wallet = null;
     this.accountIdCache.clear();
     this.pendingSync = null;
+    this.pendingImports.clear();
   }
 }
