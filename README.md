@@ -1,12 +1,48 @@
 # Zcash Router SDK Monorepo
 
-A monorepo containing TypeScript SDKs for Zcash routing. Built with pnpm workspaces, supporting both ESM and CommonJS, and compatible with Node.js and browsers.
+A monorepo containing TypeScript SDKs for routing assets to and from Zcash. Built with pnpm workspaces, supporting both ESM and CommonJS, and compatible with Node.js and browsers.
+
+## 🏗️ Architecture
+
+The SDK is designed with a modular architecture that separates concerns and makes it easy to extend support for new assets and wallet types:
+
+### Core Package
+
+The [`@zcash-router-sdk/core`](./packages/core) package handles all the logic for managing swaps to and from Zcash. Built on [NEAR intents](https://www.near.org/intents), it provides:
+- Swap orchestration and state management
+- Integration with swap APIs
+- Quote fetching and execution tracking
+- Status monitoring and event callbacks
+
+### Account Packages
+
+Account packages implement the `AccountFull` and `AccountAddressOnly` interfaces defined in the core package, providing blockchain-specific functionality:
+
+- **[`@zcash-router-sdk/zcash-account-mnemonic`](./packages/zcash-account-mnemonic)** - Zcash account management with mnemonic support
+  - Supports signing of shielded transactions
+  - Manages Zcash wallet state and synchronization
+  - Handles transparent and shielded addresses
+
+- **[`@zcash-router-sdk/solana-account-mnemonic`](./packages/solana-account-mnemonic)** - Solana account management with mnemonic support
+  - Native SOL balance fetching and transaction signing
+  - Mnemonic-based key derivation
+
+### Extensibility
+
+The architecture makes it easy to add new packages for:
+- **Other blockchain assets** (Ethereum, Bitcoin, etc.)
+- **Hardware wallets** (Ledger, Trezor, etc.)
+- **Extension wallets** (MetaMask, Phantom, etc.)
+- **Other key management methods** (WIF, private keys, etc.)
+
+Simply implement the `AccountFull` or `AccountAddressOnly` interface from the core package, and your new account type will work seamlessly with the swap routing logic.
 
 ## 📦 Packages
 
-- [`@zcash-router-sdk/core`](./packages/core) - Core Zcash routing and swap SDK
+- [`@zcash-router-sdk/core`](./packages/core) - Core swap and routing logic
 - [`@zcash-router-sdk/zcash-account-mnemonic`](./packages/zcash-account-mnemonic) - Zcash account management with mnemonic support
 - [`@zcash-router-sdk/solana-account-mnemonic`](./packages/solana-account-mnemonic) - Solana account management with mnemonic support
+- [`example-app`](./packages/example-app) - Example React application demonstrating SDK usage
 
 ## 🚀 Quick Start
 
@@ -27,6 +63,28 @@ pnpm build
 # Run tests for all packages
 pnpm test
 ```
+
+### Running the Example App
+
+The [`example-app`](./packages/example-app) is a React application that demonstrates how to use the Zcash Router SDK. It includes:
+
+- **Route to Zcash**: Swap assets from Solana (SOL) to Zcash (ZEC)
+- **Route from Zcash**: Swap assets from Zcash to Solana
+- Real-time swap status tracking
+- Clean, modern UI with Material-UI and Tailwind CSS
+
+To run the example app:
+
+```bash
+# From the root directory
+pnpm --filter @zcash-router-sdk/example-app run dev
+
+# Or navigate to the example-app directory
+cd packages/example-app
+pnpm dev
+```
+
+The app will be available at `http://localhost:3000`. See the [example-app README](./packages/example-app/README.md) for more details.
 
 ## 🛠️ Development
 
@@ -80,23 +138,52 @@ pnpm --filter @zcash-router-sdk/core test
 
 # Run dev mode for a specific package
 pnpm --filter @zcash-router-sdk/core dev
+
+# Run the example app
+pnpm --filter @zcash-router-sdk/example-app run dev
 ```
 
-### Adding a New Package
+### Adding a New Account Package
+
+To add support for a new blockchain or wallet type:
 
 1. Create a new directory in `packages/`:
    ```bash
-   mkdir packages/new-package
+   mkdir packages/new-account-package
    ```
 
-2. Create a `package.json` with the name `@zcash-router-sdk/new-package`
+2. Create a `package.json` with the name `@zcash-router-sdk/new-account-package`:
+   ```json
+   {
+     "name": "@zcash-router-sdk/new-account-package",
+     "version": "0.1.0",
+     "dependencies": {
+       "@zcash-router-sdk/core": "workspace:*"
+     }
+   }
+   ```
 
-3. Add your source code and configuration files
+3. Implement the `AccountFull` or `AccountAddressOnly` interface from `@zcash-router-sdk/core`:
+   ```typescript
+   import type { AccountFull } from '@zcash-router-sdk/core';
+   
+   export class NewAccount implements AccountFull {
+     readonly type = 'full' as const;
+     readonly asset: RouteAsset;
+     
+     async getAddress(): Promise<string> { /* ... */ }
+     async getBalance(): Promise<bigint> { /* ... */ }
+     assetToBaseUnits(amount: string): bigint { /* ... */ }
+     async sendDeposit(params: { address: string; amount: string }): Promise<string> { /* ... */ }
+   }
+   ```
 
 4. Install dependencies from the root:
    ```bash
    pnpm install
    ```
+
+5. Your new account type will now work with `routeToZcash()` and `routeFromZcash()` functions!
 
 ### Inter-package Dependencies
 
@@ -115,14 +202,14 @@ To use one package within another:
 ```
 zcash-router-sdk/
 ├── packages/
-│   ├── core/                  # Core Zcash routing package
-│   ├── zcash-account-mnemonic/ # Zcash account management
-│   ├── solana-account-mnemonic/ # Solana account management
-│   └── example-app/           # Example React app
-├── .eslintrc.cjs              # Shared ESLint config
-├── .prettierrc                # Shared Prettier config
-├── pnpm-workspace.yaml        # pnpm workspace config
-├── package.json               # Root package with workspace scripts
+│   ├── core/                      # Core swap and routing logic
+│   ├── zcash-account-mnemonic/    # Zcash account management
+│   ├── solana-account-mnemonic/   # Solana account management
+│   └── example-app/               # Example React app
+├── .eslintrc.cjs                  # Shared ESLint config
+├── .prettierrc                    # Shared Prettier config
+├── pnpm-workspace.yaml            # pnpm workspace config
+├── package.json                   # Root package with workspace scripts
 └── README.md
 ```
 
