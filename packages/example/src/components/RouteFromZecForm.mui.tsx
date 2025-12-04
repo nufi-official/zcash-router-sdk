@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Box, Typography, TextField } from '@mui/material';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
@@ -18,12 +18,14 @@ interface RouteFromZecFormProps {
   addressType: 'transparent' | 'shielded';
   mnemonic: string;
   onConnectClick?: () => void;
+  onRefreshBalance?: (refresh: () => void) => void;
 }
 
 export function RouteFromZecForm({
   addressType,
   mnemonic,
   onConnectClick,
+  onRefreshBalance,
 }: RouteFromZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
@@ -36,7 +38,7 @@ export function RouteFromZecForm({
 
   const { price: assetPrice, loading: priceLoading } = useTokenPrice(asset);
   const { price: zecPrice, loading: zecPriceLoading } = useTokenPrice('ZEC');
-  const { balance: zecBalance, loading: balanceLoading } = useZecBalance(
+  const { balance: zecBalance, loading: balanceLoading, refresh: refreshZecBalance } = useZecBalance(
     addressType,
     mnemonic
   );
@@ -44,6 +46,13 @@ export function RouteFromZecForm({
     mnemonic,
     addressType
   );
+
+  // Pass refresh function to parent
+  useEffect(() => {
+    if (onRefreshBalance) {
+      onRefreshBalance(refreshZecBalance);
+    }
+  }, [onRefreshBalance, refreshZecBalance]);
 
   // Calculate max SOL amount based on ZEC balance
   const maxBalance = useMemo(() => {
