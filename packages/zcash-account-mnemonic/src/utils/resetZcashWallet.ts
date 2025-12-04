@@ -17,6 +17,4 @@ export function resetZcashWallet(): void {
 
   // Clear all birthday blocks from localStorage
   clearAllBirthdayBlocks();
-
-  console.log('[resetZcashWallet] All Zcash wallet state cleared');
 }

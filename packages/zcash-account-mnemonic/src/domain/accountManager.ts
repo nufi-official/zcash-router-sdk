@@ -86,28 +86,19 @@ export const ZCashAccountManager = (
     ].signPczt(shieldPcztHex, account.accountIndex);
 
     // Prove the shield PCZT (shielding transactions need proofs)
-    console.log('[AccountManager] Generating proofs for shield transaction');
     const provedShieldPcztHex =
       await webWalletManager.provePczt(signedShieldPcztHex);
-
-    console.log('Shield transaction:', provedShieldPcztHex);
 
     // Submit the shield transaction
     const shieldTxHash =
       await webWalletManager.submitTransaction(provedShieldPcztHex);
 
-    console.log('[AccountManager] Shield transaction submitted:', shieldTxHash);
-
     // Wait for the transaction to be confirmed
     // TODO: Poll for confirmation instead of fixed delay
-    console.log(
-      '[AccountManager] Waiting for shield transaction to be confirmed...'
-    );
     await new Promise((resolve) => setTimeout(resolve, 30000)); // Wait 30 seconds
 
     // Sync to see the newly shielded funds
     await webWalletManager.sync();
-    console.log('[AccountManager] Wallet synced after shielding');
   };
 
   return {

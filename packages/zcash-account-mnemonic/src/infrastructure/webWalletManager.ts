@@ -63,7 +63,6 @@ export class WebWalletManagerImpl implements WebWalletManager {
       return latestBlock - BigInt(20);
     } catch (error) {
       // If we can't get the summary, fall back to a reasonable default
-      console.warn('Could not get current block height, using default:', error);
     }
     // Fallback to a recent block height if we can't fetch it
     return BigInt(1);
@@ -91,12 +90,6 @@ export class WebWalletManagerImpl implements WebWalletManager {
     const cacheKey = `${Buffer.from(seedFingerprint).toString('hex')}-${accountIndex}`;
     const cachedAccountId = this.accountIdCache.get(cacheKey);
 
-    console.log('[WebWalletManager] Importing or getting account:', {
-      cachedAccountId,
-      cacheKey,
-      account,
-    });
-
     if (cachedAccountId !== undefined) {
       return cachedAccountId;
     }
@@ -104,7 +97,6 @@ export class WebWalletManagerImpl implements WebWalletManager {
     // If there's already an import in progress for this account, wait for it
     const pendingImport = this.pendingImports.get(cacheKey);
     if (pendingImport) {
-      console.log('[WebWalletManager] Waiting for pending import:', cacheKey);
       return pendingImport;
     }
 
@@ -128,18 +120,6 @@ export class WebWalletManagerImpl implements WebWalletManager {
             accountIndex,
             birthdayHeight
           );
-
-          console.log('[WebWalletManager] New account - storing birthday block:', {
-            fingerprintHex: account.seedFingerprintHex,
-            accountIndex,
-            birthdayHeight,
-          });
-        } else {
-          console.log('[WebWalletManager] Using stored birthday block:', {
-            fingerprintHex: account.seedFingerprintHex,
-            accountIndex,
-            birthdayHeight,
-          });
         }
 
         const wallet = await this.getOrCreateWallet();
@@ -274,11 +254,6 @@ export class WebWalletManagerImpl implements WebWalletManager {
     const wallet = await this.getOrCreateWallet();
     await this.sync();
 
-    console.log(
-      '[WebWalletManager] Creating shield PCZT for account:',
-      accountId
-    );
-
     const pczt = await wallet.pczt_shield(accountId);
 
     try {
@@ -347,15 +322,8 @@ export class WebWalletManagerImpl implements WebWalletManager {
     const wallet = await this.getOrCreateWallet();
     const accountId = await this.importOrGetAccount(account);
 
-    console.log('[WebWalletManager] Syncing wallet for account:', accountId);
     await this.sync();
     const summary = ensure(await wallet.get_wallet_summary());
-
-    console.log('[WebWalletManager] Wallet summary:', {
-      chain_tip_height: summary.chain_tip_height,
-      fully_scanned_height: summary.fully_scanned_height,
-      account_balances: summary.account_balances,
-    });
 
     const accountBalances = summary.account_balances as [
       number,
@@ -378,14 +346,6 @@ export class WebWalletManagerImpl implements WebWalletManager {
 
     const samplingBalance = accountBalance.sapling_balance;
     const orchardBalance = accountBalance.orchard_balance;
-
-    console.log('[WebWalletManager] Account balances:', {
-      accountId,
-      sapling_balance: samplingBalance,
-      orchard_balance: orchardBalance,
-      unshielded_balance: accountBalance.unshielded_balance,
-      total_shielded: samplingBalance + orchardBalance,
-    });
 
     return {
       shieldedBalance: BigInt(samplingBalance + orchardBalance) as Zatoshis,

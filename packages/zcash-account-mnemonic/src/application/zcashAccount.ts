@@ -84,20 +84,10 @@ export class ZcashAccount implements AccountFull {
     const shieldedBalance = balances.shieldedBalance;
     const transparentBalance = balances.unshieldedBalance;
 
-    console.log('[ZcashAccount] sendDeposit balances:', {
-      shieldedBalance: shieldedBalance.toString(),
-      transparentBalance: transparentBalance.toString(),
-      required: amountZatoshis.toString(),
-    });
-
     // If we have transparent funds and insufficient shielded funds, shield them first
     if (shieldedBalance < amountZatoshis && transparentBalance > 0n) {
-      console.log('[ZcashAccount] Shielding transparent funds before transfer...');
-
       // Shield all transparent funds
       await this.accountManager.shieldTransparentFunds(this.account);
-
-      console.log('[ZcashAccount] Transparent funds shielded successfully');
     }
 
     // Create transaction plan
