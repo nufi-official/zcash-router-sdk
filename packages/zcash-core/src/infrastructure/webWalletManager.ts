@@ -90,6 +90,12 @@ export class WebWalletManagerImpl implements WebWalletManager {
     const cacheKey = `${Buffer.from(seedFingerprint).toString('hex')}-${accountIndex}`;
     const cachedAccountId = this.accountIdCache.get(cacheKey);
 
+    console.log('[WebWalletManager] Importing or getting account:', {
+      cachedAccountId,
+      cacheKey,
+      account,
+    });
+
     if (cachedAccountId) {
       return cachedAccountId;
     }
@@ -247,7 +253,10 @@ export class WebWalletManagerImpl implements WebWalletManager {
     const wallet = await this.getOrCreateWallet();
     await this.sync();
 
-    console.log('[WebWalletManager] Creating shield PCZT for account:', accountId);
+    console.log(
+      '[WebWalletManager] Creating shield PCZT for account:',
+      accountId
+    );
 
     const pczt = await wallet.pczt_shield(accountId);
 

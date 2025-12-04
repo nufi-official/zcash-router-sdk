@@ -9,6 +9,7 @@ import { AddressDisplay } from './RouteToZecForm/AddressDisplay';
 import { useTokenPrice } from './RouteToZecForm/useTokenPrice';
 import { useZecBalance } from './RouteToZecForm/useZecBalance';
 import { useZcashAddress } from './RouteToZecForm/useZcashAddress';
+import { useAccounts } from '../contexts/AccountContext';
 import {
   CARVED_BOX_STYLES,
   SLIDE_DOWN_ANIMATION,
@@ -40,6 +41,9 @@ export function RouteFromZecForm({
   const [swapError, setSwapError] = useState<string>();
   const [depositTxHash, setDepositTxHash] = useState<string>();
   const [depositAddress, setDepositAddress] = useState<string>();
+
+  // Get accounts from context
+  const { zcashTransparentAccount, zcashShieldedAccount, isLoading: accountsLoading } = useAccounts();
 
   const { price: assetPrice, loading: priceLoading } = useTokenPrice(asset);
   const { price: zecPrice, loading: zecPriceLoading } = useTokenPrice('ZEC');
@@ -125,8 +129,15 @@ export function RouteFromZecForm({
       return;
     }
 
-    if (!mnemonic || !mnemonic.trim()) {
-      alert('Please enter a mnemonic');
+    // Validate accounts from context
+    if (accountsLoading) {
+      alert('Accounts are still loading...');
+      return;
+    }
+
+    const zcashAccount = addressType === 'shielded' ? zcashShieldedAccount : zcashTransparentAccount;
+    if (!zcashAccount) {
+      alert(`Zcash ${addressType} account not available`);
       return;
     }
 
@@ -136,42 +147,12 @@ export function RouteFromZecForm({
       setDepositTxHash(undefined);
       setDepositAddress(undefined);
 
-      // Get lightwalletd URL from environment variable
-      const lightwalletdUrl =
-        import.meta.env.VITE_LIGHTWALLETD_URL ||
-        'https://zcash-mainnet.chainsafe.dev';
-
       // Import required functions
       const { routeFromZcash } = await import('@asset-route-sdk/core');
-      const { getZcashAccount } = await import(
-        './RouteToZecForm/zcashAccountManager'
-      );
 
-      // Get Zcash account (source)
-      console.log('[RouteFromZecForm] Creating Zcash account...');
-      const zcashAccount = await getZcashAccount({
-        addressType,
-        mnemonic,
-        lightwalletdUrl,
-      });
-
-      if (!zcashAccount) {
-        throw new Error(
-          'Failed to create Zcash account - account is undefined'
-        );
-      }
-
-      console.log('[RouteFromZecForm] Zcash account created:', {
-        hasAccount: !!zcashAccount,
+      console.log('[RouteFromZecForm] Using Zcash account from context:', {
         type: zcashAccount.type,
-        hasAssetToBaseUnits:
-          typeof zcashAccount.assetToBaseUnits === 'function',
-        hasGetAddress: typeof zcashAccount.getAddress === 'function',
-        hasSendDeposit: typeof zcashAccount.sendDeposit === 'function',
       });
-
-      const address = await zcashAccount.getAddress();
-      console.log('[RouteFromZecForm] Zcash address:', address);
 
       // Create destination AddressOnlyAccount for Solana
       const destinationAccount = {

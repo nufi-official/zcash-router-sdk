@@ -8,7 +8,10 @@ interface AddressDisplayProps {
   loading?: boolean;
 }
 
-export function AddressDisplay({ label, address, loading = false }: AddressDisplayProps) {
+export function AddressDisplay({
+  address,
+  loading = false,
+}: AddressDisplayProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -29,7 +32,10 @@ export function AddressDisplay({ label, address, loading = false }: AddressDispl
 
   if (loading) {
     return (
-      <Typography variant="caption" sx={{ color: 'text.secondary', opacity: 0.7 }}>
+      <Typography
+        variant="caption"
+        sx={{ color: 'text.secondary', opacity: 0.7 }}
+      >
         Loading...
       </Typography>
     );
@@ -41,7 +47,10 @@ export function AddressDisplay({ label, address, loading = false }: AddressDispl
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-      <Typography variant="caption" sx={{ color: 'text.secondary', fontFamily: 'monospace' }}>
+      <Typography
+        variant="caption"
+        sx={{ color: 'text.secondary', fontFamily: 'monospace' }}
+      >
         {ellipsizeAddress(address)}
       </Typography>
       <Tooltip title={copied ? 'Copied!' : 'Copy address'}>

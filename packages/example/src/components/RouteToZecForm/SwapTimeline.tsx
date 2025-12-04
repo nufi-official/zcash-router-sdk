@@ -5,10 +5,7 @@ import {
   Pending as PendingIcon,
 } from '@mui/icons-material';
 import type { SwapStateChangeEvent } from '@asset-route-sdk/core';
-import {
-  SWAP_HAPPY_PATH_TIMELINE,
-  SWAP_END_STATES,
-} from '@asset-route-sdk/core';
+
 import { CARVED_BOX_STYLES } from './constants';
 
 // Glow animations
@@ -76,11 +73,11 @@ export function SwapTimeline({
 
     // Map status to step index
     const statusToStep: Record<string, number> = {
-      'DEPOSIT_SENT': 1,
-      'PENDING_DEPOSIT': 2,
-      'KNOWN_DEPOSIT_TX': 2, // Treat same as PENDING_DEPOSIT
-      'PROCESSING': 3,
-      'SUCCESS': 4,
+      DEPOSIT_SENT: 1,
+      PENDING_DEPOSIT: 2,
+      KNOWN_DEPOSIT_TX: 2, // Treat same as PENDING_DEPOSIT
+      PROCESSING: 3,
+      SUCCESS: 4,
     };
 
     const stepIndex = statusToStep[currentState.status];

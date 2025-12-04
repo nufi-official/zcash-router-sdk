@@ -1,10 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useAccounts } from '../../contexts/AccountContext';
 
 export function useSolBalance(mnemonic: string) {
   const [balance, setBalance] = useState<string>('0');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const { solanaAccount, isLoading: accountsLoading } = useAccounts();
 
   const refresh = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
@@ -21,24 +24,15 @@ export function useSolBalance(mnemonic: string) {
         return;
       }
 
+      // Wait for account to be available
+      if (accountsLoading || !solanaAccount) {
+        setLoading(true);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(undefined);
-
-        // Get Solana RPC URL from environment or use default
-        const rpcUrl = import.meta.env.VITE_SOLANA_RPC_URL;
-
-        // Create Solana account
-        const { createSolanaAccountFull } = await import(
-          '@asset-route-sdk/solana-hot-address-only'
-        );
-        const solanaAccount = await createSolanaAccountFull({
-          mnemonic: mnemonic.trim(),
-          accountIndex: 0,
-          network: 'mainnet',
-          tokenId: undefined,
-          rpcUrl, // Will use Ankr if not specified
-        });
 
         // Get balance in base units (lamports)
         const balanceInLamports = await solanaAccount.getBalance();
@@ -73,7 +67,7 @@ export function useSolBalance(mnemonic: string) {
     return () => {
       mounted = false;
     };
-  }, [mnemonic, refreshTrigger]);
+  }, [mnemonic, refreshTrigger, accountsLoading, solanaAccount]);
 
   return { balance, loading, error, refresh };
 }
