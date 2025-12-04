@@ -1,31 +1,24 @@
-# Asset Route SDK - Example App
+# Zcash Router SDK - Example App
 
-A React example application demonstrating the usage of the Asset Route SDK for cross-chain asset routing.
+A React example application demonstrating the usage of the Zcash Router SDK for routing assets to and from Zcash.
 
 ## Features
 
 - **Route to Zcash**: Swap assets from Solana (SOL) to Zcash (ZEC)
-- **Route from Zcash**: Coming soon - swap from Zcash to other chains
+- **Route from Zcash**: Swap assets from Zcash to Solana
 - Real-time swap status tracking
-- Clean, modern UI with Tailwind CSS
+- Clean, modern UI with Material-UI and Tailwind CSS
 
 ## Prerequisites
 
 - Node.js 18+
 - pnpm (recommended) or npm
-- Valid API credentials for the Defuse Protocol One-Click API
 
 ## Getting Started
 
 ### 1. Install Dependencies
 
-From the example package directory:
-
-```bash
-pnpm install
-```
-
-Or from the root of the monorepo:
+From the root of the monorepo:
 
 ```bash
 pnpm install
@@ -33,87 +26,71 @@ pnpm install
 
 ### 2. Configure Environment Variables
 
-Copy the example environment file:
+Create a `.env` file in the `example-app` directory:
 
 ```bash
-cp .env.example .env
+VITE_LIGHTWALLETD_URL=https://zcash-mainnet.chainsafe.dev
 ```
-
-Edit `.env` and provide:
-- `VITE_LIGHTWALLETD_URL`: Zcash lightwalletd server URL
-- API credentials (configured in core package)
 
 ### 3. Run the Development Server
 
 ```bash
+cd packages/example-app
 pnpm dev
+```
+
+Or from the root:
+
+```bash
+pnpm --filter @zcash-router-sdk/example-app run dev
 ```
 
 The app will be available at `http://localhost:3000`
 
 ## Usage
 
-### Route to Zcash Form
+### Route to Zcash
 
-1. **Select Source Asset**: Currently only SOL (Solana) is supported
-2. **Enter Solana Mnemonic**: Your BIP39 mnemonic phrase (12 or 24 words)
-3. **Enter Zcash Mnemonic**: Destination Zcash account mnemonic
-4. **Enter Amount**: Amount of SOL to swap
-5. **Click "Swap to Zcash"**: Initiates the cross-chain swap
+1. **Enter Solana Mnemonic**: Your BIP39 mnemonic phrase (12 or 24 words)
+2. **Enter Zcash Mnemonic**: Destination Zcash account mnemonic
+3. **Enter Amount**: Amount of SOL to swap
+4. **Click "Swap to Zcash"**: Initiates the cross-chain swap
 
-The form will display real-time progress through these stages:
-- Deposit Sent
-- Deposit Confirmed
-- Processing Swap
-- Swap Complete
+The app will display real-time progress through the swap stages.
 
-## Development Status
+### Route from Zcash
 
-### ⚠️ Current Limitations
-
-1. **Wallet Integration Not Implemented**
-   - The `sendDeposit` function needs integration with a real Solana wallet SDK
-   - Currently throws an error when attempting to send transactions
-   - TODO: Integrate with Phantom, Solflare, or other Solana wallet
-
-2. **API Configuration Required**
-   - JWT token and API base URL must be configured in `@zcash-router-sdk/core`
-   - See `packages/core/src/swapApi/application/index.ts`
-
-3. **Test Environment Only**
-   - Do not use with real funds on mainnet
-   - Use test mnemonics only
-
-### 🔜 Coming Soon
-
-- Route from Zcash form
-- Multiple asset support
-- Real wallet integration
-- Balance display
-- Transaction history
+1. **Enter Zcash Mnemonic**: Your Zcash account mnemonic
+2. **Enter Solana Mnemonic**: Destination Solana account mnemonic
+3. **Enter Amount**: Amount of ZEC to swap
+4. **Click "Swap from Zcash"**: Initiates the cross-chain swap
 
 ## Architecture
 
 ### Components
 
-- **App.tsx**: Main application layout with two-column grid
-- **RouteToZecForm.tsx**: Form for swapping to Zcash
-- **SwapStatus.tsx**: Reusable status display component
+- **App.tsx**: Main application entry point
+- **App.mui.tsx**: Material-UI version of the app
+- **App.minimal.tsx**: Minimal version without UI framework
+- **RouteToZecForm**: Form component for swapping to Zcash
+- **RouteFromZecForm**: Form component for swapping from Zcash
+- **SwapStatus**: Reusable status display component
 
 ### Dependencies
 
-- **@zcash-router-sdk/core**: Core swap functionality
+- **@zcash-router-sdk/core**: Core swap and routing functionality
 - **@zcash-router-sdk/solana-account-mnemonic**: Solana account management with mnemonic support
 - **@zcash-router-sdk/zcash-account-mnemonic**: Zcash account management with mnemonic support
 - **React 18**: UI framework
 - **Vite**: Build tool and dev server with WASM support plugins
-- **Tailwind CSS**: Styling
-- **TypeScript**: Type safety
+- **Material-UI**: UI component library (optional)
+- **Tailwind CSS**: Utility-first CSS framework
 
 ### Technical Notes
 
 - WASM support is enabled via `vite-plugin-wasm` and `vite-plugin-top-level-await` to support the Zcash cryptographic libraries
 - The Zcash packages use `@chainsafe/webzjs-wallet` which requires WASM
+- Node.js polyfills are configured for browser compatibility
 
 ## Building for Production
 
@@ -128,6 +105,17 @@ The production build will be output to the `dist/` directory.
 ```bash
 pnpm preview
 ```
+
+## Development
+
+### Available Scripts
+
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm preview` - Preview production build
+- `pnpm typecheck` - Run TypeScript type checking
+- `pnpm lint` - Run ESLint
+- `pnpm lint:fix` - Fix ESLint errors
 
 ## License
 
