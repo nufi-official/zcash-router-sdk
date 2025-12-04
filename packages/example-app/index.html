@@ -42,6 +42,8 @@
         gap: 24px;
         z-index: 9999;
         transition: opacity 0.5s ease-out;
+        transform: none !important;
+        will-change: opacity;
       }
 
       #splash-screen.hidden {
@@ -81,6 +83,15 @@
         color: rgba(255, 255, 255, 0.6);
         font-size: 0.875rem;
       }
+
+      #root {
+        opacity: 0;
+        transition: opacity 0.3s ease-in;
+      }
+
+      #root.ready {
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
@@ -99,6 +110,12 @@
       // Wait for React to mount and render before hiding splash
       function hideSplash() {
         const splash = document.getElementById('splash-screen');
+        const root = document.getElementById('root');
+
+        if (root) {
+          root.classList.add('ready');
+        }
+
         if (splash) {
           splash.classList.add('hidden');
           setTimeout(() => splash.remove(), 500);
@@ -109,8 +126,8 @@
       function checkReactReady() {
         const root = document.getElementById('root');
         if (root && root.children.length > 0) {
-          // Add small delay to ensure all transforms are applied
-          setTimeout(hideSplash, 100);
+          // Wait longer to ensure all transforms and layout are applied
+          setTimeout(hideSplash, 400);
         } else {
           // Check again in 50ms
           setTimeout(checkReactReady, 50);
