@@ -1,15 +1,15 @@
 # @zcash-router-sdk/solana-account-mnemonic
 
-Solana account management library with mnemonic support for the Zcash Router SDK.
+Solana account management library with mnemonic support for the Zcash Router SDK. Provides utilities for creating and managing Solana accounts using BIP39 mnemonic phrases.
 
 ## Features
 
-- 🔑 Derive Solana addresses from BIP39 mnemonic phrases
-- 🪶 Lightweight implementation (address-only, no balance fetching or transactions)
-- 🎯 Support for native SOL and SPL tokens
-- 🌐 Multi-network support (mainnet-beta, devnet, testnet)
-- 💯 Full TypeScript support with type definitions
-- ✅ Implements AccountAddressOnly interface from @zcash-router-sdk/core
+- 🔑 **Mnemonic-based accounts** - Create accounts from BIP39 mnemonic phrases
+- 💰 **Full Account Functionality** - Balance fetching and transaction signing
+- 🎯 **Native SOL Support** - Support for native SOL
+- 🌐 **Network Support** - Mainnet support
+- ✅ **TypeScript** - Full TypeScript support with type declarations
+- 🌍 **Browser Compatible** - Works in Node.js and browsers
 
 ## Installation
 
@@ -17,69 +17,40 @@ Solana account management library with mnemonic support for the Zcash Router SDK
 pnpm add @zcash-router-sdk/solana-account-mnemonic
 ```
 
+```bash
+npm install @zcash-router-sdk/solana-account-mnemonic
+```
+
+```bash
+yarn add @zcash-router-sdk/solana-account-mnemonic
+```
+
 ## Usage
 
-### Basic Example
+### Create a Full Account
 
 ```typescript
-import { createSolanaAccount } from '@zcash-router-sdk/solana-account-mnemonic';
+import { createSolanaAccountFull } from '@zcash-router-sdk/solana-account-mnemonic';
 
-// Create a Solana account (address-only)
-const account = await createSolanaAccount({
+// Create a full Solana account with balance and transaction support
+const account = await createSolanaAccountFull({
   mnemonic: 'your twelve word mnemonic phrase here...',
   accountIndex: 0,
-  network: 'mainnet-beta',
-  tokenId: undefined, // optional, defaults to 'native' (SOL)
+  network: 'mainnet',
+  rpcUrl: '', // optional, uses default if not provided
 });
 
 // Get the Solana address
 const address = await account.getAddress();
-console.log('Solana address:', address);
 
-// Convert SOL amount to lamports
-const lamports = account.assetToBaseUnits('1.5'); // 1.5 SOL
-console.log('Lamports:', lamports); // 1500000000n
-```
+// Get balance (in lamports, minus fee reserve)
+const balance = await account.getBalance();
 
-### SPL Token Support
-
-```typescript
-import { createSolanaAccount } from '@zcash-router-sdk/solana-account-mnemonic';
-
-// Create an account for USDC token
-const usdcAccount = await createSolanaAccount({
-  mnemonic: 'your twelve word mnemonic phrase here...',
-  accountIndex: 0,
-  network: 'mainnet-beta',
-  tokenId: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v', // USDC mint
-});
-
-const address = await usdcAccount.getAddress();
-console.log('USDC account address:', address);
-```
-
-### Using Different Networks
-
-```typescript
-// Mainnet
-const mainnetAccount = await createSolanaAccount({
-  mnemonic: 'your mnemonic...',
-  accountIndex: 0,
-  network: 'mainnet-beta',
-});
-
-// Devnet
-const devnetAccount = await createSolanaAccount({
-  mnemonic: 'your mnemonic...',
-  accountIndex: 0,
-  network: 'devnet',
-});
-
-// Testnet
-const testnetAccount = await createSolanaAccount({
-  mnemonic: 'your mnemonic...',
-  accountIndex: 0,
-  network: 'testnet',
+// Send SOL to an address
+// Amount should be in lamports (base units) as a string
+const txHash = await account.sendDeposit({
+  address: 'destinationAddress...',
+  amount: '1000000000', // 1 SOL in lamports
 });
 ```
 
@@ -87,16 +58,16 @@ const testnetAccount = await createSolanaAccount({
 
 ```typescript
 // Derive multiple accounts using different indices
-const account0 = await createSolanaAccount({
+const account0 = await createSolanaAccountFull({
   mnemonic: 'your mnemonic...',
   accountIndex: 0,
-  network: 'mainnet-beta',
+  network: 'mainnet',
 });
 
-const account1 = await createSolanaAccount({
+const account1 = await createSolanaAccountFull({
   mnemonic: 'your mnemonic...',
   accountIndex: 1,
-  network: 'mainnet-beta',
+  network: 'mainnet',
 });
 
 const address0 = await account0.getAddress();
@@ -106,39 +77,43 @@ const address1 = await account1.getAddress();
 
 ## API Reference
 
-### `createSolanaAccount(params)`
+### Factory Functions
 
-Creates a Solana address-only account.
+#### `createSolanaAccountFull(params: CreateSolanaAccountFullParams): Promise<AccountFull>`
+
+Creates a full Solana account with balance fetching and transaction signing capabilities.
 
 **Parameters:**
+- `mnemonic: string` - BIP39 mnemonic phrase
+- `accountIndex: number` - Account index for derivation
+- `network: 'mainnet'` - Solana network
+- `rpcUrl?: string` - Optional custom RPC URL, uses default if not provided
+
+**Returns:** `Promise<AccountFull>`
+
+### Account Interface
+
+#### `AccountFull` Interface
+
+The account implements the `AccountFull` interface from `@zcash-router-sdk/core`:
 
 ```typescript
-interface CreateSolanaAccountParams {
-  mnemonic: string; // BIP39 mnemonic phrase
-  accountIndex: number; // Account derivation index
-  network: SolanaNetwork; // 'mainnet-beta' | 'devnet' | 'testnet'
-  tokenId?: SolanaTokenId; // Optional SPL token mint, defaults to 'native'
+interface AccountFull {
+  readonly type: 'full';
+  readonly asset: RouteAsset;
+  
+  getAddress(): Promise<string>;
+  getBalance(): Promise<bigint>;
+  assetToBaseUnits(amount: string): bigint;
+  sendDeposit(params: { address: string; amount: string }): Promise<string>;
 }
 ```
 
-**Returns:** `Promise<AccountAddressOnly>`
-
-### `SolanaAccountAddressOnly`
-
-The account class that implements the `AccountAddressOnly` interface.
-
 **Methods:**
-
 - `getAddress(): Promise<string>` - Get the Solana address (base58 encoded)
+- `getBalance(): Promise<bigint>` - Get balance in lamports (minus fee reserve)
 - `assetToBaseUnits(amount: string): bigint` - Convert SOL amount to lamports
-- `getNetwork(): SolanaNetwork` - Get the network
-- `getTokenId(): SolanaTokenId` - Get the token ID
-- `getAccountIndex(): number` - Get the account index
-
-**Properties:**
-
-- `type: 'addressOnly'` - Account type identifier
-- `asset: RouteAsset` - Asset information
+- `sendDeposit(params): Promise<string>` - Send SOL to an address, returns transaction hash
 
 ## Key Derivation
 
@@ -152,63 +127,45 @@ m/44'/501'/account'/change'
 - `account` is the account index you provide
 - `change` is always `0` for Solana
 
-## Constants
+## Development
 
-```typescript
-import {
-  SOLANA_ASSET,
-  SOLANA_DECIMALS,
-  LAMPORTS_PER_SOL,
-} from '@zcash-router-sdk/solana-account-mnemonic';
+### Prerequisites
 
-console.log(SOLANA_DECIMALS); // 9
-console.log(LAMPORTS_PER_SOL); // 1000000000n
-console.log(SOLANA_ASSET); // { blockchain: 'sol', tokenId: 'native' }
+- Node.js 18+
+- pnpm (recommended) or npm/yarn
+
+### Setup
+
+```bash
+# Install dependencies (from monorepo root)
+pnpm install
+
+# Run tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Build the library
+pnpm build
+
+# Development mode (watch)
+pnpm dev
+
+# Lint code
+pnpm lint
+
+# Format code
+pnpm format
 ```
-
-## Utilities
-
-### Key Derivation Utilities
-
-```typescript
-import {
-  deriveKeypairFromMnemonic,
-  getAddressFromKeypair,
-  deriveAddressFromMnemonic,
-} from '@zcash-router-sdk/solana-account-mnemonic';
-
-// Derive keypair
-const keypair = deriveKeypairFromMnemonic('your mnemonic...', 0);
-
-// Get address from keypair
-const address = getAddressFromKeypair(keypair);
-
-// Or derive address directly
-const address2 = deriveAddressFromMnemonic('your mnemonic...', 0);
-```
-
-## Type Definitions
-
-```typescript
-type SolanaNetwork = 'mainnet-beta' | 'devnet' | 'testnet';
-type SolanaAddress = string; // Base58 encoded public key
-type SolanaTokenId = string; // Token mint address or 'native'
-```
-
-## AccountAddressOnly vs AccountFull
-
-This package implements **AccountAddressOnly**, which provides:
-
-- ✅ Address derivation
-- ✅ Unit conversion
-- ❌ Balance fetching (not available)
-- ❌ Transaction signing (not available)
-
-For full account functionality with balance and transactions, use `@zcash-router-sdk/solana-full` (coming soon).
 
 ## License
 
 MIT
+
+## Contributing
+
+Contributions are welcome! Please see the [root README](../../README.md) for contribution guidelines.
 
 ## Repository
 

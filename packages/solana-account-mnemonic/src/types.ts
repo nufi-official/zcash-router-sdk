@@ -11,16 +11,6 @@ export type SolanaNetwork = 'mainnet';
 export type SolanaAddress = string;
 
 /**
- * Parameters for creating a Solana account (address only)
- */
-export interface CreateSolanaAccountParams {
-  mnemonic: string;
-  accountIndex: number;
-  network: SolanaNetwork;
-  tokenId?: string | undefined; // Optional SPL token, defaults to SOL (native)
-}
-
-/**
  * Parameters for creating a full Solana account
  */
 export interface CreateSolanaAccountFullParams {
