@@ -118,7 +118,7 @@ zcash-router-sdk/
 │   ├── core/                  # Core Zcash routing package
 │   ├── zcash-account-mnemonic/ # Zcash account management
 │   ├── solana-account-mnemonic/ # Solana account management
-│   └── example/               # Example React app
+│   └── example-app/           # Example React app
 ├── .eslintrc.cjs              # Shared ESLint config
 ├── .prettierrc                # Shared Prettier config
 ├── pnpm-workspace.yaml        # pnpm workspace config
