@@ -10,6 +10,10 @@ import type {
 
 export type SwapStateChangeEvent =
   | {
+      status: 'QUOTE_RECEIVED';
+      depositAddress: string;
+    }
+  | {
       status: 'DEPOSIT_SENT';
       txHash: string;
     }
@@ -36,6 +40,9 @@ export const swap = async (params: SwapParams): Promise<SwapQuoteResponse> => {
   if (!depositAddress) {
     throw new Error('No deposit address found in quote response');
   }
+
+  // Emit quote received event with deposit address
+  onStatusChange?.({ status: 'QUOTE_RECEIVED', depositAddress });
 
   // Step 2: Send deposit if provided
 

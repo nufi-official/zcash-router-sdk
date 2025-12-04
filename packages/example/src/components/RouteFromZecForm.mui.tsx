@@ -36,6 +36,7 @@ export function RouteFromZecForm({
   const [currentState, setCurrentState] = useState<SwapStateChangeEvent>();
   const [swapError, setSwapError] = useState<string>();
   const [depositTxHash, setDepositTxHash] = useState<string>();
+  const [depositAddress, setDepositAddress] = useState<string>();
 
   const { price: assetPrice, loading: priceLoading } = useTokenPrice(asset);
   const { price: zecPrice, loading: zecPriceLoading } = useTokenPrice('ZEC');
@@ -126,6 +127,7 @@ export function RouteFromZecForm({
       setSwapStatus('initiating');
       setSwapError(undefined);
       setDepositTxHash(undefined);
+      setDepositAddress(undefined);
 
       // Get lightwalletd URL from environment variable
       const lightwalletdUrl =
@@ -206,6 +208,11 @@ export function RouteFromZecForm({
         onSwapStatusChange: (event) => {
           console.log('[RouteFromZecForm] Swap status:', event);
           setCurrentState(event);
+
+          // Capture deposit address if available
+          if ('depositAddress' in event && event.depositAddress) {
+            setDepositAddress(event.depositAddress as string);
+          }
 
           if (event.status === 'DEPOSIT_SENT') {
             // Capture deposit txHash
@@ -353,16 +360,44 @@ export function RouteFromZecForm({
         </Box>
       )}
 
+      {/* NEAR Intents Explorer - Show when we have deposit address */}
+      {depositAddress && (
+        <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
+          <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
+                Swap status:
+              </Typography>
+              <Link
+                href={`https://explorer.near-intents.org/transactions/${depositAddress}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  color: '#F3B724',
+                  fontSize: '0.875rem',
+                  textDecoration: 'none',
+                  '&:hover': {
+                    textDecoration: 'underline',
+                  },
+                }}
+              >
+                NEAR Intents Explorer
+              </Link>
+            </Box>
+          </Box>
+        </Box>
+      )}
+
       {/* Transaction Info - Show when we have a deposit tx */}
       {depositTxHash && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
                 Deposit ZEC tx:
               </Typography>
               <Link
-                href={`https://mainnet.zcashexplorer.app/transactions/${depositTxHash}`}
+                href={`https://3xpl.com/zcash/transaction/${depositTxHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={{
