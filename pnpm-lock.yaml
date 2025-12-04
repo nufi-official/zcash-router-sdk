@@ -71,6 +71,12 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
+      '@esbuild-plugins/node-globals-polyfill':
+        specifier: ^0.2.3
+        version: 0.2.3(esbuild@0.27.0)
+      '@esbuild-plugins/node-modules-polyfill':
+        specifier: ^0.2.2
+        version: 0.2.2(esbuild@0.27.0)
       '@mui/icons-material':
         specifier: ^7.3.5
         version: 7.3.5(@mui/material@7.3.5(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react@18.3.1))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.27)(react@18.3.1)
@@ -80,12 +86,18 @@ importers:
       '@solana/web3.js':
         specifier: ^1.95.8
         version: 1.98.4(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@6.4.1(@types/node@22.19.1)(jiti@1.21.7))
       bip39:
         specifier: ^3.1.0
         version: 3.1.0
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
+      crypto-browserify:
+        specifier: ^3.12.0
+        version: 3.12.1
       events:
         specifier: ^3.3.0
         version: 3.3.0
@@ -101,25 +113,6 @@ importers:
       stream-browserify:
         specifier: ^3.0.0
         version: 3.0.0
-    devDependencies:
-      '@esbuild-plugins/node-globals-polyfill':
-        specifier: ^0.2.3
-        version: 0.2.3(esbuild@0.27.0)
-      '@esbuild-plugins/node-modules-polyfill':
-        specifier: ^0.2.2
-        version: 0.2.2(esbuild@0.27.0)
-      '@types/react':
-        specifier: ^18.3.12
-        version: 18.3.27
-      '@types/react-dom':
-        specifier: ^18.3.1
-        version: 18.3.7(@types/react@18.3.27)
-      '@vitejs/plugin-react':
-        specifier: ^4.3.4
-        version: 4.7.0(vite@6.4.1(@types/node@22.19.1)(jiti@1.21.7))
-      crypto-browserify:
-        specifier: ^3.12.0
-        version: 3.12.1
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
@@ -135,6 +128,13 @@ importers:
       vite-plugin-wasm:
         specifier: ^3.5.0
         version: 3.5.0(vite@6.4.1(@types/node@22.19.1)(jiti@1.21.7))
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.27
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.7(@types/react@18.3.27)
 
   packages/solana-hot-address-only:
     dependencies:
@@ -160,11 +160,11 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@chainsafe/webzjs-keys':
-        specifier: file:/Users/peter/Documents/GitHub/ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz
-        version: file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz
+        specifier: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-keys-0.3.0.tgz
+        version: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-keys-0.3.0.tgz
       '@chainsafe/webzjs-wallet':
-        specifier: file:/Users/peter/Documents/GitHub/ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz
-        version: file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz
+        specifier: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-wallet-0.3.0.tgz
+        version: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-wallet-0.3.0.tgz
       bip39:
         specifier: ^3.1.0
         version: 3.1.0
@@ -312,12 +312,12 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@chainsafe/webzjs-keys@file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz':
-    resolution: {integrity: sha512-yxljIfDLFWKu8Ca5E7C8Rlb2zrs231fNV5uL9nbgdoCj00EY4ynFFXCTGCNbNiVc42vPbx0QWZSdCrcCPaeLCg==, tarball: file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz}
+  '@chainsafe/webzjs-keys@https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-keys-0.3.0.tgz':
+    resolution: {tarball: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-keys-0.3.0.tgz}
     version: 0.3.0
 
-  '@chainsafe/webzjs-wallet@file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz':
-    resolution: {integrity: sha512-0avO6DqiyPeL+tXRjqgXR0efeOTiZ6OpxPE0vrAgUVHWI4ptLOXDz6EifzMAxJDDRoQxW5d1GOk7Mi51spzK4Q==, tarball: file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz}
+  '@chainsafe/webzjs-wallet@https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-wallet-0.3.0.tgz':
+    resolution: {tarball: https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-wallet-0.3.0.tgz}
     version: 0.3.0
 
   '@csstools/color-helpers@5.1.0':
@@ -3208,9 +3208,9 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@chainsafe/webzjs-keys@file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-keys-0.3.0.tgz': {}
+  '@chainsafe/webzjs-keys@https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-keys-0.3.0.tgz': {}
 
-  '@chainsafe/webzjs-wallet@file:../../ChainSafe/WebZjs/packages/chainsafe-webzjs-wallet-0.3.0.tgz': {}
+  '@chainsafe/webzjs-wallet@https://github.com/tkviet/WebZjs/releases/download/0.3.0/chainsafe-webzjs-wallet-0.3.0.tgz': {}
 
   '@csstools/color-helpers@5.1.0': {}
 
