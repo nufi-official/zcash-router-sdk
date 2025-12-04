@@ -1,7 +1,7 @@
 import type { ZcashAccountInfo } from './accountManager';
 import type { Zatoshis } from './transaction';
 
-export const ZEC_FEE_ZATOSHIS = BigInt(30_000) as Zatoshis;
+export const ZEC_FEE_ZATOSHIS = BigInt(40_000) as Zatoshis;
 
 export const getMaxSendableAmount = (
   accountInfo: ZcashAccountInfo

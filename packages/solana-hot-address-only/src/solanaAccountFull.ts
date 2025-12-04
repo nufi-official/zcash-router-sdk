@@ -111,7 +111,7 @@ export class SolanaAccountFull implements AccountFull {
       const balance = await this.connection.getBalance(publicKey);
 
       // Reserve 10,000 lamports for transaction fees
-      const FEE_RESERVE = 10000n;
+      const FEE_RESERVE = 20000n;
       const balanceBigInt = BigInt(balance);
 
       // Return balance minus fee reserve, or 0 if balance is less than fee
@@ -119,7 +119,9 @@ export class SolanaAccountFull implements AccountFull {
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('[SolanaAccountFull] Failed to get balance:', error);
-      throw new Error(`Failed to fetch Solana balance: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to fetch Solana balance: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   };
 

@@ -43,14 +43,19 @@ export function RouteFromZecForm({
   const [depositAddress, setDepositAddress] = useState<string>();
 
   // Get accounts from context
-  const { zcashTransparentAccount, zcashShieldedAccount, isLoading: accountsLoading } = useAccounts();
+  const {
+    zcashTransparentAccount,
+    zcashShieldedAccount,
+    isLoading: accountsLoading,
+  } = useAccounts();
 
   const { price: assetPrice, loading: priceLoading } = useTokenPrice(asset);
   const { price: zecPrice, loading: zecPriceLoading } = useTokenPrice('ZEC');
-  const { balance: zecBalance, loading: balanceLoading, refresh: refreshZecBalance } = useZecBalance(
-    addressType,
-    mnemonic
-  );
+  const {
+    balance: zecBalance,
+    loading: balanceLoading,
+    refresh: refreshZecBalance,
+  } = useZecBalance(addressType, mnemonic);
   const { address: zcashAddress, loading: addressLoading } = useZcashAddress(
     mnemonic,
     addressType
@@ -135,7 +140,10 @@ export function RouteFromZecForm({
       return;
     }
 
-    const zcashAccount = addressType === 'shielded' ? zcashShieldedAccount : zcashTransparentAccount;
+    const zcashAccount =
+      addressType === 'shielded'
+        ? zcashShieldedAccount
+        : zcashTransparentAccount;
     if (!zcashAccount) {
       alert(`Zcash ${addressType} account not available`);
       return;
@@ -237,27 +245,25 @@ export function RouteFromZecForm({
             mb: 1,
           }}
         >
-          <Typography
-            variant="caption"
-            sx={{ color: 'text.secondary' }}
-          >
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
             Zcash →
           </Typography>
-          <AddressDisplay
-            address={zcashAddress}
-            loading={addressLoading}
-          />
+          <AddressDisplay address={zcashAddress} loading={addressLoading} />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <AmountInput
             value={amount}
             onChange={setAmount}
-            disabled={swapStatus === 'initiating' || swapStatus === 'monitoring'}
+            disabled={
+              swapStatus === 'initiating' || swapStatus === 'monitoring'
+            }
           />
           <AssetSelect
             value={asset}
             onChange={setAsset}
-            disabled={swapStatus === 'initiating' || swapStatus === 'monitoring'}
+            disabled={
+              swapStatus === 'initiating' || swapStatus === 'monitoring'
+            }
           />
         </Box>
         <Box
@@ -352,8 +358,17 @@ export function RouteFromZecForm({
       {depositAddress && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary', fontWeight: 600 }}
+              >
                 Swap status:
               </Typography>
               <Link
@@ -384,9 +399,18 @@ export function RouteFromZecForm({
       {depositTxHash && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
-                Deposit ZEC tx:
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary', fontWeight: 600 }}
+              >
+                Deposit ZEC TX:
               </Typography>
               <Link
                 href={`https://3xpl.com/zcash/transaction/${depositTxHash}`}
