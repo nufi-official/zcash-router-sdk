@@ -8,7 +8,7 @@
   "type": "module",
   "engines": {
     "node": "18.x",
-    "pnpm": "9.x"
+    "pnpm": "10.x"
   },
   "scripts": {
     "build": "pnpm --filter \"./packages/*\" run build",
