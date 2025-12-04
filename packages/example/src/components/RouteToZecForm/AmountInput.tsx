@@ -5,9 +5,10 @@ interface AmountInputProps {
   value: string;
   onChange: (value: string) => void;
   error?: boolean;
+  disabled?: boolean;
 }
 
-export function AmountInput({ value, onChange, error }: AmountInputProps) {
+export function AmountInput({ value, onChange, error, disabled }: AmountInputProps) {
   return (
     <TextField
       fullWidth
@@ -17,6 +18,7 @@ export function AmountInput({ value, onChange, error }: AmountInputProps) {
       placeholder="0"
       variant="standard"
       error={error}
+      disabled={disabled}
       slotProps={{
         input: {
           disableUnderline: true,
