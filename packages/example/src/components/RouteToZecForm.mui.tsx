@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Box, Typography, Link } from '@mui/material';
+import { OpenInNew as OpenInNewIcon } from '@mui/icons-material';
 import { AmountInput } from './RouteToZecForm/AmountInput';
 import { AssetSelect } from './RouteToZecForm/AssetSelect';
 import { SwapButton } from './RouteToZecForm/SwapButton';
@@ -23,7 +24,13 @@ interface RouteToZecFormProps {
   onRefreshAllBalances?: () => void;
 }
 
-export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefreshBalance, onRefreshAllBalances }: RouteToZecFormProps) {
+export function RouteToZecForm({
+  addressType,
+  mnemonic,
+  onConnectClick,
+  onRefreshBalance,
+  onRefreshAllBalances,
+}: RouteToZecFormProps) {
   const [amount, setAmount] = useState('');
   const [asset, setAsset] = useState('SOL');
   const [swapStatus, setSwapStatus] = useState<
@@ -35,8 +42,11 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
   const [depositAddress, setDepositAddress] = useState<string>();
 
   const { price, loading: priceLoading } = useTokenPrice(asset);
-  const { balance: solBalance, loading: balanceLoading, refresh: refreshSolBalance } =
-    useSolBalance(mnemonic);
+  const {
+    balance: solBalance,
+    loading: balanceLoading,
+    refresh: refreshSolBalance,
+  } = useSolBalance(mnemonic);
   const { address: solanaAddress, loading: addressLoading } =
     useSolanaAddress(mnemonic);
 
@@ -211,20 +221,22 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
             mb: 1,
           }}
         >
-          <Typography
-            variant="caption"
-            sx={{ color: 'text.secondary' }}
-          >
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
             → Zcash
           </Typography>
-          <AddressDisplay
-            address={solanaAddress}
-            loading={addressLoading}
-          />
+          <AddressDisplay address={solanaAddress} loading={addressLoading} />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <AmountInput value={amount} onChange={setAmount} disabled={swapStatus === 'monitoring'} />
-          <AssetSelect value={asset} onChange={setAsset} disabled={swapStatus === 'monitoring'} />
+          <AmountInput
+            value={amount}
+            onChange={setAmount}
+            disabled={swapStatus === 'monitoring'}
+          />
+          <AssetSelect
+            value={asset}
+            onChange={setAsset}
+            disabled={swapStatus === 'monitoring'}
+          />
         </Box>
         <Box
           sx={{
@@ -280,8 +292,17 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
       {depositAddress && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary', fontWeight: 600 }}
+              >
                 Swap status:
               </Typography>
               <Link
@@ -292,12 +313,16 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
                   color: '#F3B724',
                   fontSize: '0.875rem',
                   textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
                   '&:hover': {
                     textDecoration: 'underline',
                   },
                 }}
               >
                 NEAR Intents Explorer
+                <OpenInNewIcon sx={{ fontSize: '0.875rem' }} />
               </Link>
             </Box>
           </Box>
@@ -308,9 +333,18 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
       {depositTxHash && (
         <Box sx={{ ...SLIDE_DOWN_ANIMATION, mt: 3 }}>
           <Box sx={{ ...CARVED_BOX_STYLES, p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>
-                Deposit SOL tx:
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary', fontWeight: 600 }}
+              >
+                Deposit SOL TX:
               </Typography>
               <Link
                 href={`https://explorer.solana.com/tx/${depositTxHash}`}
@@ -321,12 +355,16 @@ export function RouteToZecForm({ addressType, mnemonic, onConnectClick, onRefres
                   fontFamily: 'monospace',
                   fontSize: '0.875rem',
                   textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
                   '&:hover': {
                     textDecoration: 'underline',
                   },
                 }}
               >
                 {depositTxHash.slice(0, 8)}...{depositTxHash.slice(-8)}
+                <OpenInNewIcon sx={{ fontSize: '0.875rem' }} />
               </Link>
             </Box>
           </Box>
