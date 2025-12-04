@@ -5,7 +5,7 @@ import {
   type SwapStateChangeEvent,
   type AccountFull,
 } from '@asset-route-sdk/core';
-import { createSolanaAccount } from '@asset-route-sdk/solana-hot-address-only';
+import { createSolanaAccount } from '@asset-route-sdk/solana-account-mnemonic';
 import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-account-mnemonic';
 import { SwapStatus } from './SwapStatus';
 

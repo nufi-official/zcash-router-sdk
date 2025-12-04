@@ -8,7 +8,7 @@ import {
 import type { AccountFull } from '@asset-route-sdk/core';
 import { loadAndInitWebZjs } from '@asset-route-sdk/zcash-account-mnemonic';
 import { createZcashShieldedAccount } from '@asset-route-sdk/zcash-account-mnemonic';
-import { createSolanaAccountFull } from '@asset-route-sdk/solana-hot-address-only';
+import { createSolanaAccountFull } from '@asset-route-sdk/solana-account-mnemonic';
 
 interface AccountContextType {
   solanaAccount: AccountFull | null;
