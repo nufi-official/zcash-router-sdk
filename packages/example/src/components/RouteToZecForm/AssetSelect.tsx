@@ -16,7 +16,8 @@ const renderValue = (value: unknown) => {
         gap: 1.5,
         fontSize: '1.25rem',
         fontWeight: 600,
-        fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        fontFamily:
+          '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       }}
     >
       {val === 'SOL' && <SolanaIcon size={28} />}
@@ -39,10 +40,9 @@ const IconComponent = (props: any) => (
       alignItems: 'center',
       justifyContent: 'center',
       position: 'absolute',
-      right: -12,
+      right: 0,
       top: '50%',
       pointerEvents: 'none',
-      marginRight: '14px',
       marginTop: '-5px',
     }}
   >

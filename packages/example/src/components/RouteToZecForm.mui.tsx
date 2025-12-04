@@ -193,14 +193,15 @@ export function RouteToZecForm({ addressType, mnemonic }: RouteToZecFormProps) {
               fontWeight: 600,
               color: 'white',
               cursor: balanceLoading ? 'default' : 'pointer',
-              mr: '14px',
               opacity: balanceLoading ? 0.6 : 1,
               '&:hover': {
                 textDecoration: balanceLoading ? 'none' : 'underline',
               },
             }}
           >
-            {balanceLoading ? 'Loading balance...' : `MAX: ${maxBalance} ${asset}`}
+            {balanceLoading
+              ? 'Loading balance...'
+              : `MAX: ${maxBalance} ${asset}`}
           </Typography>
         </Box>
       </Box>
