@@ -7,9 +7,9 @@ echo "-----> Building monorepo for Heroku"
 echo "-----> Installing pnpm"
 npm install -g pnpm
 
-# Install all dependencies at root
+# Install all dependencies at root (without frozen lockfile to allow updates)
 echo "-----> Installing dependencies"
-pnpm install --frozen-lockfile
+pnpm install --no-frozen-lockfile
 
 # Build all workspace packages that example depends on
 echo "-----> Building workspace dependencies"
