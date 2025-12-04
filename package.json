@@ -6,6 +6,10 @@
   "author": "",
   "license": "MIT",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "scripts": {
     "build": "pnpm --filter \"./packages/*\" run build",
     "dev": "pnpm --filter \"./packages/*\" run dev",
@@ -17,7 +21,9 @@
     "format": "prettier --write \"packages/**/src/**/*.ts\" \"packages/**/tests/**/*.ts\"",
     "format:check": "prettier --check \"packages/**/src/**/*.ts\" \"packages/**/tests/**/*.ts\"",
     "typecheck": "pnpm --filter \"./packages/*\" run typecheck",
-    "clean": "pnpm --filter \"./packages/*\" run clean"
+    "clean": "pnpm --filter \"./packages/*\" run clean",
+    "heroku-postbuild": "./heroku-build.sh",
+    "start": "cd packages/example && pnpm run start"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
