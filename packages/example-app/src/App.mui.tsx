@@ -368,6 +368,7 @@ function App() {
             width: '500px',
             transform: 'scale(0.85)',
             transformOrigin: 'top right',
+            zIndex: 1000,
           }}
         >
           <Box
