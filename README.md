@@ -2,6 +2,18 @@
 
 A monorepo containing TypeScript SDKs for routing assets to and from Zcash. Built with pnpm workspaces, supporting both ESM and CommonJS, and compatible with Node.js and browsers.
 
+## 🎯 Production-Grade Mainnet Demo
+
+**Live demos:**
+- [https://zcash.nu.fi](https://zcash.nu.fi) - Full demo with mnemonic input (build of [`packages/example-app`](./packages/example-app))
+- [https://zcash-hackathon.nu.fi](https://zcash-hackathon.nu.fi) - NUFI wallet integration
+
+These are **fully functional, production-grade implementations**:
+
+- ✅ **Live blockchain integration** - Real swaps on Solana and Zcash mainnet
+- ✅ **End-to-end transactions** - Complete deposit to withdrawal flow
+- ✅ **Professional UI** - Modern interface with real-time status tracking
+
 ## 🏗️ Architecture
 
 The SDK is designed with a modular architecture that separates concerns and makes it easy to extend support for new assets and wallet types:
@@ -85,6 +97,21 @@ pnpm dev
 ```
 
 The app will be available at `http://localhost:3000`. See the [example-app README](./packages/example-app/README.md) for more details.
+
+## 🎯 Production-Grade Demo
+
+This is a **fully functional, production-ready implementation**:
+
+- ✅ **Live blockchain integration** - Real swaps on Solana and Zcash mainnet
+- ✅ **End-to-end transactions** - Complete deposit to withdrawal flow
+- ✅ **Modular architecture** - Extensible SDK design for adding new chains
+- ✅ **Professional UI** - Modern interface with real-time status tracking
+- ✅ **Comprehensive error handling** - Graceful failure recovery
+- ✅ **Full type safety** - TypeScript throughout with comprehensive testing
+
+Not a mockup or prototype - this actually works.
+
+[🎥 View Live Demo](#) | [💻 Try It Yourself](#running-the-example-app)
 
 ## 🛠️ Development
 
